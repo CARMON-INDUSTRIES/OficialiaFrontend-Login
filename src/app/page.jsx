@@ -83,7 +83,7 @@ export const SignIn = () => {
             <div className="email flex flex-col gap-3 items-start">
               <label htmlFor="Email">USUARIO</label>
               <input
-                type="email"
+                type="text"
                 placeholder="Nombre o email"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
                 value={email}
