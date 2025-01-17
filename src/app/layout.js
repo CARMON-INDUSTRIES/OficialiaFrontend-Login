@@ -20,9 +20,10 @@ export default function RootLayout({ children }) {
           <AddUserContextProvider>
             <html lang="en">
               <head>
-                <link rel="icon" type="image/svg+xml" sizes='96*96' href="https://img.icons8.com/pulsar-color/96/dashboard.png" />
+                <link rel="icon" type="image/jpeg" sizes="96x96" href="/images/oficialia.jpg" />
+
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Board.</title>
+                <title>Oficialia</title>
               </head>
               <body className={inter.className}>{children}</body>
             </html>

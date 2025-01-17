@@ -10,9 +10,9 @@ import { signOut, useSession } from 'next-auth/react'
 const Sidebar = () => {
   const session = useSession()
   return (
-    <div className='h-auto py-8 px-4 bg-[#4285F4] flex flex-col justify-start min-w-[16rem] rounded-3xl mx-8 my-6'>
+    <div className='h-auto py-8 px-4 bg-[#A02142] flex flex-col justify-start min-w-[16rem] rounded-3xl mx-8 my-6'>
         <div className="brand py-8 px-4 text-slate-100 font-extrabold">
-            <h1 className='text-4xl'>Board.</h1>
+            <h1 className='text-4xl'>Oficialia de partes.</h1>
             </div>
         <ul className="items flex flex-col list-none gap-4">
             <li><a className='px-5 py-2 hover:font-bold text-slate-100 transition-all focus:font-bold duration-200 ease-in-out flex items-center gap-2' href="#"><FiPieChart/>Dashboard</a></li>
