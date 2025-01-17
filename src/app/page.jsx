@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank } from "react-icons/fa";
+import { FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export const SignIn = () => {
   const [email, setEmail] = useState(""); // Estado para el email
   const [password, setPassword] = useState(""); // Estado para la contraseña
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para mensajes de error
 
   const handleLogin = async (e) => {
@@ -90,15 +91,24 @@ export const SignIn = () => {
                 onChange={(e) => setEmail(e.target.value)} // Actualiza el estado
               />
             </div>
-            <div className="password flex flex-col gap-3 items-start">
+            <div className="password flex flex-col gap-3 items-start relative">
               <label htmlFor="Password">CONTRASEÑA</label>
+              <div className="flex items-center w-full relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Ingrese su contraseña"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#EAEAEA]"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} // Actualiza el estado
               />
+              <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)} // Alterna la visibilidad
+                  className="absolute right-3 text-[#691B31]"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+            </div>
             </div>
             {error && <p className="text-red-500">{error}</p>}
             <p>
