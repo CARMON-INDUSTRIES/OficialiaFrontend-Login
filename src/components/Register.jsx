@@ -4,7 +4,7 @@ import React, { useState } from "react";
 export const Register = () => {
   const [name, setName] = useState(""); // Estado para el nombre
   const [email, setEmail] = useState(""); // Estado para el correo
-  const [area, setArea] = useState(""); // Estado para el área
+  const [password, setPassword] = useState(""); // Estado para la contraseña
   const [position, setPosition] = useState(""); // Estado para el puesto
   const [error, setError] = useState(""); // Estado para errores
   const [success, setSuccess] = useState(""); // Estado para mensaje de éxito
@@ -21,7 +21,7 @@ export const Register = () => {
         body: JSON.stringify({
           name,
           email,
-          area,
+          password, // Enviar la contraseña al backend
           position,
         }),
       });
@@ -97,31 +97,20 @@ export const Register = () => {
               />
             </div>
 
-            <div className="area flex flex-col gap-3 items-start">
-              <label htmlFor="Area" className="text-sm">
-                Área
+            {/* Campo de Contraseña */}
+            <div className="password flex flex-col gap-3 items-start">
+              <label htmlFor="Password" className="text-sm">
+                Contraseña
               </label>
               <input
-                type="text"
-                placeholder="Ingrese el área"
+                type="password"
+                placeholder="Ingrese su contraseña"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={area}
-                onChange={(e) => setArea(e.target.value)} // Actualiza el estado
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Actualiza el estado
               />
             </div>
 
-            <div className="position flex flex-col gap-3 items-start">
-              <label htmlFor="Position" className="text-sm">
-                Puesto
-              </label>
-              <input
-                type="text"
-                placeholder="Ingrese el puesto"
-                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)} // Actualiza el estado
-              />
-            </div>
 
             {/* Muestra errores o mensajes de éxito */}
             {error && <p className="text-red-500">{error}</p>}
@@ -129,7 +118,7 @@ export const Register = () => {
 
             <button
               type="submit"
-              className="bg-[#BC995B] text-white rounded-[10px] py-2"
+              className="bg-[#691B31] text-white rounded-[10px] py-2"
             >
               Registrarse
             </button>
