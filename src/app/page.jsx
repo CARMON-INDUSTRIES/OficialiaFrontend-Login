@@ -1,10 +1,7 @@
-import SignIn from "@/components/SignIn";
+import LandingPage from "@/components/LandingPage";
 
 const Page = () => {
-  return (
-    <SignIn/>
-  );
+  return <LandingPage />;
 };
 
 export default Page;
-
