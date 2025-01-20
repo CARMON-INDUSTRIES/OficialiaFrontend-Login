@@ -1,0 +1,143 @@
+"use client"; 
+import React, { useState } from "react";
+
+export const Register = () => {
+  const [name, setName] = useState(""); // Estado para el nombre
+  const [email, setEmail] = useState(""); // Estado para el correo
+  const [area, setArea] = useState(""); // Estado para el área
+  const [position, setPosition] = useState(""); // Estado para el puesto
+  const [error, setError] = useState(""); // Estado para errores
+  const [success, setSuccess] = useState(""); // Estado para mensaje de éxito
+
+  const handleRegister = async (e) => {
+    e.preventDefault(); // Evita el recargado de la página
+
+    try {
+      const response = await fetch("http://localhost:5205/api/Registro/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          area,
+          position,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al registrar usuario"); // Maneja errores
+      }
+
+      const data = await response.json();
+      console.log("Registro exitoso:", data);
+      setSuccess("Usuario registrado exitosamente");
+      setError(""); // Limpia errores
+    } catch (err) {
+      setError(err.message); // Establece el mensaje de error
+      setSuccess(""); // Limpia mensajes de éxito
+    }
+  };
+
+  return (
+    <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
+      {/* Panel izquierdo */}
+      <div className="register-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col">
+        <h1 className="text-white text-1xl font-bold">
+          Presidencia municipal Tula de Allende
+        </h1>
+        <h1 className="text-white text-5xl font-bold my-auto ml-20 lg:ml-32">
+          REGISTRO
+        </h1>
+      </div>
+
+      {/* Panel derecho */}
+      <div className="right flex flex-col justify-center items-center relative">
+        <h1 className="top-8 left-8 absolute text-3xl font-bold sm:hidden">
+          REGISTRO
+        </h1>
+        <div className="lg:w-[26.5rem] w-80 flex flex-col gap-4">
+          <div className="text-center sm:text-left">
+            <br />
+            <img
+              src="/images/presidencia.jpeg"
+              alt="Presidencia"
+              className="w-36 h-auto object-cover mb-4 mx-auto"
+            />
+          </div>
+
+          <form
+            onSubmit={handleRegister} // Llama a la función de registro
+            className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
+          >
+            <div className="name flex flex-col gap-3 items-start">
+              <label htmlFor="Name" className="text-sm">
+                Nombre Completo
+              </label>
+              <input
+                type="text"
+                placeholder="Ingrese su nombre completo"
+                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+                value={name}
+                onChange={(e) => setName(e.target.value)} // Actualiza el estado
+              />
+            </div>
+
+            <div className="email flex flex-col gap-3 items-start">
+              <label htmlFor="Email" className="text-sm">
+                Correo Electrónico
+              </label>
+              <input
+                type="email"
+                placeholder="Ingrese su correo"
+                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} // Actualiza el estado
+              />
+            </div>
+
+            <div className="area flex flex-col gap-3 items-start">
+              <label htmlFor="Area" className="text-sm">
+                Área
+              </label>
+              <input
+                type="text"
+                placeholder="Ingrese el área"
+                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+                value={area}
+                onChange={(e) => setArea(e.target.value)} // Actualiza el estado
+              />
+            </div>
+
+            <div className="position flex flex-col gap-3 items-start">
+              <label htmlFor="Position" className="text-sm">
+                Puesto
+              </label>
+              <input
+                type="text"
+                placeholder="Ingrese el puesto"
+                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)} // Actualiza el estado
+              />
+            </div>
+
+            {/* Muestra errores o mensajes de éxito */}
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-500">{success}</p>}
+
+            <button
+              type="submit"
+              className="bg-[#BC995B] text-white rounded-[10px] py-2"
+            >
+              Registrarse
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
