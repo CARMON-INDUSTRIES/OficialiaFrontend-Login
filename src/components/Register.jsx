@@ -1,5 +1,7 @@
-"use client"; 
+"use client";
 import React, { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa"; // Importa el icono
+import Link from "next/link"; // Importa el componente Link de Next.js
 
 export const Register = () => {
   const [usuario, setName] = useState(""); // Estado para el nombre
@@ -25,7 +27,7 @@ export const Register = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error al registrar usuario"); // Maneja errores 
+        throw new Error("Error al registrar usuario"); // Maneja errores
       }
 
       const data = await response.json();
@@ -109,18 +111,27 @@ export const Register = () => {
               />
             </div>
 
-
             {/* Muestra errores o mensajes de éxito */}
             {error && <p className="text-red-500">{error}</p>}
             {success && <p className="text-green-500">{success}</p>}
 
             <button
               type="submit"
-              className="bg-[#691B31] text-white rounded-[10px] py-2"
+              className="bg-[#BC995B] text-white rounded-[10px] py-2"
             >
               Registrarse
+                 {/* Botón de regreso */}
+          <Link href="/login">
+            <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
+              <FaArrowLeft />
+            </div>
+          </Link>
             </button>
+         
+
           </form>
+
+          
         </div>
       </div>
     </div>

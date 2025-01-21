@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from 'next/link'; // Importar Link de Next.js
+import { FaArrowLeft } from "react-icons/fa"; // Importa el icono
 
 import {
   FaRunning,
@@ -140,6 +141,12 @@ export const SignIn = () => {
             <p>
           {/* Usamos Link de Next.js para la navegación */}
           <Link href="/register" className="text-[#A02142]">REGISTRATE
+          </Link>
+          {/* Botón de regreso */}
+          <Link href="/">
+            <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
+              <FaArrowLeft />
+            </div>
           </Link>
         </p>
           </form>
