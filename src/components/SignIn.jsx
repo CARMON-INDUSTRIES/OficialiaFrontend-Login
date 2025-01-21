@@ -21,7 +21,7 @@ export const SignIn = () => {
     e.preventDefault(); // Evita que la página se recargue
 
     try {
-      const response = await fetch("http://localhost:5205/api/Registro/login", {
+      const response = await fetch("http://localhost:5299/api/Cuenta/login", {
         method: "POST", // Método de la solicitud
         headers: {
           "Content-Type": "application/json", // Tipo de contenido

@@ -2,10 +2,9 @@
 import React, { useState } from "react";
 
 export const Register = () => {
-  const [name, setName] = useState(""); // Estado para el nombre
+  const [usuario, setName] = useState(""); // Estado para el nombre
   const [email, setEmail] = useState(""); // Estado para el correo
   const [password, setPassword] = useState(""); // Estado para la contraseña
-  const [position, setPosition] = useState(""); // Estado para el puesto
   const [error, setError] = useState(""); // Estado para errores
   const [success, setSuccess] = useState(""); // Estado para mensaje de éxito
 
@@ -13,21 +12,20 @@ export const Register = () => {
     e.preventDefault(); // Evita el recargado de la página
 
     try {
-      const response = await fetch("http://localhost:5205/api/Registro/register", {
+      const response = await fetch("http://localhost:5299/api/Cuenta/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
+          usuario,
           email,
           password, // Enviar la contraseña al backend
-          position,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Error al registrar usuario"); // Maneja errores
+        throw new Error("Error al registrar usuario"); // Maneja errores 
       }
 
       const data = await response.json();
@@ -79,7 +77,7 @@ export const Register = () => {
                 type="text"
                 placeholder="Ingrese su nombre completo"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={name}
+                value={usuario}
                 onChange={(e) => setName(e.target.value)} // Actualiza el estado
               />
             </div>
