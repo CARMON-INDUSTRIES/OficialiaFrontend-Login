@@ -17,7 +17,7 @@ const Carousel = () => {
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
@@ -33,7 +33,7 @@ const Carousel = () => {
             <img
               src={src}
               alt={`Imagen ${index + 1}`}
-              className="w-full max-w-3xl mx-auto h-auto"
+              className="w-full max-w-2xl mx-auto h-auto"
             />
           </SwiperSlide>
         ))}

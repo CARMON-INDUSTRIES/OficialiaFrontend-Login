@@ -11,7 +11,7 @@ const LandingPage = () => {
       style={{ backgroundImage: "url('/images/background.jpg')" }}
     >
       <div className="text-center bg-white bg-opacity-70 rounded-lg p-8 shadow-lg">
-        <h1 className="text-4xl font-bold mb-6 text-[#691B31]">
+        <h1 className="text-5xl font-bold mb-6 text-[#691B31]">
           Unidad Central de Correspondencia <br /> Tula de Allende
         </h1>
         <p className="text-lg text-[#333] mb-8">
