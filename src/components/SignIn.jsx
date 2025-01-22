@@ -34,7 +34,7 @@ export const SignIn = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Credenciales incorrectas"); // Manejo de errores
+        throw new Error("Ha ocurrido un error"); // Manejo de errores
       }
 
       const data = await response.json();
