@@ -15,7 +15,7 @@ export const Register = () => {
     e.preventDefault(); // Evita el recargado de la página
 
     try {
-      const response = await fetch("oficialialoginbackend.somee.com/api/Cuenta/registrar", {
+      const response = await fetch("http://oficialialoginbackend.somee.com/api/Cuenta/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
