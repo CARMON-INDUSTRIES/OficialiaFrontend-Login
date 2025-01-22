@@ -22,7 +22,7 @@ export const SignIn = () => {
     e.preventDefault(); // Evita que la página se recargue
 
     try {
-      const response = await fetch("http://oficialialoginbackend.somee.com/api/Cuenta/login", {
+      const response = await fetch("oficialialoginbackend.somee.com/api/Cuenta/login", {
         method: "POST", // Método de la solicitud
         headers: {
           "Content-Type": "application/json", // Tipo de contenido
