@@ -6,10 +6,13 @@ import Carousel from "@/components/Carousel";
 
 const LandingPage = () => {
   return (
-    <div className="grid h-screen place-items-center bg-[#F5F5F5]">
-      <div className="text-center">
+    <div
+      className="grid h-screen place-items-center bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/background.jpg')" }}
+    >
+      <div className="text-center bg-white bg-opacity-70 rounded-lg p-8 shadow-lg">
         <h1 className="text-4xl font-bold mb-6 text-[#691B31]">
-         Unidad Central de Correspondencia <br></br>Tula de Allende
+          Unidad Central de Correspondencia <br /> Tula de Allende
         </h1>
         <p className="text-lg text-[#333] mb-8">
           Selecciona una opción para continuar:
@@ -21,29 +24,14 @@ const LandingPage = () => {
               Iniciar Sesión
             </button>
           </Link>
-          {/* Botón para consulta 
-          <Link href="/consulta">
-            <button className="bg-[#BC995B] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#D1B074] transition-all">
-              Consultas
-            </button>
-          </Link>
-          {/* Botón para solicitud 
-          <Link href="/solicitud">
-            <button className="bg-[#6C7B95] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#8493AD] transition-all">
-              Solicitudes
-            </button>
-          </Link>
-          */}
-
-          
         </div>
-        <div>
-          <br></br>
-            <Carousel />
-          </div>
+        <div className="mt-8">
+          <Carousel />
+        </div>
       </div>
     </div>
   );
 };
 
 export default LandingPage;
+
