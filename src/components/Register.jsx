@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { FaArrowLeft } from "react-icons/fa"; // Importa el icono
-import Link from "next/link"; // Importa el componente Link de Next.js
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa"; // Importa iconos
+import Link from "next/link";
 
 export const Register = () => {
   const [usuario, setName] = useState(""); // Estado para el nombre
   const [email, setEmail] = useState(""); // Estado para el correo
   const [password, setPassword] = useState(""); // Estado para la contraseña
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para errores
   const [success, setSuccess] = useState(""); // Estado para mensaje de éxito
 
@@ -98,17 +99,26 @@ export const Register = () => {
             </div>
 
             {/* Campo de Contraseña */}
-            <div className="password flex flex-col gap-3 items-start">
+            <div className="password flex flex-col gap-3 items-start relative">
               <label htmlFor="Password" className="text-sm">
                 Contraseña
               </label>
-              <input
-                type="password"
-                placeholder="Ingrese su contraseña"
-                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} // Actualiza el estado
-              />
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Ingrese su contraseña"
+                  className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5] pr-10"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} // Actualiza el estado
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)} // Alterna la visibilidad
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#691B31]"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
 
             {/* Muestra errores o mensajes de éxito */}
@@ -120,18 +130,15 @@ export const Register = () => {
               className="bg-[#BC995B] text-white rounded-[10px] py-2"
             >
               Registrarse
-                 {/* Botón de regreso */}
-          <Link href="/login">
-            <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
-              <FaArrowLeft />
-            </div>
-          </Link>
             </button>
-         
 
+            {/* Botón de regreso */}
+            <Link href="/login">
+              <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
+                <FaArrowLeft />
+              </div>
+            </Link>
           </form>
-
-          
         </div>
       </div>
     </div>
