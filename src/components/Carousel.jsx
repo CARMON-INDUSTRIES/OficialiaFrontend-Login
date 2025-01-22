@@ -33,7 +33,7 @@ const Carousel = () => {
             <img
               src={src}
               alt={`Imagen ${index + 1}`}
-              className="w-full h-64 object-cover"
+              className="w-full max-w-3xl mx-auto h-auto"
             />
           </SwiperSlide>
         ))}
