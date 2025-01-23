@@ -1,22 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import Link from 'next/link'; // Importar Link de Next.js
-import { FaArrowLeft } from "react-icons/fa"; // Importa el icono
-
-import {
-  FaRunning,
-  FaHeartbeat,
-  FaLeaf,
-  FaPiggyBank,
-  FaEye,
-  FaEyeSlash,
-} from "react-icons/fa";
+import Link from "next/link"; // Importar Link de Next.js
+import { useRouter } from "next/navigation"; // Importar useRouter para redirección
+import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export const SignIn = () => {
   const [email, setEmail] = useState(""); // Estado para el email
   const [password, setPassword] = useState(""); // Estado para la contraseña
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para mensajes de error
+
+  const router = useRouter(); // Hook de Next.js para navegación
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita que la página se recargue
@@ -40,8 +34,8 @@ export const SignIn = () => {
       const data = await response.json();
       console.log("Login exitoso:", data);
 
-      // Puedes redirigir al usuario o realizar otras acciones
-      alert("Inicio de sesión exitoso");
+      // Redirigir al usuario a la página de consulta
+      router.push("/consulta");
     } catch (err) {
       setError(err.message); // Muestra el mensaje de error
     }
@@ -139,16 +133,17 @@ export const SignIn = () => {
               Iniciar Sesión
             </button>
             <p>
-          {/* Usamos Link de Next.js para la navegación */}
-          <Link href="/register" className="text-[#A02142]">REGISTRATE
-          </Link>
-          {/* Botón de regreso */}
-          <Link href="/">
-            <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
-              <FaArrowLeft />
-            </div>
-          </Link>
-        </p>
+              {/* Usamos Link de Next.js para la navegación */}
+              <Link href="/register" className="text-[#A02142]">
+                REGISTRATE
+              </Link>
+              {/* Botón de regreso */}
+              <Link href="/">
+                <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
+                  <FaArrowLeft />
+                </div>
+              </Link>
+            </p>
           </form>
         </div>
       </div>
