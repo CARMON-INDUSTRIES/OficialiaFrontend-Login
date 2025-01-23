@@ -1,6 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa"; // Importa iconos
+import {
+  FaArrowLeft,
+  FaEye,
+  FaEyeSlash,
+  FaUserCircle,
+  FaFileAlt,
+  FaSearch,
+  FaClipboardList,
+} from "react-icons/fa"; // Importa todos los íconos una sola vez
 import Link from "next/link";
 
 export const Register = () => {
@@ -15,17 +23,20 @@ export const Register = () => {
     e.preventDefault(); // Evita el recargado de la página
 
     try {
-      const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuenta/registrar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          usuario,
-          email,
-          password, // Enviar la contraseña al backend
-        }),
-      });
+      const response = await fetch(
+        "http://oficialialoginbackend.somee.com/api/Cuenta/registrar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            usuario,
+            email,
+            password, // Enviar la contraseña al backend
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al registrar usuario"); // Maneja errores
@@ -43,14 +54,29 @@ export const Register = () => {
 
   return (
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
-      {/* Panel izquierdo */}
-      <div className="register-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col">
+      <div className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col">
         <h1 className="text-white text-1xl font-bold">
           Presidencia municipal Tula de Allende
         </h1>
         <h1 className="text-white text-5xl font-bold my-auto ml-20 lg:ml-32">
           REGISTRO
         </h1>
+        <div className="socials ml-8 lg:ml-24">
+          <ul className="right list-none flex items-center gap-6">
+            <li>
+              <FaUserCircle className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaFileAlt className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaClipboardList className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaSearch className="text-3xl text-slate-50" />
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Panel derecho */}
