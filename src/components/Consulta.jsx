@@ -15,9 +15,27 @@ import {
 const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [records, setRecords] = useState([
-    { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
-    { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
+    {
+      folio: "001",
+      date: "2025-01-01",
+      department: "Recursos Humanos",
+      subject: "Contratación",
+      status: "Activo",
+    },
+    {
+      folio: "002",
+      date: "2025-01-02",
+      department: "Finanzas",
+      subject: "Presupuesto",
+      status: "Pendiente",
+    },
+    {
+      folio: "003",
+      date: "2025-01-03",
+      department: "Jurídico",
+      subject: "Revisión de contrato",
+      status: "Cerrado",
+    },
   ]);
 
   const handleDelete = (folio) => {
@@ -41,19 +59,20 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold">Unidad Central</h1>
             <h2 className="text-sm font-semibold">de Correspondencia</h2>
             <div className="flex justify-center items-center w-16 h-16 mx-auto">
-  <FaUsers className="text-6xl text-slate-50" />
-</div>
-
-
-
-
+              <FaUsers className="text-6xl text-slate-50" />
+            </div>
           </div>
           <nav className="flex flex-col gap-4 px-6 mt-4">
-          
-            <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+            <Link
+              href="/consulta"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B]"
+            >
               <FaHome /> Inicio
             </Link>
-            <Link href="/register" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+            <Link
+              href="/register"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B]"
+            >
               <FaUserPlus /> Registro
             </Link>
           </nav>
@@ -67,19 +86,20 @@ const Dashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
-        <h1 className="text-3xl font-bold mb-6">Inicio</h1>
+     {/* Main Content */}
+<main className="flex-1 p-6">
+  {/* Contenedor para título y barra de búsqueda */}
+  <div className="flex items-center justify-between mb-6">
+    <h1 className="text-3xl font-bold">Inicio</h1>
+    <input
+      type="text"
+      placeholder="Buscar registros..."
+      className="w-full max-w-md px-4 py-2 border border-[#691B31] rounded-lg focus:outline-none focus:border-[#BC995B]"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  </div>
 
-        {/* Search Bar */}
-        <div className="flex items-center justify-between mb-6">
-          <input
-            type="text"
-            placeholder="Buscar registros..."
-            className="w-full max-w-md px-4 py-2 border rounded-lg"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
 
         {/* Table */}
         <div className="overflow-x-auto">
