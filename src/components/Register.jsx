@@ -104,7 +104,7 @@ export const Register = () => {
               </label>
               <input
                 type="text"
-                placeholder="Ingrese su nombre completo"
+                placeholder="Ingrese un nombre sin espacios"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
                 value={usuario}
                 onChange={(e) => setName(e.target.value)} // Actualiza el estado
