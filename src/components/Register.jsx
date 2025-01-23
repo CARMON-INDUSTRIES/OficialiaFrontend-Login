@@ -10,6 +10,7 @@ import {
   FaClipboardList,
 } from "react-icons/fa"; // Importa todos los íconos una sola vez
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Importa el hook useRouter
 
 export const Register = () => {
   const [usuario, setName] = useState(""); // Estado para el nombre
@@ -17,7 +18,7 @@ export const Register = () => {
   const [password, setPassword] = useState(""); // Estado para la contraseña
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para errores
-  const [success, setSuccess] = useState(""); // Estado para mensaje de éxito
+  const router = useRouter(); // Inicializa el hook useRouter
 
   const handleRegister = async (e) => {
     e.preventDefault(); // Evita el recargado de la página
@@ -44,11 +45,10 @@ export const Register = () => {
 
       const data = await response.json();
       console.log("Registro exitoso:", data);
-      setSuccess("Usuario registrado exitosamente");
       setError(""); // Limpia errores
+      router.push("/login"); // Redirige a la página de inicio de sesión
     } catch (err) {
       setError(err.message); // Establece el mensaje de error
-      setSuccess(""); // Limpia mensajes de éxito
     }
   };
 
@@ -100,7 +100,7 @@ export const Register = () => {
           >
             <div className="name flex flex-col gap-3 items-start">
               <label htmlFor="Name" className="text-sm">
-                Nombre Completo
+                Nombre de usuario
               </label>
               <input
                 type="text"
@@ -147,9 +147,8 @@ export const Register = () => {
               </div>
             </div>
 
-            {/* Muestra errores o mensajes de éxito */}
+            {/* Muestra errores */}
             {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-500">{success}</p>}
 
             <button
               type="submit"
