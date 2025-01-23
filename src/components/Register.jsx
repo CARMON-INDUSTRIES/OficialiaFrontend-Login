@@ -41,6 +41,8 @@ export const Register = () => {
     }
   };
 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
   return (
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
       {/* Panel izquierdo */}

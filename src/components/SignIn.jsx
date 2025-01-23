@@ -47,6 +47,8 @@ export const SignIn = () => {
     }
   };
 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
   return (
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
       <div className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col">
