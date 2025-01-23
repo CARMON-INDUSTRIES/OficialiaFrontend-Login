@@ -9,6 +9,7 @@ import {
   FaEye,
   FaEdit,
   FaTrashAlt,
+  FaUsers,
 } from "react-icons/fa";
 
 const Dashboard = () => {
@@ -35,8 +36,20 @@ const Dashboard = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-[#691B31] text-white flex flex-col justify-between">
         <div>
-          <h1 className="text-2xl font-bold p-6">Unidad Central de Correspondencia</h1>
-          <nav className="flex flex-col gap-4 px-6">
+          {/* Mover título aquí */}
+          <div className="text-center p-6 border-b border-[#BC995B]">
+            <h1 className="text-2xl font-bold">Unidad Central</h1>
+            <h2 className="text-sm font-semibold">de Correspondencia</h2>
+            <div className="flex justify-center items-center w-16 h-16 mx-auto">
+  <FaUsers className="text-6xl text-slate-50" />
+</div>
+
+
+
+
+          </div>
+          <nav className="flex flex-col gap-4 px-6 mt-4">
+          
             <Link href="/" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
               <FaHome /> Inicio
             </Link>
