@@ -98,7 +98,7 @@ export const SignIn = () => {
               </label>
               <input
                 type="text"
-                placeholder="Nombre o email"
+                placeholder="Nombre de usuario"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} // Actualiza el estado
