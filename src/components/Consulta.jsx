@@ -50,7 +50,7 @@ const Dashboard = () => {
           </div>
           <nav className="flex flex-col gap-4 px-6 mt-4">
           
-            <Link href="/" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+            <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
               <FaHome /> Inicio
             </Link>
             <Link href="/register" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
