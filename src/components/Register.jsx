@@ -15,7 +15,7 @@ export const Register = () => {
     e.preventDefault(); // Evita el recargado de la página
 
     try {
-      const response = await fetch("http://oficialialoginbackend.somee.com/api/Cuenta/registrar", {
+      const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuenta/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,8 +40,6 @@ export const Register = () => {
       setSuccess(""); // Limpia mensajes de éxito
     }
   };
-
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 
   return (
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
