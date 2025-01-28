@@ -1,7 +1,13 @@
+import Layout from "@/components/Layout";
 import Consulta from "@/components/Consulta";
 
 const ConsultaPage = () => {
-  return <Consulta />;
+  return (
+    
+      <Consulta />
+    
+  );
 };
 
 export default ConsultaPage;
+

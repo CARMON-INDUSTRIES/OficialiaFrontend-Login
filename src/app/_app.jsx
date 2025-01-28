@@ -1,13 +1,14 @@
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react";
+import Layout from "@/components/Layout";
 
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
+  // Si la página tiene un layout definido, se usa; si no, se envuelve con el Layout global
+  const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
-export default function App({
-  Component, pageProps: { session, ...pageProps }
-}) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps}/>
+      {getLayout(<Component {...pageProps} />)}
     </SessionProvider>
-  )
+  );
 }
 
