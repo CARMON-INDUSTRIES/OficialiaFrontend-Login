@@ -16,7 +16,7 @@ export const SignIn = () => {
     e.preventDefault(); // Evita que la página se recargue
 
     try {
-      const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuentas/UserNuevo", {
+      const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin", {
         method: "POST", // Método de la solicitud
         headers: {
           "Content-Type": "application/json", // Tipo de contenido
