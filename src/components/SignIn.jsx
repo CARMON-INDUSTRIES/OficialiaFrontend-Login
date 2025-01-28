@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"; // Importar useRouter para redirecc
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export const SignIn = () => {
-  const [email, setEmail] = useState(""); // Estado para el email
+  const [userName, setEmail] = useState(""); // Estado para el email
   const [password, setPassword] = useState(""); // Estado para la contraseña
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para mensajes de error
@@ -22,7 +22,7 @@ export const SignIn = () => {
           "Content-Type": "application/json", // Tipo de contenido
         },
         body: JSON.stringify({
-          email, // Envía el email
+          userName, // Envía el email
           password, // Envía la contraseña
         }),
       });
@@ -87,14 +87,14 @@ export const SignIn = () => {
             className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
           >
             <div className="email flex flex-col gap-3 items-start">
-              <label htmlFor="Email" className="text-sm">
+              <label htmlFor="Name" className="text-sm">
                 USUARIO
               </label>
               <input
                 type="text"
                 placeholder="Nombre de usuario"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={email}
+                value={userName}
                 onChange={(e) => setEmail(e.target.value)} // Actualiza el estado
               />
             </div>

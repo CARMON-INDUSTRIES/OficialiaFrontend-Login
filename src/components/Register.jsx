@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // Importa el hook useRouter
 
 export const Register = () => {
-  const [usuario, setName] = useState(""); // Estado para el nombre
+  const [userName, setName] = useState(""); // Estado para el nombre
   const [email, setEmail] = useState(""); // Estado para el correo
   const [password, setPassword] = useState(""); // Estado para la contraseña
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
@@ -32,7 +32,7 @@ export const Register = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            usuario,
+            userName,
             email,
             password, // Enviar la contraseña al backend
           }),
@@ -106,7 +106,7 @@ export const Register = () => {
                 type="text"
                 placeholder="Ingrese un nombre sin espacios"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
-                value={usuario}
+                value={userName}
                 onChange={(e) => setName(e.target.value)} // Actualiza el estado
               />
             </div>
