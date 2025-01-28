@@ -21,6 +21,7 @@ export const SignIn = () => {
         headers: {
           "Content-Type": "application/json", // Tipo de contenido
         },
+        credentials: "include",
         body: JSON.stringify({
           userName, // Envía el email
           password, // Envía la contraseña
