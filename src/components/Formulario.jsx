@@ -17,15 +17,14 @@ const Formulario = () => {
     style.innerHTML = `.input-field { ${inputFieldClass} }`;
     document.head.appendChild(style);
 
-    // Limpieza (opcional)
     return () => {
       document.head.removeChild(style);
     };
-  }, []); // Este effect solo se ejecuta una vez, después de montar el componente en el navegador
+  }, []);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31]">
-      <div className="bg-white shadow-lg rounded-lg w-[600px] p-6 relative">
+    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] m-0 p-0">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-xl p-6"> {/* Cambiado max-w-md a max-w-lg */}
         {/* Encabezado con imagen de fondo */}
         <div
           className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
@@ -151,4 +150,5 @@ const Formulario = () => {
 };
 
 export default Formulario;
+
 

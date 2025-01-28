@@ -16,8 +16,14 @@ const Dashboard = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const handleDelete = (folio) => setRecords(records.filter((record) => record.folio !== folio));
-  const handleView = (record) => { setSelectedRecord(record); setShowModal(true); };
-  const closeModal = () => { setShowModal(false); setSelectedRecord(null); };
+  const handleView = (record) => {
+    setSelectedRecord(record);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedRecord(null);
+  };
 
   const filteredRecords = records.filter((record) =>
     record.folio.includes(search) ||
@@ -26,7 +32,7 @@ const Dashboard = () => {
   );
 
   return (
-    <Layout> {/* Ahora Layout maneja la sidebar */}
+    <Layout>
       <div className="flex flex-col p-6">
         <h1 className="text-3xl font-bold mb-4">Inicio</h1>
         <input
@@ -76,21 +82,44 @@ const Dashboard = () => {
         {/* Modal */}
         {showModal && selectedRecord && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white rounded-lg p-6 w-full max-w-3xl">
-              <h2 className="text-2xl font-bold mb-4">Detalles del Registro</h2>
-              <p>Folio: {selectedRecord.folio}</p>
-              <p>Fecha: {selectedRecord.date}</p>
-              <p>Dependencia: {selectedRecord.department}</p>
-              <p>Asunto: {selectedRecord.subject}</p>
-              <p>Status: {selectedRecord.status}</p>
-              <div className="flex justify-end mt-4">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
-                >
-                  Cerrar
-                </button>
+            
+            <div className="bg-white rounded-lg p-6 w-full max-w-3xl flex">
+              {/* Imagen a la izquierda */}
+              
+              <div className="w-1/2 flex items-center justify-center">
+                <img
+                  src="/images/consulta.jpeg" // Asegúrate de tener una imagen en esta ruta
+                  alt="Registro"
+                  className="w-full h-auto rounded-lg shadow-md"
+                />
+              </div>
+              {/* Información a la derecha */}
+              <div className="w-2/3 p-6">
+                <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
+                <p className="text-lg mb-2">
+                  <span className="font-bold">Folio:</span> {selectedRecord.folio}
+                </p>
+                <p className="text-lg mb-2">
+                  <span className="font-bold">Fecha:</span> {selectedRecord.date}
+                </p>
+                <p className="text-lg mb-2">
+                  <span className="font-bold">Dependencia:</span> {selectedRecord.department}
+                </p>
+                <p className="text-lg mb-2">
+                  <span className="font-bold">Asunto:</span> {selectedRecord.subject}
+                </p>
+                <p className="text-lg mb-4">
+                  <span className="font-bold">Status:</span> {selectedRecord.status}
+                </p>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -101,3 +130,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
