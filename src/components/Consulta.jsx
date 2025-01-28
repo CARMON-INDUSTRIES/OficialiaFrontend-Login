@@ -82,11 +82,12 @@ const Dashboard = () => {
               <FaHome /> Inicio
             </Link>
             <Link
-              href="/register"
-              className="flex items-center gap-3 py-2 hover:text-[#BC995B]"
-            >
-              <FaUserPlus /> Registro
-            </Link>
+  href="/formulario"
+  className="flex items-center gap-3 py-2 hover:text-[#BC995B]"
+>
+  <FaUserPlus /> Registro
+</Link>
+
           </nav>
         </div>
         <button
@@ -189,7 +190,7 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2">Fecha emisión</label>
+                  <label className="block text-sm font-bold mb-2">Fecha emision</label>
                   <input
                     type="text"
                     value={selectedRecord.subject}
@@ -234,10 +235,10 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2">Areas destino</label>
+                  <label className="block text-sm font-bold mb-2">Area(s) a turnar</label>
                   <input
                     type="text"
-                    value={selectedRecord.subject}
+                    value={selectedRecord.status}
                     readOnly
                     className="w-full px-4 py-2 border border-[#691B31] rounded-lg focus:outline-none"
                   />

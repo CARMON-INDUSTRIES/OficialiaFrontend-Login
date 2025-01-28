@@ -25,7 +25,7 @@ export const Register = () => {
 
     try {
       const response = await fetch(
-        "https://oficialialoginbackend.somee.com/api/Cuenta/registrar",
+        "https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin",
         {
           method: "POST",
           headers: {
