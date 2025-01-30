@@ -18,6 +18,13 @@ const Formulario = () => {
     setSelectedFile(file);
   };
 
+  const handleViewFile = () => {
+    if (selectedFile) {
+      const fileURL = URL.createObjectURL(selectedFile);
+      window.open(fileURL, "_blank");
+    }
+  };
+
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] p-6">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
@@ -32,6 +39,9 @@ const Formulario = () => {
             </div>
           </div>
         </div>
+
+        {/*Tituloo */}
+        <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">REGISTRAR DOCUMENTOS</h2>
 
         {/* Formulario */}
         <form className="mt-8 grid grid-cols-3 gap-4">
@@ -109,6 +119,15 @@ const Formulario = () => {
               Subir Documento Escaneado
             </label>
             {selectedFile && <p className="text-sm mt-2">{selectedFile.name}</p>}
+            {selectedFile && (
+              <button
+                type="button"
+                onClick={handleViewFile}
+                className="ml-4 text-[#691B31] underline font-semibold"
+              >
+                Ver Documento
+              </button>
+            )}
           </div>
 
           {/* Botón de Registro */}
