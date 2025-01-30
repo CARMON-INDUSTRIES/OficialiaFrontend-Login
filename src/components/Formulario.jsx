@@ -10,11 +10,13 @@ const options = [
 ];
 
 const Formulario = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [formData, setFormData] = useState({
     folio: "",
     fechaRegistro: "",
     dependencia: "",
+    comunidad: "",
     remitente: "",
     cargoRemitente: "",
     destinatario: "",
@@ -22,6 +24,18 @@ const Formulario = () => {
     asunto: "",
     importancia: "",
   });
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const handleViewFile = () => {
+    if (selectedFile) {
+      const fileURL = URL.createObjectURL(selectedFile);
+      window.open(fileURL, "_blank");
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -35,6 +49,7 @@ const Formulario = () => {
     data.append("folio", formData.folio);
     data.append("fechaRegistro", formData.fechaRegistro);
     data.append("dependencia", formData.dependencia);
+    data.append("comunidad", formData.comunidad);
     data.append("remitente", formData.remitente);
     data.append("cargoRemitente", formData.cargoRemitente);
     data.append("destinatario", formData.destinatario);
@@ -42,6 +57,9 @@ const Formulario = () => {
     data.append("asunto", formData.asunto);
     data.append("importancia", formData.importancia);
     data.append("areasDestino", JSON.stringify(areasDestino.map((area) => area.value)));
+    if (selectedFile) {
+      data.append("archivo", selectedFile);
+    }
 
     try {
       const response = await fetch("https://oficialialoginbackend.somee.com/api/Registros/Nuevo", {
@@ -56,6 +74,7 @@ const Formulario = () => {
         folio: "",
         fechaRegistro: "",
         dependencia: "",
+        comunidad: "",
         remitente: "",
         cargoRemitente: "",
         destinatario: "",
@@ -63,6 +82,7 @@ const Formulario = () => {
         asunto: "",
         importancia: "",
       });
+      setSelectedFile(null);
       setAreasDestino([]);
     } catch (error) {
       console.error("Error al registrar:", error);
@@ -91,6 +111,11 @@ const Formulario = () => {
             <option value="Recursos Humanos">Recursos Humanos</option>
             <option value="Finanzas">Finanzas</option>
           </select>
+          <select name="comunidad" value={formData.comunidad} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
+            <option value="">Seleccionar Comunidad</option>
+            <option value="Comunidad A">Comunidad A</option>
+            <option value="Comunidad B">Comunidad B</option>
+          </select>
           <input type="text" name="remitente" placeholder="Remitente" value={formData.remitente} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           <input type="text" name="cargoRemitente" placeholder="Cargo" value={formData.cargoRemitente} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           <input type="text" name="destinatario" placeholder="Destinatario" value={formData.destinatario} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
@@ -108,6 +133,13 @@ const Formulario = () => {
             <option value="Normal">Normal</option>
             <option value="Informativo">Informativo</option>
           </select>
+
+          <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
+            <input type="file" onChange={handleFileChange} className="hidden" id="fileInput" />
+            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">Subir Documento Escaneado</label>
+            {selectedFile && <p className="text-sm mt-2">{selectedFile.name}</p>}
+            {selectedFile && <button type="button" onClick={handleViewFile} className="ml-4 text-[#691B31] underline font-semibold">Ver Documento</button>}
+          </div>
 
           <div className="col-span-3 flex justify-center">
             <button type="submit" className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">Registrar</button>
