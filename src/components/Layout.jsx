@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { FaSignOutAlt, FaHome, FaUserPlus, FaUsers } from "react-icons/fa";
+import { FiFilePlus } from "react-icons/fi";
 
 const Layout = ({ children }) => {
   return (
@@ -20,11 +21,11 @@ const Layout = ({ children }) => {
               <FaHome /> Inicio
             </Link>
             <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
-              <FaUserPlus /> Registro
+              <FiFilePlus /> Nuevo Registro
             </Link>
           </nav>
         </div>
-        <button onClick={() => (window.location.href = "/landingpage")} className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B]">
+        <button onClick={() => (window.location.href = "/")} className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B]">
           <FaSignOutAlt /> Cerrar Sesión
         </button>
       </aside>

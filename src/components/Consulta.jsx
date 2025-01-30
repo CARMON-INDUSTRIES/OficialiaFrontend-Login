@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
+
+
 import Layout from "@/components/Layout";
 
 const Dashboard = () => {
@@ -82,35 +84,30 @@ const Dashboard = () => {
         {/* Modal */}
         {showModal && selectedRecord && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            
-            <div className="bg-white rounded-lg p-6 w-full max-w-3xl flex">
-              {/* Imagen a la izquierda */}
-              
-              <div className="w-1/2 flex items-center justify-center">
+            <div className="bg-white rounded-lg w-full max-w-3xl flex overflow-hidden min-h-[400px]">
+              {/* Imagen a la izquierda ocupando toda la altura */}
+              <div className="w-1/3">
                 <img
-                  src="/images/consulta.jpeg" // Asegúrate de tener una imagen en esta ruta
+                  src="/images/consulta.jpeg"
                   alt="Registro"
-                  className="w-full h-auto rounded-lg shadow-md"
+                  className="w-full h-full object-cover rounded-l-lg"
                 />
               </div>
+
               {/* Información a la derecha */}
-              <div className="w-2/3 p-6">
-                <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
-                <p className="text-lg mb-2">
-                  <span className="font-bold">Folio:</span> {selectedRecord.folio}
-                </p>
-                <p className="text-lg mb-2">
-                  <span className="font-bold">Fecha:</span> {selectedRecord.date}
-                </p>
-                <p className="text-lg mb-2">
-                  <span className="font-bold">Dependencia:</span> {selectedRecord.department}
-                </p>
-                <p className="text-lg mb-2">
-                  <span className="font-bold">Asunto:</span> {selectedRecord.subject}
-                </p>
-                <p className="text-lg mb-4">
-                  <span className="font-bold">Status:</span> {selectedRecord.status}
-                </p>
+              <div className="w-2/3 p-6 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
+                  <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.date}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.department}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.department}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.subject}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Prioridad:</span> {selectedRecord.subject}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Documento:</span> {selectedRecord.subject}</p>
+                  <p className="text-lg mb-2"><span className="font-bold">Area turnada::</span> {selectedRecord.department}</p>
+                  <p className="text-lg mb-4"><span className="font-bold">Status:</span> {selectedRecord.status}</p>
+                </div>
                 <div className="flex justify-end">
                   <button
                     type="button"
@@ -130,4 +127,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
