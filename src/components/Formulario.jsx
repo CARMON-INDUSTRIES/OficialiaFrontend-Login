@@ -12,18 +12,6 @@ const options = [
 const Formulario = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
-  const [formData, setFormData] = useState({
-    folio: "",
-    fechaRegistro: "",
-    dependencia: "",
-    comunidad: "",
-    remitente: "",
-    cargoRemitente: "",
-    destinatario: "",
-    cargoDestinatario: "",
-    asunto: "",
-    importancia: "",
-  });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -37,63 +25,14 @@ const Formulario = () => {
     }
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const data = new FormData();
-    data.append("folio", formData.folio);
-    data.append("fechaRegistro", formData.fechaRegistro);
-    data.append("dependencia", formData.dependencia);
-    data.append("comunidad", formData.comunidad);
-    data.append("remitente", formData.remitente);
-    data.append("cargoRemitente", formData.cargoRemitente);
-    data.append("destinatario", formData.destinatario);
-    data.append("cargoDestinatario", formData.cargoDestinatario);
-    data.append("asunto", formData.asunto);
-    data.append("importancia", formData.importancia);
-    data.append("areasDestino", JSON.stringify(areasDestino.map((area) => area.value)));
-    if (selectedFile) {
-      data.append("archivo", selectedFile);
-    }
-
-    try {
-      const response = await fetch("https://oficialialoginbackend.somee.com/api/Registros/Nuevo", {
-        method: "POST",
-        body: data,
-      });
-
-      if (!response.ok) throw new Error("Error en la solicitud");
-
-      alert("Registro exitoso");
-      setFormData({
-        folio: "",
-        fechaRegistro: "",
-        dependencia: "",
-        comunidad: "",
-        remitente: "",
-        cargoRemitente: "",
-        destinatario: "",
-        cargoDestinatario: "",
-        asunto: "",
-        importancia: "",
-      });
-      setSelectedFile(null);
-      setAreasDestino([]);
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      alert("Error al registrar documento");
-    }
-  };
-
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] p-6">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
-        <div className="relative w-full h-24 bg-cover bg-center rounded-t-lg" style={{ backgroundImage: "url('/images/fondo.jpg')" }}>
+        {/* Encabezado */}
+        <div
+          className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
+          style={{ backgroundImage: "url('/images/fondo.jpg')" }}
+        >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
             <div className="bg-white p-3 rounded-full shadow-lg">
               <FaFileAlt className="text-4xl text-[#691B31]" />
@@ -101,48 +40,101 @@ const Formulario = () => {
           </div>
         </div>
 
+        {/*Tituloo */}
         <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">REGISTRAR DOCUMENTOS</h2>
 
-        <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
-          <input type="text" name="folio" placeholder="Folio" value={formData.folio} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <input type="date" name="fechaRegistro" value={formData.fechaRegistro} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <select name="dependencia" value={formData.dependencia} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
-            <option value="">Seleccionar Dependencia</option>
-            <option value="Recursos Humanos">Recursos Humanos</option>
-            <option value="Finanzas">Finanzas</option>
-          </select>
-          <select name="comunidad" value={formData.comunidad} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
-            <option value="">Seleccionar Comunidad</option>
-            <option value="Comunidad A">Comunidad A</option>
-            <option value="Comunidad B">Comunidad B</option>
-          </select>
-          <input type="text" name="remitente" placeholder="Remitente" value={formData.remitente} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <input type="text" name="cargoRemitente" placeholder="Cargo" value={formData.cargoRemitente} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <input type="text" name="destinatario" placeholder="Destinatario" value={formData.destinatario} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <input type="text" name="cargoDestinatario" placeholder="Cargo" value={formData.cargoDestinatario} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
-          <input type="text" name="asunto" placeholder="Asunto o descripción" value={formData.asunto} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
+        {/* Formulario */}
+        <form className="mt-8 grid grid-cols-3 gap-4">
+          <div>
+            <label className="block font-bold">Folio</label>
+            <input type="text" placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Fecha de Registro</label>
+            <input type="date" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Dependencia</label>
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Dependencia</option>
+              <option>Recursos Humanos</option>
+              <option>Finanzas</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-bold">Comunidad</label>
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Comunidad</option>
+              <option>Comunidad A</option>
+              <option>Comunidad B</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-bold">Remitente</label>
+            <input type="text" placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Cargo del Remitente</label>
+            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Destinatario</label>
+            <input type="text" placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Cargo del Destinatario</label>
+            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
+          <div>
+            <label className="block font-bold">Asunto</label>
+            <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
+          </div>
           
+          {/* Importancia y Multi-Select Dropdown */}
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={options} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
+            <Select
+              options={options}
+              isMulti
+              value={areasDestino}
+              onChange={setAreasDestino}
+              className="w-full border border-[#691B31] rounded-lg"
+            />
           </div>
-          <select name="importancia" value={formData.importancia} onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
-            <option value="">Seleccionar Prioridad</option>
-            <option value="Urgente">Urgente</option>
-            <option value="Medio">Medio</option>
-            <option value="Normal">Normal</option>
-            <option value="Informativo">Informativo</option>
-          </select>
+          <div>
+            <label className="block font-bold">Importancia</label>
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Prioridad</option>
+              <option>Urgente</option>
+              <option>Medio</option>
+              <option>Normal</option>
+              <option>Informativo</option>
+            </select>
+          </div>
 
+          {/* Subida de Documento */}
           <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
             <input type="file" onChange={handleFileChange} className="hidden" id="fileInput" />
-            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">Subir Documento Escaneado</label>
+            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">
+              Subir Documento Escaneado
+            </label>
             {selectedFile && <p className="text-sm mt-2">{selectedFile.name}</p>}
-            {selectedFile && <button type="button" onClick={handleViewFile} className="ml-4 text-[#691B31] underline font-semibold">Ver Documento</button>}
+            {selectedFile && (
+              <button
+                type="button"
+                onClick={handleViewFile}
+                className="ml-4 text-[#691B31] underline font-semibold"
+              >
+                Ver Documento
+              </button>
+            )}
           </div>
 
+          {/* Botón de Registro */}
           <div className="col-span-3 flex justify-center">
-            <button type="submit" className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">Registrar</button>
+            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
+              Registrar
+            </button>
           </div>
         </form>
       </div>
