@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link"; // Importar Link de Next.js
 import { useRouter } from "next/navigation"; // Importar useRouter para redirección
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export const SignIn = () => {
   const [userName, setEmail] = useState(""); // Estado para el email
