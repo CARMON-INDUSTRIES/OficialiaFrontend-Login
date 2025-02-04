@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link"; // Importar Link de Next.js
 import { useRouter } from "next/navigation"; // Importar useRouter para redirección
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 export const SignIn = () => {
   const [userName, setEmail] = useState(""); // Estado para el email
@@ -11,6 +12,7 @@ export const SignIn = () => {
   const [error, setError] = useState(""); // Estado para mensajes de error
 
   const router = useRouter(); // Hook de Next.js para navegación
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita que la página se recargue
@@ -35,7 +37,7 @@ export const SignIn = () => {
       const data = await response.json();
       console.log("Login exitoso:", data);
 
-      // Redirigir al usuario a la página de consulta
+      login(data); // Guardar usuario en contexto
       router.push("/consulta");
     } catch (err) {
       setError(err.message); // Muestra el mensaje de error

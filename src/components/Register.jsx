@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa"; // Importa todos los íconos una sola vez
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Importa el hook useRouter
+import { useAuth } from "../context/AuthContext";
 
 export const Register = () => {
   const [userName, setName] = useState(""); // Estado para el nombre
@@ -19,6 +20,7 @@ export const Register = () => {
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [error, setError] = useState(""); // Estado para errores
   const router = useRouter(); // Inicializa el hook useRouter
+  const { login } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault(); // Evita el recargado de la página
@@ -47,7 +49,8 @@ export const Register = () => {
       const data = await response.json();
       console.log("Registro exitoso:", data);
       setError(""); // Limpia errores
-      router.push("/login"); // Redirige a la página de inicio de sesión
+      login(data);
+      router.push("/Consulta"); // Redirige a la página de inicio de sesión
     } catch (err) {
       setError(err.message); // Establece el mensaje de error
     }
