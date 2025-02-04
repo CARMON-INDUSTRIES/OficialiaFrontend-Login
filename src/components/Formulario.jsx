@@ -3,6 +3,19 @@ import React, { useState } from "react";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 
+const token = localStorage.getItem("token");
+const userRole = token ? JSON.parse(atob(token.split(".")[1])).role : null;
+
+if (!token) {
+  // Redirigir a login si no hay sesión iniciada
+  window.location.href = "/login";
+}
+
+if (userRole !== "User") {
+  // Redirigir si no es administrador
+  window.location.href = "/unauthorized";
+}
+
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
