@@ -1,25 +1,14 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
-interface AuthContextType {
-  user: any;
-  login: (userData: any) => void;
-  logout: () => void;
-}
+const AuthContext = createContext();
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
-  }, []);
-
-  const login = (userData: any) => {
+  const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userData)); // Guardar en localStorage
   };
 
   const logout = () => {
@@ -34,8 +23,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
