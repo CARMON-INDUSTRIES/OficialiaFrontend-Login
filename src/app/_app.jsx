@@ -1,5 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import Layout from "@/components/Layout";
+import { AuthProvider } from "@/context/AuthContext";
 
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
