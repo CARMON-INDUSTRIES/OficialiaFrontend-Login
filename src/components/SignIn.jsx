@@ -4,6 +4,13 @@ import Link from "next/link"; // Importar Link de Next.js
 import { useRouter } from "next/navigation"; // Importar useRouter para redirección
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
+import { getSession } from "next-auth/react";
+
+const checkSession = async () => {
+  const session = await getSession();
+  console.log("Sesión:", session);
+};
+
 
 export const SignIn = () => {
   const [userName, setEmail] = useState(""); // Estado para el email
