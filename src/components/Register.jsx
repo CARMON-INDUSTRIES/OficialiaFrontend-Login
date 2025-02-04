@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa"; // Importa todos los íconos una sola vez
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Importa el hook useRouter
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export const Register = () => {
   const [userName, setName] = useState(""); // Estado para el nombre
