@@ -1,33 +1,28 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
-
-export default NextAuth({
+export const authOptions = {
   providers: [
-    Providers.Credentials({
-      name: "Credentials",
-      credentials: {
-        userName: { label: "userName", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: async (credentials) => {
-        // Aquí puedes validar las credenciales con tu base de datos
-        const user = { id: 1, name: "Usuario", userName: "usuario@example.com" };
-        if (user) return user;
-        return null;
-      },
-    }),
+    // Configura tus proveedores aquí
   ],
-  session: {
-    jwt: true,
-  },
   callbacks: {
-    async jwt(token, user) {
-      if (user) token.id = user.id;
-      return token;
-    },
-    async session(session, token) {
-      session.user.id = token.id;
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          id: token.id,
+          email: token.email,
+          name: token.name,
+          role: token.role, // Asegúrate de incluir el rol si lo usas
+        };
+      }
       return session;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.role = user.role; // Agrega los datos necesarios
+      }
+      return token;
+    },
   },
-});
+  secret: process.env.NEXTAUTH_SECRET, // Asegúrate de que esté configurado en .env
+};
