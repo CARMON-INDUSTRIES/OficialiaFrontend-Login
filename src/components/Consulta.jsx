@@ -1,22 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Importar useRouter para manejar redirecciones
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import withAuth from "@/utils/withAuth"; 
 
 const Dashboard = () => {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [records, setRecords] = useState([
-    { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
-    { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
-    { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
-    { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
-    { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
-    { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
     { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
     { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
     { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
@@ -25,11 +18,23 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
-  const handleDelete = (folio) => setRecords(records.filter((record) => record.folio !== folio));
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login"); // Si no hay token, redirige al login
+    }
+  }, []);
+
+  const handleDelete = (folio) => {
+    setRecords(records.filter((record) => record.folio !== folio));
+  };
+
   const handleView = (record) => {
     setSelectedRecord(record);
     setShowModal(true);
   };
+
   const closeModal = () => {
     setShowModal(false);
     setSelectedRecord(null);
@@ -105,12 +110,8 @@ const Dashboard = () => {
                     <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.date}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.department}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.department}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.subject}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Prioridad:</span> {selectedRecord.subject}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Documento:</span> {selectedRecord.subject}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Area turnada:</span> {selectedRecord.department}</p>
-                    <p className="text-lg mb-4"><span className="font-bold">Status:</span> {selectedRecord.status}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Status:</span> {selectedRecord.status}</p>
                   </div>
                   <div className="flex justify-end">
                     <button
