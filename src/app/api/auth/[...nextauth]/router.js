@@ -6,41 +6,36 @@ export default NextAuth({
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        userName: { label: "Usuario", type: "text", placeholder: "tu_usuario" },
+        userName: { label: "Usuario", type: "text" },
         password: { label: "Contraseña", type: "password" },
       },
       async authorize(credentials) {
         const res = await fetch("https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userName: credentials.userName,
-            password: credentials.password,
-          }),
+          body: JSON.stringify(credentials),
         });
 
         const user = await res.json();
 
         if (!res.ok || !user.token) throw new Error("Credenciales inválidas");
 
-        return user; // Retorna el usuario si la autenticación es exitosa
+        return user;
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.user = user;
-        token.token = user.token; // Guarda el token en la sesión
+        token.token = user.token;
       }
       return token;
     },
     async session({ session, token }) {
       session.user = token.user;
-      session.token = token.token; // Incluye el token en la sesión
+      session.token = token.token;
       return session;
     },
   },
