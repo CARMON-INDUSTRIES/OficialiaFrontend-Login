@@ -89,7 +89,42 @@ const Dashboard = () => {
             </table>
           </div>
 
-         
+          {showModal && selectedRecord && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white rounded-lg w-full max-w-3xl flex overflow-hidden min-h-[400px]">
+                <div className="w-1/3">
+                  <img
+                    src="/images/consulta.jpeg"
+                    alt="Registro"
+                    className="w-full h-full object-cover rounded-l-lg"
+                  />
+                </div>
+                <div className="w-2/3 p-6 flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
+                    <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.date}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.department}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.department}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.subject}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Prioridad:</span> {selectedRecord.subject}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Documento:</span> {selectedRecord.subject}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Area turnada:</span> {selectedRecord.department}</p>
+                    <p className="text-lg mb-4"><span className="font-bold">Status:</span> {selectedRecord.status}</p>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
