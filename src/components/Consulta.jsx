@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
+import withAuth from "@/utils/withAuth"; 
 
 const Dashboard = () => {
   const [search, setSearch] = useState("");
@@ -130,4 +131,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);
