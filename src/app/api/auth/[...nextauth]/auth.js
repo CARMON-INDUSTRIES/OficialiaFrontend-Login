@@ -6,12 +6,12 @@ export default NextAuth({
     Providers.Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        userName: { label: "userName", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
         // Aquí puedes validar las credenciales con tu base de datos
-        const user = { id: 1, name: "Usuario", email: "usuario@example.com" };
+        const user = { id: 1, name: "Usuario", userName: "usuario@example.com" };
         if (user) return user;
         return null;
       },
