@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <title>Oficialia</title>
       </head>
       <body className={inter.className}>
-        <AddUserClickContextProvider>
+      <AddUserClickContextProvider>
           <AddUserContextProvider>
             {children}
           </AddUserContextProvider>

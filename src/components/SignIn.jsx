@@ -3,6 +3,13 @@ import React, { useState } from "react";
 import Link from "next/link"; // Importar Link de Next.js
 import { useRouter } from "next/navigation"; // Importar useRouter para redirección
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
+import { getSession } from "next-auth/react";
+
+const checkSession = async () => {
+  const session = await getSession();
+  console.log("Sesión:", session);
+};
+
 
 export const SignIn = () => {
   const [userName, setEmail] = useState(""); // Estado para el email
@@ -35,7 +42,6 @@ export const SignIn = () => {
       const data = await response.json();
       console.log("Login exitoso:", data);
 
-      // Redirigir al usuario a la página de consulta
       router.push("/consulta");
     } catch (err) {
       setError(err.message); // Muestra el mensaje de error

@@ -47,7 +47,7 @@ export const Register = () => {
       const data = await response.json();
       console.log("Registro exitoso:", data);
       setError(""); // Limpia errores
-      router.push("/login"); // Redirige a la página de inicio de sesión
+      router.push("/Consulta"); // Redirige a la página de inicio de sesión
     } catch (err) {
       setError(err.message); // Establece el mensaje de error
     }
