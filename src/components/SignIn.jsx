@@ -53,7 +53,7 @@ export const SignIn = () => {
           Presidencia municipal Tula de Allende
         </h1>
         <h1 className="text-white text-5xl font-bold my-auto ml-20 lg:ml-32">
-          BIENVENIDO hola
+          BIENVENIDO
         </h1>
         <div className="socials ml-8 lg:ml-24">
           <ul className="right list-none flex items-center gap-6">
