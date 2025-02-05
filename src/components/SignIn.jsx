@@ -38,9 +38,9 @@ export const SignIn = () => {
       localStorage.setItem("token", data.token);
 
       console.log("Login exitoso:", data);
-
+      console.log("Token guardado, redirigiendo...");
       // Redirigir al usuario después del login exitoso
-      router.push("/consulta");
+      router.replace("/Consulta");
     } catch (err) {
       setError(err.message);
     }
