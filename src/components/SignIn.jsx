@@ -42,7 +42,6 @@ export const SignIn = () => {
       const data = await response.json();
       console.log("Login exitoso:", data);
 
-      login(data); // Guardar usuario en contexto
       router.push("/consulta");
     } catch (err) {
       setError(err.message); // Muestra el mensaje de error
