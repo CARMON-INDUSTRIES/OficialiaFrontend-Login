@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Importar useRouter para manejar redirecciones
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
@@ -16,14 +16,6 @@ const Dashboard = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/login"); // Si no hay token, redirige al login
-    }
-  }, []);
 
   const handleDelete = (folio) => {
     setRecords(records.filter((record) => record.folio !== folio));
