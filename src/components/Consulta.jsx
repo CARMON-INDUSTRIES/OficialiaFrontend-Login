@@ -24,7 +24,7 @@ const Dashboard = () => {
 
   const fetchRecords = async (token) => {
     try {
-      const response = await axios.get("https://tu-api.com/api/registros", {
+      const response = await axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRecords(response.data);
