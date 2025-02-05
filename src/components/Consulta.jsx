@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [records, setRecords] = useState([
     { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
     { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
+    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión contrato", status: "Cerrado" },
   ]);
   
   const [showModal, setShowModal] = useState(false);
