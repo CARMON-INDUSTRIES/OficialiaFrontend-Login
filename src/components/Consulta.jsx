@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Importar useRouter para manejar redirecciones
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
-import withAuth from "@/utils/withAuth"; 
 
 const Dashboard = () => {
   const router = useRouter();
@@ -132,4 +131,4 @@ const Dashboard = () => {
   );
 };
 
-export default withAuth(Dashboard);
+export default (Dashboard);

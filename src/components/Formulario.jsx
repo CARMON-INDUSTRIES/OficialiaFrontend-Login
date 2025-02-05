@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
-import withAuth from "@/utils/withAuth";
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
@@ -143,4 +142,4 @@ const Formulario = () => {
   );
 };
 
-export default withAuth(Formulario);
+export default (Formulario);

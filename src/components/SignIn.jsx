@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Link from "next/link"; // Importar Link de Next.js
 import { useRouter } from "next/navigation"; // Importar useRouter para redirección
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAuth } from "../contexts/AuthContext";
 import { getSession } from "next-auth/react";
 
 const checkSession = async () => {
@@ -19,7 +18,6 @@ export const SignIn = () => {
   const [error, setError] = useState(""); // Estado para mensajes de error
 
   const router = useRouter(); // Hook de Next.js para navegación
-  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita que la página se recargue
