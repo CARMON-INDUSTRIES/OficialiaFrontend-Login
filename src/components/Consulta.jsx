@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Importar useRouter para manejar redirecciones
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
@@ -13,9 +13,17 @@ const Dashboard = () => {
     { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
     { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión de contrato", status: "Cerrado" },
   ]);
-
+  
   const [showModal, setShowModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+
+  // Verifica si el usuario tiene sesión al cargar la página
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // O usa cookies si es tu método
+    if (!token) {
+      router.push("/login"); // Redirige al login si no hay token
+    }
+  }, []);
 
   const handleDelete = (folio) => {
     setRecords(records.filter((record) => record.folio !== folio));
@@ -123,4 +131,4 @@ const Dashboard = () => {
   );
 };
 
-export default (Dashboard);
+export default Dashboard;

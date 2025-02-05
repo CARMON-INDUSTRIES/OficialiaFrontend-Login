@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 
@@ -10,8 +11,16 @@ const options = [
 ];
 
 const Formulario = () => {
+  const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -22,13 +31,13 @@ const Formulario = () => {
     if (selectedFile) {
       const fileURL = URL.createObjectURL(selectedFile);
       window.open(fileURL, "_blank");
+      setTimeout(() => URL.revokeObjectURL(fileURL), 100);
     }
   };
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] p-6">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
-        {/* Encabezado */}
         <div
           className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
           style={{ backgroundImage: "url('/images/fondo.jpg')" }}
@@ -39,11 +48,7 @@ const Formulario = () => {
             </div>
           </div>
         </div>
-
-        {/*Tituloo */}
         <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">REGISTRAR DOCUMENTOS</h2>
-
-        {/* Formulario */}
         <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
             <label className="block font-bold">Folio</label>
@@ -89,17 +94,9 @@ const Formulario = () => {
             <label className="block font-bold">Asunto</label>
             <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
-          
-          {/* Importancia y Multi-Select Dropdown */}
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select
-              options={options}
-              isMulti
-              value={areasDestino}
-              onChange={setAreasDestino}
-              className="w-full border border-[#691B31] rounded-lg"
-            />
+            <Select options={options} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
@@ -111,30 +108,16 @@ const Formulario = () => {
               <option>Informativo</option>
             </select>
           </div>
-
-          {/* Subida de Documento */}
           <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
             <input type="file" onChange={handleFileChange} className="hidden" id="fileInput" />
-            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">
-              Subir Documento Escaneado
-            </label>
+            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">Subir Documento Escaneado</label>
             {selectedFile && <p className="text-sm mt-2">{selectedFile.name}</p>}
             {selectedFile && (
-              <button
-                type="button"
-                onClick={handleViewFile}
-                className="ml-4 text-[#691B31] underline font-semibold"
-              >
-                Ver Documento
-              </button>
+              <button type="button" onClick={handleViewFile} className="ml-4 text-[#691B31] underline font-semibold">Ver Documento</button>
             )}
           </div>
-
-          {/* Botón de Registro */}
           <div className="col-span-3 flex justify-center">
-            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
-              Registrar
-            </button>
+            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">Registrar</button>
           </div>
         </form>
       </div>
@@ -142,4 +125,5 @@ const Formulario = () => {
   );
 };
 
-export default (Formulario);
+export default Formulario;
+
