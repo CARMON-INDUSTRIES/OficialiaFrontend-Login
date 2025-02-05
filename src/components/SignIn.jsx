@@ -20,7 +20,7 @@ export const SignIn = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", // Importante para que las cookies se envíen correctamente
         body: JSON.stringify({ userName, password }),
       });
 
@@ -34,11 +34,11 @@ export const SignIn = () => {
         throw new Error("No se recibió un token de autenticación");
       }
 
-      // Guardar el token en localStorage
-      localStorage.setItem("token", data.token);
+      // Guardar el token en cookies
+      document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
 
       console.log("Login exitoso:", data);
-      console.log("Token guardado, redirigiendo...");
+      console.log("Token guardado en cookies, redirigiendo...");
 
       // Redirigir al usuario después del login exitoso
       router.push("/consulta");
