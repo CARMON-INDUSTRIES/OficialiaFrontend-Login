@@ -40,7 +40,9 @@ export const SignIn = () => {
       console.log("Login exitoso:", data);
       console.log("Token guardado, redirigiendo...");
       // Redirigir al usuario después del login exitoso
-      router.replace("/Consulta");
+      setTimeout(() =>{
+        router.replace("/Consulta");
+      },  500);
     } catch (err) {
       setError(err.message);
     }
