@@ -1,9 +1,20 @@
 "use client";
 import Link from "next/link";
-import { FaSignOutAlt, FaHome, FaUserPlus, FaUsers } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { FaSignOutAlt, FaHome, FaUsers } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 
 const Layout = ({ children }) => {
+  const router = useRouter(); // Hook para redirección
+
+  const handleLogout = () => {
+    // Eliminar el token de las cookies
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+
+    // Redirigir al usuario a la página de inicio de sesión
+    router.push("/");
+  };
+
   return (
     <div className="flex h-screen bg-[#F5F5F5]">
       {/* Sidebar */}
@@ -25,7 +36,10 @@ const Layout = ({ children }) => {
             </Link>
           </nav>
         </div>
-        <button onClick={() => (window.location.href = "/")} className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B]">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B]"
+        >
           <FaSignOutAlt /> Cerrar Sesión
         </button>
       </aside>
