@@ -1,32 +1,48 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Importar useRouter para manejar redirecciones
+import { useRouter } from "next/navigation";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
+import axios from "axios";
 
 const Dashboard = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [records, setRecords] = useState([
-    { folio: "001", date: "2025-01-01", department: "Recursos Humanos", subject: "Contratación", status: "Activo" },
-    { folio: "002", date: "2025-01-02", department: "Finanzas", subject: "Presupuesto", status: "Pendiente" },
-    { folio: "003", date: "2025-01-03", department: "Jurídico", subject: "Revisión contrato", status: "Cerrado" },
-  ]);
-  
+  const [records, setRecords] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
-  // Verifica si el usuario tiene sesión al cargar la página
   useEffect(() => {
-    const token = localStorage.getItem("token"); // O usa cookies si es tu método
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/login"); // Redirige al login si no hay token
+      router.push("/login");
+    } else {
+      fetchRecords(token);
     }
   }, []);
 
-  const handleDelete = (folio) => {
-    setRecords(records.filter((record) => record.folio !== folio));
+  const fetchRecords = async (token) => {
+    try {
+      const response = await axios.get("https://tu-api.com/api/registros", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setRecords(response.data);
+    } catch (error) {
+      console.error("Error al obtener registros:", error);
+    }
+  };
+
+  const handleDelete = async (folio) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`https://tu-api.com/api/registros/${folio}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setRecords(records.filter((record) => record.folio !== folio));
+    } catch (error) {
+      console.error("Error al eliminar registro:", error);
+    }
   };
 
   const handleView = (record) => {
