@@ -166,7 +166,10 @@ const Formulario = () => {
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
+            <select
+              className="w-full p-2 border rounded border-[#691B31]"
+              multiple
+            >
               <option>Seleccionar Area</option>
               {area.map((com) => (
                 <option key={com.idArea} value={com.idArea}>
