@@ -36,7 +36,7 @@ const Dashboard = () => {
   const handleDelete = async (folio) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://tu-api.com/api/registros/${folio}`, {
+      await axios.delete(`https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRecords(records.filter((record) => record.folio !== folio));
