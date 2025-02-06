@@ -2,27 +2,38 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaRunning,
+  FaHeartbeat,
+  FaLeaf,
+  FaPiggyBank,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 
 export const SignIn = () => {
-  const [userName, setUserName] = useState(""); 
-  const [password, setPassword] = useState(""); 
-  const [showPassword, setShowPassword] = useState(false); 
-  const [error, setError] = useState(""); 
-  const router = useRouter(); 
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     try {
-      const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", 
-        body: JSON.stringify({ userName, password }),
-      });
+      const response = await fetch(
+        "https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ userName, password }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Credenciales incorrectas");
@@ -34,14 +45,13 @@ export const SignIn = () => {
         throw new Error("No se recibió un token de autenticación");
       }
 
-      const token = response.data.token; 
-      localStorage.setItem('token', token); 
+      localStorage.setItem("token", data.token);
+
       document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
 
       console.log("Login exitoso:", data);
-      console.log("Token guardado en cookies, redirigiendo...");
+      console.log("Token guardado en localStorage y cookies, redirigiendo...");
 
-      
       router.push("/consulta");
     } catch (err) {
       setError(err.message);
@@ -59,10 +69,18 @@ export const SignIn = () => {
         </h1>
         <div className="socials ml-8 lg:ml-24">
           <ul className="right list-none flex items-center gap-6">
-            <li><FaRunning className="text-3xl text-slate-50" /></li>
-            <li><FaHeartbeat className="text-3xl text-slate-50" /></li>
-            <li><FaLeaf className="text-3xl text-slate-50" /></li>
-            <li><FaPiggyBank className="text-3xl text-slate-50" /></li>
+            <li>
+              <FaRunning className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaHeartbeat className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaLeaf className="text-3xl text-slate-50" />
+            </li>
+            <li>
+              <FaPiggyBank className="text-3xl text-slate-50" />
+            </li>
           </ul>
         </div>
       </div>
@@ -81,9 +99,14 @@ export const SignIn = () => {
             />
           </div>
 
-          <form onSubmit={handleLogin} className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]">
+          <form
+            onSubmit={handleLogin}
+            className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
+          >
             <div className="email flex flex-col gap-3 items-start">
-              <label htmlFor="Name" className="text-sm">USUARIO</label>
+              <label htmlFor="Name" className="text-sm">
+                USUARIO
+              </label>
               <input
                 type="text"
                 placeholder="Nombre de usuario"
@@ -94,7 +117,9 @@ export const SignIn = () => {
             </div>
 
             <div className="password flex flex-col gap-3 items-start relative">
-              <label htmlFor="Password" className="text-sm">CONTRASEÑA</label>
+              <label htmlFor="Password" className="text-sm">
+                CONTRASEÑA
+              </label>
               <div className="flex items-center w-full relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -116,15 +141,22 @@ export const SignIn = () => {
             {error && <p className="text-red-500">{error}</p>}
 
             <p>
-              <a href="#" className="text-[#A02142]">¿Olvidaste tu contraseña?</a>
+              <a href="#" className="text-[#A02142]">
+                ¿Olvidaste tu contraseña?
+              </a>
             </p>
 
-            <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2">
+            <button
+              type="submit"
+              className="bg-[#BC995B] text-white rounded-[10px] py-2"
+            >
               Iniciar Sesión
             </button>
 
             <p>
-              <Link href="/register" className="text-[#A02142]">REGISTRATE</Link>
+              <Link href="/register" className="text-[#A02142]">
+                REGISTRATE
+              </Link>
             </p>
 
             <Link href="/">
