@@ -31,6 +31,8 @@ const Formulario = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
+        console.log("Datos de comunidades:", response.data);
         setComunidades(response.data);
       } catch (error) {
         console.error("Error al obtener comunidades:", error);
@@ -99,7 +101,7 @@ const Formulario = () => {
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
                 <option key={com.idComunidad} value={com.idComunidad}>
-                  {com.nombre}
+                  {com.nombreComunidad}
                 </option>
               ))}
             </select>
