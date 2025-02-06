@@ -3,23 +3,36 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
-
-const options = [
-  { value: "area1", label: "Presidente municipal" },
-  { value: "area2", label: "Secretaria general" },
-  { value: "area3", label: "Oficialia Mayor" },
-];
+import axios from "axios"; // Importa axios
 
 const Formulario = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
+  const [comunidades, setComunidades] = useState([]); // Estado para comunidades
+  const [comunidadSeleccionada, setComunidadSeleccionada] = useState(""); // Estado para la comunidad seleccionada
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
     }
+
+    // Llamar a la API para obtener las comunidades
+    const fetchComunidades = async () => {
+      try {
+        const response = await axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Si necesitas autenticación
+          },
+        });
+        setComunidades(response.data); // Almacena las comunidades en el estado
+      } catch (error) {
+        console.error("Error al obtener comunidades:", error);
+      }
+    };
+
+    fetchComunidades();
   }, []);
 
   const handleFileChange = (event) => {
@@ -68,10 +81,17 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Comunidad</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Comunidad</option>
-              <option>Comunidad A</option>
-              <option>Comunidad B</option>
+            <select
+              className="w-full p-2 border rounded border-[#691B31]"
+              value={comunidadSeleccionada}
+              onChange={(e) => setComunidadSeleccionada(e.target.value)}
+            >
+              <option value="">Seleccionar Comunidad</option>
+              {comunidades.map((comunidad) => (
+                <option key={comunidad.id} value={comunidad.id}>
+                  {comunidad.nombre}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -83,30 +103,8 @@ const Formulario = () => {
             <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
-            <label className="block font-bold">Destinatario</label>
-            <input type="text" placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
-          </div>
-          <div>
-            <label className="block font-bold">Cargo del Destinatario</label>
-            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
-          </div>
-          <div>
-            <label className="block font-bold">Asunto</label>
-            <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
-          </div>
-          <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={options} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
-          </div>
-          <div>
-            <label className="block font-bold">Importancia</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Prioridad</option>
-              <option>Urgente</option>
-              <option>Medio</option>
-              <option>Normal</option>
-              <option>Informativo</option>
-            </select>
+            <Select options={areasDestino} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
             <input type="file" onChange={handleFileChange} className="hidden" id="fileInput" />
@@ -126,4 +124,3 @@ const Formulario = () => {
 };
 
 export default Formulario;
-
