@@ -128,9 +128,9 @@ const Dashboard = () => {
                     <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.asunto}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Status:</span> {selectedRecord.estatus}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoremitente}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargodestinatario}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}</p>
                     <p className="text-lg mb-2"><span className="font-bold">Area:</span> {selectedRecord.area}</p>
                   </div>
                   <div className="flex justify-end">
