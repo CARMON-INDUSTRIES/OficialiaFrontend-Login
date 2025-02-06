@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 
+
+const [comunidades, setComunidades] = useState([]);
+const [comunidadSeleccionada, setComunidadSeleccionada] = useState("");
+
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
@@ -16,11 +20,22 @@ const Formulario = () => {
   const [areasDestino, setAreasDestino] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
+    const fetchComunidades = async () => {
+      try {
+        const response = await axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setComunidades(response.data);
+      } catch (error) {
+        console.error("Error al obtener comunidades:", error);
+      }
+    };
+  
+    fetchComunidades();
   }, []);
+  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -68,11 +83,15 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Comunidad</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Comunidad</option>
-              <option>Comunidad A</option>
-              <option>Comunidad B</option>
+            <select value={comunidadSeleccionada} onChange={(e) => setComunidadSeleccionada(e.target.value)}>
+              <option value="">Seleccionar Comunidad</option>
+                {comunidades.map((comunidad) => (
+              <option key={comunidad.id} value={comunidad.id}>
+                {comunidad.nombre}
+               </option>
+                ))}
             </select>
+
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
