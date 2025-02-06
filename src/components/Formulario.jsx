@@ -22,10 +22,21 @@ const Formulario = () => {
       router.push("/login");
     }
 
-    fetch("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener")
-      .then((res) => res.json())
-      .then((data) => setComunidades(data))
-      .catch((err) => console.error("Error cargando comunidades:", err));
+    const fetchComunidades = async () => {
+      try {
+        const response = await axios.get(
+          "https://oficialialoginbackend.somee.com/api/Comunidades/obtener",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setComunidades(response.data);
+      } catch (error) {
+        console.error("Error al obtener comunidades:", error);
+      }
+    };
+
+    fetchComunidades();
   }, []);
 
   const handleFileChange = (event) => {
@@ -86,7 +97,7 @@ const Formulario = () => {
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
-                <option key={com.idComunidad} value={com.idComuniadad}>
+                <option key={com.id} value={com.id}>
                   {com.nombre}
                 </option>
               ))}
