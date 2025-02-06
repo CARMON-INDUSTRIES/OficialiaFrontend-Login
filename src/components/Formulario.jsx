@@ -97,7 +97,7 @@ const Formulario = () => {
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
-                <option key={com.id} value={com.id}>
+                <option key={com.idComunidad} value={com.idComunidad}>
                   {com.nombre}
                 </option>
               ))}
