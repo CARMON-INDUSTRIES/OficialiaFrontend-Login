@@ -14,6 +14,7 @@ const Formulario = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
+  const [comunidades, setComunidades] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
