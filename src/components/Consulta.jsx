@@ -55,10 +55,10 @@ const Dashboard = () => {
     setSelectedRecord(null);
   };
 
-  const filteredRecords = records.filter((record) =>
-    record.folio.includes(search) ||
-    record.department.toLowerCase().includes(search.toLowerCase()) ||
-    record.subject.toLowerCase().includes(search.toLowerCase())
+  const filteredRecords = records.filter(e =>
+    String(e.folio).includes(search) ||  
+    e.department?.toLowerCase().includes(search.toLowerCase()) ||
+    e.subject?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
