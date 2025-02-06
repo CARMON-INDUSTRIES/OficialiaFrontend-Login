@@ -18,6 +18,11 @@ const Formulario = () => {
   const [comunidades, setComunidades] = useState([]);
   const [area, setAreas] = useState([]);
 
+  const areaOptions = area.map((com) => ({
+    value: com.idArea,
+    label: com.nombreArea,
+  }));
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -55,11 +60,6 @@ const Formulario = () => {
         console.error("Error al obtener areas:", error);
       }
     };
-
-    const areaOptions = area.map((com) => ({
-      value: com.idArea,
-      label: com.nombreArea,
-    }));
 
     fetchComunidades();
     fetchAreas();
