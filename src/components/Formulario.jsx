@@ -26,7 +26,7 @@ const Formulario = () => {
     const fetchComunidades = async () => {
       try {
         const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Comunidades/obtener",
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
