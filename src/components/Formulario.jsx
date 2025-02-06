@@ -56,6 +56,11 @@ const Formulario = () => {
       }
     };
 
+    const areaOptions = area.map((com) => ({
+      value: com.idArea,
+      label: com.nombreArea,
+    }));
+
     fetchComunidades();
     fetchAreas();
   }, []);
@@ -166,17 +171,13 @@ const Formulario = () => {
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <select
-              className="w-full p-2 border rounded border-[#691B31]"
-              multiple
-            >
-              <option>Seleccionar Area</option>
-              {area.map((com) => (
-                <option key={com.idArea} value={com.idArea}>
-                  {com.nombreArea}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={areaOptions}
+              isMulti
+              value={areasDestino}
+              onChange={setAreasDestino}
+              className="w-full border border-[#691B31] rounded-lg"
+            />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
