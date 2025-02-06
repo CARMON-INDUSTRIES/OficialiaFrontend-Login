@@ -34,7 +34,8 @@ export const SignIn = () => {
         throw new Error("No se recibió un token de autenticación");
       }
 
-      localStorage.getItem (token)
+      const token = response.data.token; 
+      localStorage.setItem('token', token); 
       document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
 
       console.log("Login exitoso:", data);
