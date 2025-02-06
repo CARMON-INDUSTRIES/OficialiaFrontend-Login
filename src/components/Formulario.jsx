@@ -16,6 +16,7 @@ const Formulario = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
+  const [area, setAreas] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -39,7 +40,24 @@ const Formulario = () => {
       }
     };
 
+    const fetchAreas = async () => {
+      try {
+        const response = await axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log("Datos de areas:", response.data);
+        setAreas(response.data);
+      } catch (error) {
+        console.error("Error al obtener areas:", error);
+      }
+    };
+
     fetchComunidades();
+    fetchAreas();
   }, []);
 
   const handleFileChange = (event) => {
@@ -148,13 +166,14 @@ const Formulario = () => {
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select
-              options={options}
-              isMulti
-              value={areasDestino}
-              onChange={setAreasDestino}
-              className="w-full border border-[#691B31] rounded-lg"
-            />
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Area</option>
+              {area.map((com) => (
+                <option key={com.idArea} value={com.idArea}>
+                  {com.nombreArea}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
