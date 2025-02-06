@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaRunning, FaHeartbeat, FaLeaf, FaPiggyBank, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export const SignIn = () => {
-  const [userName, setUserName] = useState(""); // Estado para el usuario
-  const [password, setPassword] = useState(""); // Estado para la contraseña
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
-  const [error, setError] = useState(""); // Estado para mensajes de error
-  const router = useRouter(); // Hook de Next.js para navegación
+  const [userName, setUserName] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false); 
+  const [error, setError] = useState(""); 
+  const router = useRouter(); 
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue
+    e.preventDefault(); 
 
     try {
       const response = await fetch("https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin", {
@@ -20,7 +20,7 @@ export const SignIn = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Importante para que las cookies se envíen correctamente
+        credentials: "include", 
         body: JSON.stringify({ userName, password }),
       });
 
@@ -34,13 +34,13 @@ export const SignIn = () => {
         throw new Error("No se recibió un token de autenticación");
       }
 
-      // Guardar el token en cookies
+      localStorage.setItem ('token', token);
       document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
 
       console.log("Login exitoso:", data);
       console.log("Token guardado en cookies, redirigiendo...");
 
-      // Redirigir al usuario después del login exitoso
+      
       router.push("/consulta");
     } catch (err) {
       setError(err.message);
