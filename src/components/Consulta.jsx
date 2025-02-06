@@ -90,10 +90,10 @@ const Dashboard = () => {
                 {filteredRecords.map((record) => (
                   <tr key={record.folio} className="border-b">
                     <td className="py-3 px-6">{record.folio}</td>
-                    <td className="py-3 px-6">{record.date}</td>
-                    <td className="py-3 px-6">{record.department}</td>
-                    <td className="py-3 px-6">{record.subject}</td>
-                    <td className="py-3 px-6">{record.status}</td>
+                    <td className="py-3 px-6">{record.fecha}</td>
+                    <td className="py-3 px-6">{record.dependencia}</td>
+                    <td className="py-3 px-6">{record.asunto}</td>
+                    <td className="py-3 px-6">{record.estatus}</td>
                     <td className="py-3 px-6 flex justify-center gap-4">
                       <button className="text-blue-500 hover:underline" onClick={() => handleView(record)}>
                         <FaEye />
