@@ -4,10 +4,6 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 
-
-const [comunidades, setComunidades] = useState([]);
-const [comunidadSeleccionada, setComunidadSeleccionada] = useState("");
-
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
@@ -20,22 +16,16 @@ const Formulario = () => {
   const [areasDestino, setAreasDestino] = useState([]);
 
   useEffect(() => {
-    const fetchComunidades = async () => {
-      try {
-        const response = await axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setComunidades(response.data);
-      } catch (error) {
-        console.error("Error al obtener comunidades:", error);
-      }
-    };
-  
-    fetchComunidades();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+
+    fetch("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener")
+      .then((res) => res.json())
+      .then((data) => setComunidades(data))
+      .catch((err) => console.error("Error cargando comunidades:", err));
   }, []);
-  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -63,15 +53,24 @@ const Formulario = () => {
             </div>
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">REGISTRAR DOCUMENTOS</h2>
+        <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
+          REGISTRAR DOCUMENTOS
+        </h2>
         <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
             <label className="block font-bold">Folio</label>
-            <input type="text" placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Folio"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
-            <input type="date" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="date"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
@@ -83,39 +82,64 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Comunidad</label>
-            <select value={comunidadSeleccionada} onChange={(e) => setComunidadSeleccionada(e.target.value)}>
-              <option value="">Seleccionar Comunidad</option>
-                {comunidades.map((comunidad) => (
-              <option key={comunidad.id} value={comunidad.id}>
-                {comunidad.nombre}
-               </option>
-                ))}
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Comunidad</option>
+              {comunidades.map((com) => (
+                <option key={com.id} value={com.id}>
+                  {com.nombre}
+                </option>
+              ))}
             </select>
-
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
-            <input type="text" placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Remitente"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
-            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Cargo"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
-            <input type="text" placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Nombre del destinatario"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
-            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Cargo"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
-            <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
+            <input
+              type="text"
+              placeholder="Asunto o descripción"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={options} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
+            <Select
+              options={options}
+              isMulti
+              value={areasDestino}
+              onChange={setAreasDestino}
+              className="w-full border border-[#691B31] rounded-lg"
+            />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
@@ -128,15 +152,35 @@ const Formulario = () => {
             </select>
           </div>
           <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
-            <input type="file" onChange={handleFileChange} className="hidden" id="fileInput" />
-            <label htmlFor="fileInput" className="cursor-pointer text-[#691B31] font-semibold">Subir Documento Escaneado</label>
-            {selectedFile && <p className="text-sm mt-2">{selectedFile.name}</p>}
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              id="fileInput"
+            />
+            <label
+              htmlFor="fileInput"
+              className="cursor-pointer text-[#691B31] font-semibold"
+            >
+              Subir Documento Escaneado
+            </label>
             {selectedFile && (
-              <button type="button" onClick={handleViewFile} className="ml-4 text-[#691B31] underline font-semibold">Ver Documento</button>
+              <p className="text-sm mt-2">{selectedFile.name}</p>
+            )}
+            {selectedFile && (
+              <button
+                type="button"
+                onClick={handleViewFile}
+                className="ml-4 text-[#691B31] underline font-semibold"
+              >
+                Ver Documento
+              </button>
             )}
           </div>
           <div className="col-span-3 flex justify-center">
-            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">Registrar</button>
+            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
+              Registrar
+            </button>
           </div>
         </form>
       </div>
@@ -145,4 +189,3 @@ const Formulario = () => {
 };
 
 export default Formulario;
-
