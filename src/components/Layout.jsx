@@ -10,6 +10,8 @@ const Layout = ({ children }) => {
   const handleLogout = () => {
     // Eliminar el token de las cookies
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+    localStorage.getItem("token");
+
 
     // Redirigir al usuario a la página de inicio de sesión
     router.push("/");
