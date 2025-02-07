@@ -22,6 +22,7 @@ const Formulario = () => {
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
+  const [status, setStatus] = useState([]);
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
   const areaOptions = area.map((com) => ({
@@ -83,9 +84,26 @@ const Formulario = () => {
       }
     };
 
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log("Datos de status:", response.data);
+        setStatus(response.data);
+      } catch (error) {
+        console.error("Error al obtener status:", error);
+      }
+    };
+
     fetchComunidades();
     fetchAreas();
     fetchImportancias();
+    fetchStatus();
   }, []);
 
   const handleFileChange = (event) => {
@@ -216,11 +234,12 @@ const Formulario = () => {
           <div>
             <label className="block font-bold">Status</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Prioridad</option>
-              <option>Urgente</option>
-              <option>Medio</option>
-              <option>Normal</option>
-              <option>Informativo</option>
+              <option>Seleccionar Status</option>
+              {status.map((com) => (
+                <option key={com.idStatus} value={com.idStatus}>
+                  {com.estado}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-span-3 border p-4 rounded border-[#691B31] text-center">
