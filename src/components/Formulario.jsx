@@ -20,7 +20,7 @@ const Formulario = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
-  const [importancia] = useState([]);
+  const [importancia, setImportancia] = useState([]);
   const [area, setAreas] = useState([]);
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
@@ -67,8 +67,25 @@ const Formulario = () => {
       }
     };
 
+    const fetchImportancias = async () => {
+      try {
+        const response = await axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log("Datos de importancia:", response.data);
+        setImportancias(response.data);
+      } catch (error) {
+        console.error("Error al obtener importancias:", error);
+      }
+    };
+
     fetchComunidades();
     fetchAreas();
+    fetchImportancias();
   }, []);
 
   const handleFileChange = (event) => {
