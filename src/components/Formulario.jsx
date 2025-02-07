@@ -20,6 +20,7 @@ const Formulario = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
+  const [importancia] = useState([]);
   const [area, setAreas] = useState([]);
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
@@ -187,11 +188,12 @@ const Formulario = () => {
           <div>
             <label className="block font-bold">Importancia</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Prioridad</option>
-              <option>Urgente</option>
-              <option>Medio</option>
-              <option>Normal</option>
-              <option>Informativo</option>
+              <option>Seleccionar Importancia</option>
+              {importancia.map((com) => (
+                <option key={com.idImportancia} value={com.idImportancia}>
+                  {com.nivel}
+                </option>
+              ))}
             </select>
           </div>
           <div>
