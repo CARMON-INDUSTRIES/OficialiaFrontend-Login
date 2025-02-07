@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
-import AWS from "aws-sdk";
+import { S3Client } from "@aws-sdk/client-s3";
+import { createUploadRouteHandler, route } from "better-upload/server";
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
@@ -12,13 +13,17 @@ const options = [
   { value: "area3", label: "Oficialia Mayor" },
 ];
 
-AWS.config.update({
-  accessKeyId: "AKIA2FXAD57XG5NRDHCQ",
-  secretAccessKey: "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", 
-  region: "us-east-2", 
-});
+const s3 = new S3Client();
 
-const s3 = new AWS.S3();
+export const { POST } = createUploadRouteHandler({
+  client: s3,
+  bucketName: "oficialia-documentos",
+  routes: {
+    demo: route({
+      fileTypes: ["image/*"],
+    }),
+  },
+});
 
 const Formulario = () => {
   const router = useRouter();
@@ -209,30 +214,13 @@ const Formulario = () => {
             </select>
           </div>
           <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
-            <input
-              type="file"
-              onChange={handleFileChange}
-              className="hidden"
-              id="fileInput"
+            <UploadButton
+              route="demo"
+              accept="image/*"
+              onUploadComplete={({ file }) => {
+                alert(`Uploaded ${file.name}`);
+              }}
             />
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer text-[#691B31] font-semibold"
-            >
-              Subir Documento Escaneado
-            </label>
-            {selectedFile && (
-              <p className="text-sm mt-2">{selectedFile.name}</p>
-            )}
-            {selectedFile && (
-              <button
-                type="button"
-                onClick={handleViewFile}
-                className="ml-4 text-[#691B31] underline font-semibold"
-              >
-                Ver Documento
-              </button>
-            )}
           </div>
           <div className="col-span-3 flex justify-center">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
