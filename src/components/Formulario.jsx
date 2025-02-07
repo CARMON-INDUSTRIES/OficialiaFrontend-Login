@@ -160,7 +160,7 @@ const Formulario = () => {
             />
           </div>
           <div>
-            <label className="block font-bold">Comunidad</label>
+            <label className="block font-bold">Comunidades</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
