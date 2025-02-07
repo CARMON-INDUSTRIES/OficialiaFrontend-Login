@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { FaEdit, FaCheckCircle } from "react-icons/fa";
+
+import React, { useState, useEffect } from "react";
+import { FaEdit, FaCheckCircle, FaSearch } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
 
 const fondoModal = "/images/fondoModal.jpg";
@@ -17,6 +18,15 @@ const Roles = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [searching, setSearching] = useState(false); // Estado para controlar la animación de rotación
+  const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el montaje
+
+  useEffect(() => {
+    // Activamos la animación de rotación tan pronto como se carga la página
+    setRotateOnLoad(true);
+    // Detenemos la animación después de 1 segundo
+    setTimeout(() => setRotateOnLoad(false), 1000); // La animación dura 1 segundo
+  }, []);
 
   const openModal = (user) => {
     setSelectedUser(user);
@@ -43,7 +53,16 @@ const Roles = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-[#621132] p-6">
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-4">
-        <h1 className="text-4xl font-bold text-[#621132] text-center mb-4">USUARIOS</h1>
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <h1 className="text-4xl font-bold text-[#621132]">USUARIOS</h1>
+          <button
+            onClick={() => setSearching(true)}
+            className={`p-2 bg-[#621132] text-white rounded-full hover:bg-blue-600 transition ${rotateOnLoad ? "animate-rotate" : ""}`}
+          >
+            <FaSearch />
+          </button>
+        </div>
+
         <div className="overflow-auto max-h-[500px] mt-6">
           <table className="w-full border-collapse bg-white">
             <thead>
@@ -145,9 +164,22 @@ const Roles = () => {
         .animate-slideIn {
           animation: slideIn 0.5s ease-out;
         }
+
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-rotate {
+          animation: rotate 1s linear;
+        }
       `}</style>
     </div>
   );
 };
 
 export default Roles;
+
