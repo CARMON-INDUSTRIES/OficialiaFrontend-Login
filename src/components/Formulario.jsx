@@ -6,7 +6,7 @@ import Select from "react-select";
 import axios from "axios";
 import { S3Client } from "@aws-sdk/client-s3";
 import { createUploadRouteHandler, route } from "better-upload/server";
-import { UploadButton } from '@/components/ui/upload-button';
+import { UploadButton } from "better-upload/react";
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
@@ -214,14 +214,23 @@ const Formulario = () => {
               <option>Informativo</option>
             </select>
           </div>
-          <div className="col-span-3 border p-2 rounded border-[#691B31] text-center">
+          <div className="col-span-3 border p-4 rounded border-[#691B31] text-center">
             <UploadButton
               route="demo"
               accept="image/*"
               onUploadComplete={({ file }) => {
-                alert(`Uploaded ${file.name}`);
+                setUploadedFileUrl(file.url); // ✅ Guardar la URL subida
+                alert(`Archivo subido: ${file.name}`);
               }}
             />
+            {uploadedFileUrl && (
+              <p className="mt-2 text-green-600">
+                Archivo subido:{" "}
+                <a href={uploadedFileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                  Ver archivo
+                </a>
+              </p>
+            )}
           </div>
           <div className="col-span-3 flex justify-center">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
