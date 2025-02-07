@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion"; // Importamos Framer Motion
 import {
   FaArrowLeft,
   FaRunning,
@@ -21,36 +22,24 @@ export const SignIn = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch(
         "https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ userName, password }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Credenciales incorrectas");
-      }
+      if (!response.ok) throw new Error("Credenciales incorrectas");
 
       const data = await response.json();
-
-      if (!data.token) {
-        throw new Error("No se recibió un token de autenticación");
-      }
+      if (!data.token) throw new Error("No se recibió un token de autenticación");
 
       localStorage.setItem("token", data.token);
-
       document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
-
-      console.log("Login exitoso:", data);
-      console.log("Token guardado en localStorage y cookies, redirigiendo...");
 
       router.push("/consulta");
     } catch (err) {
@@ -60,7 +49,13 @@ export const SignIn = () => {
 
   return (
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
-      <div className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col">
+      {/* Sección Izquierda */}
+      <motion.div
+        initial={{ opacity: 0, x: -100 }} // Aparece desde la izquierda
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1 }}
+        className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col"
+      >
         <h1 className="text-white text-1xl font-bold">
           Presidencia municipal Tula de Allende
         </h1>
@@ -69,27 +64,33 @@ export const SignIn = () => {
         </h1>
         <div className="socials ml-8 lg:ml-24">
           <ul className="right list-none flex items-center gap-6">
-            <li>
-              <FaRunning className="text-3xl text-slate-50" />
-            </li>
-            <li>
-              <FaHeartbeat className="text-3xl text-slate-50" />
-            </li>
-            <li>
-              <FaLeaf className="text-3xl text-slate-50" />
-            </li>
-            <li>
-              <FaPiggyBank className="text-3xl text-slate-50" />
-            </li>
+            <li><FaRunning className="text-3xl text-slate-50" /></li>
+            <li><FaHeartbeat className="text-3xl text-slate-50" /></li>
+            <li><FaLeaf className="text-3xl text-slate-50" /></li>
+            <li><FaPiggyBank className="text-3xl text-slate-50" /></li>
           </ul>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Sección Derecha */}
       <div className="right flex flex-col justify-center items-center relative">
-        <h1 className="top-8 left-8 absolute text-3xl font-bold sm:hidden">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }} // Aparece desde arriba
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="top-8 left-8 absolute text-3xl font-bold sm:hidden"
+        >
           BIENVENIDO
-        </h1>
-        <div className="lg:w-[26.5rem] w-80 flex flex-col gap-4">
-          <div className="text-center sm :text-left">
+        </motion.h1>
+
+        {/* Animación del formulario */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }} // Aparece desde abajo
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="lg:w-[26.5rem] w-80 flex flex-col gap-4"
+        >
+          <div className="text-center sm:text-left">
             <h1 className="text-3xl font-bold">Inicio de sesión</h1>
             <br />
             <img
@@ -104,9 +105,7 @@ export const SignIn = () => {
             className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
           >
             <div className="email flex flex-col gap-3 items-start">
-              <label htmlFor="Name" className="text-sm">
-                USUARIO
-              </label>
+              <label htmlFor="Name" className="text-sm">USUARIO</label>
               <input
                 type="text"
                 placeholder="Nombre de usuario"
@@ -117,9 +116,7 @@ export const SignIn = () => {
             </div>
 
             <div className="password flex flex-col gap-3 items-start relative">
-              <label htmlFor="Password" className="text-sm">
-                CONTRASEÑA
-              </label>
+              <label htmlFor="Password" className="text-sm">CONTRASEÑA</label>
               <div className="flex items-center w-full relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -140,23 +137,14 @@ export const SignIn = () => {
 
             {error && <p className="text-red-500">{error}</p>}
 
-            <p>
-              <a href="#" className="text-[#A02142]">
-                ¿Olvidaste tu contraseña?
-              </a>
-            </p>
+            <p><a href="#" className="text-[#A02142]">¿Olvidaste tu contraseña?</a></p>
 
-            <button
-              type="submit"
-              className="bg-[#BC995B] text-white rounded-[10px] py-2"
-            >
+            <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2">
               Iniciar Sesión
             </button>
 
             <p>
-              <Link href="/register" className="text-[#A02142]">
-                REGISTRATE
-              </Link>
+              <Link href="/register" className="text-[#A02142]">REGISTRATE</Link>
             </p>
 
             <Link href="/">
@@ -165,7 +153,7 @@ export const SignIn = () => {
               </div>
             </Link>
           </form>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

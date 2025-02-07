@@ -41,9 +41,9 @@ const Roles = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white [#56242A] p-6">
-      <div className="w-full max-w-6xl bg-zinc-500-500 shadow-lg rounded-lg p-4">
-        <h1 className="text-4xl font-bold text-gray-700 text-center mb-4">USUARIOS</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-[#621132] p-6">
+      <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-4">
+        <h1 className="text-4xl font-bold text-[#621132] text-center mb-4">USUARIOS</h1>
         <div className="overflow-auto max-h-[500px] mt-6">
           <table className="w-full border-collapse bg-white">
             <thead>
