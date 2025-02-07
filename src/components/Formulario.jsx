@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
-import { S3Client } from "@aws-sdk/client-s3";
-import { createUploadRouteHandler, route } from "better-upload/server";
 import { UploadButton } from '@/components/ui/upload-button';
 
 
@@ -15,17 +13,7 @@ const options = [
   { value: "area3", label: "Oficialia Mayor" },
 ];
 
-const s3 = new S3Client();
 
-export const { POST } = createUploadRouteHandler({
-  client: s3,
-  bucketName: "oficialia-documentos",
-  routes: {
-    demo: route({
-      fileTypes: ["image/*"],
-    }),
-  },
-});
 
 const Formulario = () => {
   const router = useRouter();
