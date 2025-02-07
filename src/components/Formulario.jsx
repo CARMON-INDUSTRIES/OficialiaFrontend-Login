@@ -4,12 +4,21 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
+import AWS from "aws-sdk";
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
   { value: "area3", label: "Oficialia Mayor" },
 ];
+
+AWS.config.update({
+  accessKeyId: "AKIA2FXAD57XG5NRDHCQ",
+  secretAccessKey: "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", 
+  region: "us-east-2", 
+});
+
+const s3 = new AWS.S3();
 
 const Formulario = () => {
   const router = useRouter();
