@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
-import axios from "axios";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -55,11 +54,18 @@ const Dashboard = () => {
     setSelectedRecord(null);
   };
 
-  const filteredRecords = records.filter(e =>
-    String(e.folio).includes(search) ||  
-    e.department?.toLowerCase().includes(search.toLowerCase()) ||
-    e.subject?.toLowerCase().includes(search.toLowerCase())
-  );
+  // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
+  const filteredRecords = records.filter(record => {
+    const searchLower = search.toLowerCase();
+
+    return (
+      String(record.folio).includes(search) ||  
+      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
+      (record.dependencia && record.dependencia.toLowerCase().includes(searchLower)) ||
+      (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
+      (record.estatus && record.estatus.toLowerCase().includes(searchLower))
+    );
+  });
 
   return (
     <Layout>
