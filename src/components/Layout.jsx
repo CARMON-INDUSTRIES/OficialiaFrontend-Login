@@ -36,6 +36,9 @@ const Layout = ({ children }) => {
             <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
               <FiFilePlus /> Nuevo Registro
             </Link>
+            <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+              <FaUsers /> Roles y usuarios
+            </Link>
           </nav>
         </div>
         <button
