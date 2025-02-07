@@ -6,7 +6,7 @@ import Select from "react-select";
 import axios from "axios";
 import { S3Client } from "@aws-sdk/client-s3";
 import { createUploadRouteHandler, route } from "better-upload/server";
-import { UploadButton } from "better-upload/react";
+import { UploadButton } from '@/components/ui/upload-button';
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
