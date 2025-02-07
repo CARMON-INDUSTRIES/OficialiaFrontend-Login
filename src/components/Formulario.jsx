@@ -112,11 +112,11 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
-              <option>Seleccionar Dependencia</option>
-              <option>Recursos Humanos</option>
-              <option>Finanzas</option>
-            </select>
+            <input
+              type="text"
+              placeholder="Dependencia remitente"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
           </div>
           <div>
             <label className="block font-bold">Comunidad</label>
@@ -181,6 +181,16 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
+            <select className="w-full p-2 border rounded border-[#691B31]">
+              <option>Seleccionar Prioridad</option>
+              <option>Urgente</option>
+              <option>Medio</option>
+              <option>Normal</option>
+              <option>Informativo</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-bold">Status</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Prioridad</option>
               <option>Urgente</option>
