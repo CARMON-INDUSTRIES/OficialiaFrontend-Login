@@ -8,6 +8,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { createUploadRouteHandler, route } from "better-upload/server";
 import { UploadButton } from '@/components/ui/upload-button';
 
+
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
@@ -32,6 +33,7 @@ const Formulario = () => {
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [area, setAreas] = useState([]);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
   const areaOptions = area.map((com) => ({
     value: com.idArea,
