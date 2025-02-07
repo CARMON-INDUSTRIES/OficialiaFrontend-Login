@@ -20,7 +20,7 @@ const Formulario = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
-  const [importancia, setImportancia] = useState([]);
+  const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
