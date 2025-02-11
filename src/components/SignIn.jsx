@@ -91,7 +91,7 @@ export const SignIn = () => {
           className="lg:w-[26.5rem] w-80 flex flex-col gap-4"
         >
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl font-bold">Inicio de sesión</h1>
+            <h1 className="text-3xl text-center font-bold">Inicio de sesión</h1>
             <br />
             <img
               src="/images/presidencia.jpeg"
