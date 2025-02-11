@@ -4,16 +4,13 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
-import { UploadButton } from '@/components/ui/upload-button';
-
+import { UploadButton } from "@/components/ui/upload-button";
 
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
   { value: "area3", label: "Oficialia Mayor" },
 ];
-
-
 
 const Formulario = () => {
   const router = useRouter();
@@ -242,25 +239,40 @@ const Formulario = () => {
               ))}
             </select>
           </div>
-          <div className="col-span-3 border p-4 rounded border-[#691B31] text-center">
+          <div>
+            <label className="block font-bold">Documento</label>
+            <input
+              type="text"
+              placeholder="Subir documento"
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
+          </div>
+         {/*/ <div className="flex flex-col justify-end">
             <UploadButton
               route="demo"
               accept="image/*"
               onUploadComplete={({ file }) => {
-                setUploadedFileUrl(file.url); // ✅ Guardar la URL subida
+                setUploadedFileUrl(file.url);
                 alert(`Archivo subido: ${file.name}`);
               }}
             />
+
             {uploadedFileUrl && (
               <p className="mt-2 text-green-600">
                 Archivo subido:{" "}
-                <a href={uploadedFileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                <a
+                  href={uploadedFileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
                   Ver archivo
                 </a>
               </p>
             )}
           </div>
-          <div className="col-span-3 flex justify-center">
+          */}
+          <div className="col-span-3 flex justify-end items-end">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
               Registrar
             </button>
