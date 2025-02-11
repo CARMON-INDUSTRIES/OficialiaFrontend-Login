@@ -111,23 +111,6 @@ const Formulario = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    try {
-      await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
-        { ...formData, documento: uploadedFileUrl },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("Documento registrado exitosamente");
-      router.push("/Consulta");
-    } catch (error) {
-      console.error("Error al registrar documento:", error);
-      alert("Error al registrar el documento");
-    }
-  };
-
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] p-6">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
@@ -144,31 +127,33 @@ const Formulario = () => {
         <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
           REGISTRAR DOCUMENTOS
         </h2>
-        <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
+        <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
             <label className="block font-bold">Folios</label>
             <input
-              type="text" name="folio" placeholder="Folio" onChange={handleChange}
+              type="text"
+              placeholder="Folio"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
             <input
-              type="date" name="fecha" onChange={handleChange}
+              type="date"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
             <input
-              type="text" name="dependencia" placeholder="Dependencia" onChange={handleChange}
+              type="text"
+              placeholder="Dependencia remitente"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Comunidades</label>
-            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
+            <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
                 <option key={com.idComunidad} value={com.idComunidad}>
@@ -180,35 +165,40 @@ const Formulario = () => {
           <div>
             <label className="block font-bold">Remitente</label>
             <input
-              type="text" name="remitente" placeholder="Remitente" onChange={handleChange}
+              type="text"
+              placeholder="Remitente"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
             <input
-              type="text" name="cargo" placeholder="Cargo" onChange={handleChange}
+              type="text"
+              placeholder="Cargo"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
             <input
-              type="text" name="destinatario" placeholder="nombre del destinatario" onChange={handleChange}
+              type="text"
+              placeholder="Nombre del destinatario"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
             <input
-              type="text" name="cargoDestinatario" placeholder="Cargo del destinatario" onChange={handleChange}
+              type="text"
+              placeholder="Cargo"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
             <input
-              type="text" name="asunto" placeholder="Asunto" onChange={handleChange}
+              type="text"
+              placeholder="Asunto o descripción"
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
