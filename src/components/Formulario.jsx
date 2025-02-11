@@ -7,14 +7,6 @@ import axios from "axios";
 import { UploadButton } from '@/components/ui/upload-button';
 
 
-const options = [
-  { value: "area1", label: "Presidente municipal" },
-  { value: "area2", label: "Secretaria general" },
-  { value: "area3", label: "Oficialia Mayor" },
-];
-
-
-
 const Formulario = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
