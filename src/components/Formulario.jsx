@@ -6,15 +6,7 @@ import Select from "react-select";
 import axios from "axios";
 import { UploadButton } from "@/components/ui/upload-button";
 
-<<<<<<< HEAD
-const options = [
-  { value: "area1", label: "Presidente municipal" },
-  { value: "area2", label: "Secretaria general" },
-  { value: "area3", label: "Oficialia Mayor" },
-];
 
-=======
->>>>>>> origin/main
 const Formulario = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
@@ -137,7 +129,7 @@ const Formulario = () => {
         </h2>
         <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
-            <label className="block font-bold">Folio</label>
+            <label className="block font-bold">Folios</label>
             <input
               type="text"
               placeholder="Folio"
