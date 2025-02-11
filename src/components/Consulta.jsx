@@ -40,7 +40,7 @@ const Dashboard = () => {
       });
       setRecords(records.filter((record) => record.folio !== folio));
     } catch (error) {
-      console.error("Error al eliminar registro:", error);
+      console.error("Error al eliminar:", error);
     }
   };
 
