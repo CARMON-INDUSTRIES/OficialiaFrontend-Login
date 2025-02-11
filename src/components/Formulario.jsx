@@ -4,112 +4,55 @@ import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
-import { UploadButton } from "@/components/ui/upload-button";
-
 
 const Formulario = () => {
   const router = useRouter();
+  const [isRotating, setIsRotating] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
   const [status, setStatus] = useState([]);
-  const [uploadedFileUrl, setUploadedFileUrl] = useState("");
-
-  const areaOptions = area.map((com) => ({
-    value: com.idArea,
-    label: com.nombreArea,
-  }));
-
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
     }
 
-    const fetchComunidades = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const [comResp, areasResp, impResp, statusResp] = await Promise.all([
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status", { headers: { Authorization: `Bearer ${token}` } }),
+        ]);
 
-        console.log("Datos de comunidades:", response.data);
-        setComunidades(response.data);
+        setComunidades(comResp.data);
+        setAreas(areasResp.data);
+        setImportancias(impResp.data);
+        setStatus(statusResp.data);
       } catch (error) {
-        console.error("Error al obtener comunidades:", error);
+        console.error("Error al obtener datos:", error);
       }
     };
 
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+    fetchData();
 
-        console.log("Datos de areas:", response.data);
-        setAreas(response.data);
-      } catch (error) {
-        console.error("Error al obtener areas:", error);
-      }
-    };
+    // Detener la animación después de 1 segundo
+    const timeout = setTimeout(() => {
+      setIsRotating(false);
+    }, 1500);
 
-    const fetchImportancias = async () => {
-      try {
-        const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        console.log("Datos de importancia:", response.data);
-        setImportancias(response.data);
-      } catch (error) {
-        console.error("Error al obtener importancias:", error);
-      }
-    };
-
-    const fetchStatus = async () => {
-      try {
-        const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        console.log("Datos de status:", response.data);
-        setStatus(response.data);
-      } catch (error) {
-        console.error("Error al obtener status:", error);
-      }
-    };
-
-    fetchComunidades();
-    fetchAreas();
-    fetchImportancias();
-    fetchStatus();
+    return () => clearTimeout(timeout);
   }, []);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-  };
-
-  const handleViewFile = () => {
-    if (selectedFile) {
-      const fileURL = URL.createObjectURL(selectedFile);
-      window.open(fileURL, "_blank");
-      setTimeout(() => URL.revokeObjectURL(fileURL), 100);
-    }
-  };
+  const areaOptions = area.map((com) => ({
+    value: com.idArea,
+    label: com.nombreArea,
+  }));
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#691B31] p-6">
@@ -119,108 +62,67 @@ const Formulario = () => {
           style={{ backgroundImage: "url('/images/fondo.jpg')" }}
         >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
-          <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
-          REGISTRAR DOCUMENTOS ㅤㅤ
-        </h2>
+            <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
+              REGISTRAR DOCUMENTOS ㅤㅤ
+            </h2>
             <div className="bg-white p-3 rounded-full shadow-lg">
-              <FaFileAlt className="text-4xl text-[#691B31]" />
+              <FaFileAlt className={`text-4xl text-[#691B31] ${isRotating ? "animate-spin" : ""}`} />
             </div>
           </div>
         </div>
-        
+
         <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
             <label className="block font-bold">Folios</label>
-            <input
-              type="text"
-              placeholder="Folio"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
-            <input
-              type="date"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="date" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
-            <input
-              type="text"
-              placeholder="Dependencia remitente"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Comunidades</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
-                <option key={com.idComunidad} value={com.idComunidad}>
-                  {com.nombreComunidad}
-                </option>
+                <option key={com.idComunidad} value={com.idComunidad}>{com.nombreComunidad}</option>
               ))}
             </select>
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
-            <input
-              type="text"
-              placeholder="Remitente"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
-            <input
-              type="text"
-              placeholder="Cargo"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
-            <input
-              type="text"
-              placeholder="Nombre del destinatario"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
-            <input
-              type="text"
-              placeholder="Cargo"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
-            <input
-              type="text"
-              placeholder="Asunto o descripción"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select
-              options={areaOptions}
-              isMulti
-              value={areasDestino}
-              onChange={setAreasDestino}
-              className="w-full border border-[#691B31] rounded-lg"
-            />
+            <Select options={areaOptions} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Importancia</option>
               {importancia.map((com) => (
-                <option key={com.idImportancia} value={com.idImportancia}>
-                  {com.nivel}
-                </option>
+                <option key={com.idImportancia} value={com.idImportancia}>{com.nivel}</option>
               ))}
             </select>
           </div>
@@ -229,45 +131,10 @@ const Formulario = () => {
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Status</option>
               {status.map((com) => (
-                <option key={com.idStatus} value={com.idStatus}>
-                  {com.estado}
-                </option>
+                <option key={com.idStatus} value={com.idStatus}>{com.estado}</option>
               ))}
             </select>
           </div>
-          <div>
-            <label className="block font-bold">Documento</label>
-            <input
-              type="text"
-              placeholder="Subir documento"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
-          </div>
-         {/*/ <div className="flex flex-col justify-end">
-            <UploadButton
-              route="demo"
-              accept="image/*"
-              onUploadComplete={({ file }) => {
-                setUploadedFileUrl(file.url);
-                alert(`Archivo subido: ${file.name}`);
-              }}
-            />
-
-            {uploadedFileUrl && (
-              <p className="mt-2 text-green-600">
-                Archivo subido:{" "}
-                <a
-                  href={uploadedFileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  Ver archivo
-                </a>
-              </p>
-            )}
-          </div>
-          */}
           <div className="col-span-3 flex justify-end items-end">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
               Registrar
