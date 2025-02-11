@@ -6,12 +6,15 @@ import Select from "react-select";
 import axios from "axios";
 import { UploadButton } from "@/components/ui/upload-button";
 
+<<<<<<< HEAD
 const options = [
   { value: "area1", label: "Presidente municipal" },
   { value: "area2", label: "Secretaria general" },
   { value: "area3", label: "Oficialia Mayor" },
 ];
 
+=======
+>>>>>>> origin/main
 const Formulario = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState(null);
@@ -157,7 +160,7 @@ const Formulario = () => {
             />
           </div>
           <div>
-            <label className="block font-bold">Comunidad</label>
+            <label className="block font-bold">Comunidades</label>
             <select className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (

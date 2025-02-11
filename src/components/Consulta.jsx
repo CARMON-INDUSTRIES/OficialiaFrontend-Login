@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
+import axios from "axios";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const Dashboard = () => {
       });
       setRecords(records.filter((record) => record.folio !== folio));
     } catch (error) {
-      console.error("Error al eliminar registro:", error);
+      console.error("Error al eliminar:", error);
     }
   };
 
