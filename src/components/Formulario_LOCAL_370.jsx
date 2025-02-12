@@ -62,11 +62,9 @@ const Formulario = () => {
           style={{ backgroundImage: "url('/images/fondo.jpg')" }}
         >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
-
             <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
               REGISTRAR DOCUMENTOS ㅤㅤ
             </h2>
-
             <div className="bg-white p-3 rounded-full shadow-lg">
               <FaFileAlt className={`text-4xl text-[#691B31] ${isRotating ? "animate-spin" : ""}`} />
             </div>
