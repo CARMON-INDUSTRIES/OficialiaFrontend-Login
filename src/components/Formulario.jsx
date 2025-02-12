@@ -101,8 +101,7 @@ const Formulario = () => {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
         <div
           className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
-          style={{ backgroundImage: "url('/images/fondo.jpg')" }}
-        >
+          style={{ backgroundImage: "url('/images/fondo.jpg')" }} >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
 
             <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
@@ -122,19 +121,19 @@ const Formulario = () => {
 
           <div>
             <label className="block font-bold">Folio</label>
-            <input type="text" onChange={handleChange} placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="folio" onChange={handleChange} placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
-            <input type="date" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="date" name="fecha" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
-            <input type="text" onChange={handleChange} placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="dependencia" onChange={handleChange} placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Comunidades</label>
-            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
+            <select name="comunidad" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
                 <option key={com.idComunidad} value={com.idComunidad}>{com.nombreComunidad}</option>
@@ -143,31 +142,31 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
-            <input type="text" onChange={handleChange} placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="remitente" onChange={handleChange} placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
-            <input type="text" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="cargoRemitente" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
-            <input type="text" onChange={handleChange} placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="destinatario" onChange={handleChange} placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
-            <input type="text" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="cargoDestinatario" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
-            <input type="text" onChange={handleChange} placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" name="asunto" onChange={handleChange} placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={areaOptions} isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "areaDestino")} className="w-full border border-[#691B31] rounded-lg" />
+            <Select options={areaOptions} name="area" isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "areaDestino")} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
-            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
+            <select onChange={handleChange} name="importancia" className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Importancia</option>
               {importancia.map((com) => (
                 <option key={com.idImportancia} value={com.idImportancia}>{com.nivel}</option>
@@ -176,7 +175,7 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Status</label>
-            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
+            <select onChange={handleChange} name="status" className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Status</option>
               {status.map((com) => (
                 <option key={com.idStatus} value={com.idStatus}>{com.estado}</option>
