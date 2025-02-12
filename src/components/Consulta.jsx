@@ -26,9 +26,12 @@ const Dashboard = () => {
 
   const fetchRecords = async (token) => {
     try {
-      const response = await axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get(
+        "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setRecords(response.data);
     } catch (error) {
       console.error("Error al obtener registros:", error);
@@ -38,9 +41,12 @@ const Dashboard = () => {
   const handleDelete = async (folio) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.delete(
+        `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setRecords(records.filter((record) => record.folio !== folio));
     } catch (error) {
       console.error("Error al eliminar:", error);
@@ -53,7 +59,7 @@ const Dashboard = () => {
   };
 
   const handleEdit = (record) => {
-    setEditData(record);
+    setSelectedRecord(record);
     setShowEditModal(true);
   };
 
@@ -100,13 +106,22 @@ const Dashboard = () => {
                     <td className="py-3 px-6">{record.asunto}</td>
                     <td className="py-3 px-6">{record.estatus}</td>
                     <td className="py-3 px-6 flex justify-center gap-4">
-                      <button className="text-blue-500 hover:underline" onClick={() => handleView(record)}>
+                      <button
+                        className="text-blue-500 hover:underline"
+                        onClick={() => handleView(record)}
+                      >
                         <FaEye />
                       </button>
-                      <button className="text-green-500 hover:underline" onClick={() => handleEdit(record)}>
+                      <button
+                        className="text-green-500 hover:underline"
+                        onClick={() => handleEdit(record)}
+                      >
                         <FaEdit />
                       </button>
-                      <button className="text-red-500 hover:underline" onClick={() => handleDelete(record.folio)}>
+                      <button
+                        className="text-red-500 hover:underline"
+                        onClick={() => handleDelete(record.folio)}
+                      >
                         <FaTrashAlt />
                       </button>
                     </td>
@@ -128,17 +143,49 @@ const Dashboard = () => {
                 </div>
                 <div className="w-2/3 p-6 flex flex-col justify-between">
                   <div>
-                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
-                    <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.fecha}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.dependencia}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.asunto}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Status:</span> {selectedRecord.estatus}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Area:</span> {selectedRecord.area}</p>
+                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">
+                      Detalles del Registro
+                    </h2>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Folio:</span>{" "}
+                      {selectedRecord.folio}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Fecha:</span>{" "}
+                      {selectedRecord.fecha}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Destinatario:</span>{" "}
+                      {selectedRecord.dependencia}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Asunto:</span>{" "}
+                      {selectedRecord.asunto}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Status:</span>{" "}
+                      {selectedRecord.estatus}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Remitente:</span>{" "}
+                      {selectedRecord.remitente}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Cargo Remitente:</span>{" "}
+                      {selectedRecord.cargoRemitente}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Destinatario:</span>{" "}
+                      {selectedRecord.destinatario}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Cargo Destinatario:</span>{" "}
+                      {selectedRecord.cargoDestinatario}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold">Area:</span>{" "}
+                      {selectedRecord.area}
+                    </p>
                   </div>
                   <div className="flex justify-end">
                     <button
@@ -153,74 +200,86 @@ const Dashboard = () => {
               </div>
             </div>
           )}
-          {showEditModal && selectedRecord && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-xl">
-      <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Editar Registro</h2>
-      <form>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-bold">Folio</label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
-              value={selectedRecord.folio}
-              readOnly
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold">Fecha</label>
-            <input
-              type="date"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
-              value={selectedRecord.fecha}
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold">Dependencia</label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
-              value={selectedRecord.dependencia}
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold">Asunto</label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
-              value={selectedRecord.asunto}
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold">Status</label>
-            <select className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]">
-              <option value="Pendiente">Pendiente</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Finalizado">Finalizado</option>
-            </select>
-          </div>
-        </div>
-        <div className="flex justify-end mt-4">
-          <button
-            type="button"
-            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mr-2"
-            onClick={() => setShowEditModal(false)}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
-          >
-            Guardar Cambios
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
 
+          {showEditModal && selectedRecord && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-xl">
+                <h2 className="text-2xl font-bold mb-4 text-[#691B31]">
+                  Editar Registro
+                </h2>
+                <form>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Folio
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+                        value={selectedRecord.folio}
+                        readOnly
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Fecha
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+                        value={selectedRecord.fecha}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Dependencia
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+                        value={selectedRecord.dependencia}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Asunto
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+                        value={selectedRecord.asunto}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Status
+                      </label>
+                      <select className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En proceso">En proceso</option>
+                        <option value="Finalizado">Finalizado</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-4">
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mr-2"
+                      onClick={() => setShowEditModal(false)}
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+                    >
+                      Guardar Cambios
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
@@ -228,4 +287,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
