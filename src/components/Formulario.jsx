@@ -101,8 +101,7 @@ const Formulario = () => {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
         <div
           className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
-          style={{ backgroundImage: "url('/images/fondo.jpg')" }}
-        >
+          style={{ backgroundImage: "url('/images/fondo.jpg')" }} >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
 
             <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
