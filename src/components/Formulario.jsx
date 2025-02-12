@@ -49,7 +49,7 @@ const Formulario = () => {
         setImportancias(impResp.data);
         setStatus(statusResp.data);
       } catch (error) {
-        console.error("Error al obtener dato:", error);
+        console.error("Error al obtener datos:", error);
       }
     };
 
