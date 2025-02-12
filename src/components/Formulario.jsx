@@ -75,7 +75,7 @@ const Formulario = () => {
 
         <form className="mt-8 grid grid-cols-3 gap-4">
           <div>
-            <label className="block font-bold">Folios</label>
+            <label className="block font-bold">Folio</label>
             <input type="text" placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
