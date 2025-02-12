@@ -80,7 +80,7 @@ const Formulario = () => {
         "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
         formData,
         { method: "POST",
-          headers: { Authorization: `Bearer ${token}`,
+          headers: { "Content-Type": "application/json" },
           credentials: "include", } }
       );
 
