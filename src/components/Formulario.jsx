@@ -79,7 +79,9 @@ const Formulario = () => {
       const response = await axios.post(
         "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
         formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { method: "POST",
+          headers: { Authorization: `Bearer ${token}`,
+          credentials: "include", } }
       );
 
       console.log("Registro exitoso:", response.data);
