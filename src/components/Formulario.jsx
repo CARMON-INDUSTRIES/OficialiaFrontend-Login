@@ -129,6 +129,7 @@ const Formulario = () => {
               <option key={st.idStatus} value={st.idStatus}>{st.estado}</option>
             ))}
           </select>
+          <input type="text" name="documento" placeholder="Documento" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
 
           <div className="col-span-3 flex justify-end items-end">
             <button type="submit" className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
