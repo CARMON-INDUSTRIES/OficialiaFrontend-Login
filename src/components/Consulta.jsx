@@ -39,20 +39,45 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = async (folio) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(
-        `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+  const handleDeleteConfirmation = (folio) => {
+    Swal.fire({
+      title: "¿Estás seguro de querer eliminar este registro?",
+      text: "¡Esta acción no se puede deshacer!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "No, cancelar",
+      confirmButtonColor: "#691B31",
+      cancelButtonColor: "#d33",
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        try {
+          const token = localStorage.getItem("token");
+          await axios.delete(
+            `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          setRecords(records.filter((record) => record.folio !== folio));
+          Swal.fire({
+            icon: "success",
+            title: "Registro eliminado",
+            text: "El registro ha sido eliminado exitosamente.",
+            confirmButtonColor: "#691B31",
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "¡Error!",
+            text: "Ha ocurrido un error al eliminar el registro.",
+            confirmButtonColor: "#691B31",
+          });
         }
-      );
-      setRecords(records.filter((record) => record.folio !== folio));
-    } catch (error) {
-      console.error("Error al eliminar:", error);
-    }
+      },
+    });
   };
+
 
   const handleView = (record) => {
     setSelectedRecord(record);
@@ -121,7 +146,7 @@ const Dashboard = () => {
                       </button>
                       <button
                         className="text-red-500 hover:underline"
-                        onClick={() => handleDelete(record.folio)}
+                        onClick={() => handleDeleteConfirmation(record.folio)}
                       >
                         <FaTrashAlt />
                       </button>
