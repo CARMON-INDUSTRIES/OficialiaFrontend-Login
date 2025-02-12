@@ -87,7 +87,7 @@ const Formulario = () => {
             }
         );
 
-        console.log("Registro exitoso:", response.data);
+        console.log("Registros exitosos:", response.data);
         alert("Documento registrado exitosamente");
         router.replace("/consulta"); // Redirige tras el registro
     } catch (error) {
