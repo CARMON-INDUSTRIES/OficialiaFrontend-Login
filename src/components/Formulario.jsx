@@ -1,3 +1,10 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { FaFileAlt } from "react-icons/fa";
+import Select from "react-select";
+import axios from "axios";
+
 const Formulario = () => {
   const router = useRouter();
   const [isRotating, setIsRotating] = useState(true);
