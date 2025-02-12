@@ -8,13 +8,27 @@ import axios from "axios";
 const Formulario = () => {
   const router = useRouter();
   const [isRotating, setIsRotating] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
   const [status, setStatus] = useState([]);
   
+  const [formData, setFormData] = useState({
+    folio: "",
+    fecha: "",
+    dependencia: "",
+    comunidad: "",
+    remitente: "",
+    cargoRemitente: "",
+    destinatario: "",
+    cargoDestinatario: "",
+    asunto: "",
+    areaDestino: [],
+    importancia: "",
+    status: "",
+  });
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -49,6 +63,34 @@ const Formulario = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (selectedOptions, field) => {
+    setFormData({ ...formData, [field]: selectedOptions.map((option) => option.value) });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log("Registro exitoso:", response.data);
+      alert("Documento registrado exitosamente");
+      router.replace("/consulta"); // Redirige tras el registro
+    } catch (error) {
+      console.error("Error al registrar:", error);
+      alert("Hubo un error al registrar el documento");
+    }
+  };
+
   const areaOptions = area.map((com) => ({
     value: com.idArea,
     label: com.nombreArea,
@@ -73,22 +115,22 @@ const Formulario = () => {
           </div>
         </div>
 
-        <form className="mt-8 grid grid-cols-3 gap-4">
+        <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
           <div>
             <label className="block font-bold">Folio</label>
-            <input type="text" placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
-            <input type="date" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="date" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
-            <input type="text" placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Comunidades</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
+            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
                 <option key={com.idComunidad} value={com.idComunidad}>{com.nombreComunidad}</option>
@@ -97,31 +139,31 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
-            <input type="text" placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
-            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
-            <input type="text" placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
-            <input type="text" placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
-            <input type="text" placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
+            <input type="text" onChange={handleChange} placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={areaOptions} isMulti value={areasDestino} onChange={setAreasDestino} className="w-full border border-[#691B31] rounded-lg" />
+            <Select options={areaOptions} isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "areaDestino")} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
+            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Importancia</option>
               {importancia.map((com) => (
                 <option key={com.idImportancia} value={com.idImportancia}>{com.nivel}</option>
@@ -130,7 +172,7 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Status</label>
-            <select className="w-full p-2 border rounded border-[#691B31]">
+            <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Status</option>
               {status.map((com) => (
                 <option key={com.idStatus} value={com.idStatus}>{com.estado}</option>
