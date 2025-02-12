@@ -8,7 +8,6 @@ import axios from "axios";
 const Formulario = () => {
   const router = useRouter();
   const [isRotating, setIsRotating] = useState(true);
-  const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
@@ -24,7 +23,7 @@ const Formulario = () => {
     destinatario: "",
     cargoDestinatario: "",
     asunto: "",
-    areaDestino: [],
+    area: [],
     importancia: "",
     status: "",
   });
@@ -168,7 +167,7 @@ const Formulario = () => {
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={areaOptions}  isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "area")} className="w-full border border-[#691B31] rounded-lg" />
+            <Select options={areaOptions}  isMulti value={area} onChange={(selected) => handleSelectChange(selected, "area")} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
