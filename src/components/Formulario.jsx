@@ -81,7 +81,7 @@ const Formulario = () => {
         formData,
         { method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include", } }
+          credentials: "include", }
       );
 
       console.log("Registro exitoso:", response.data);
