@@ -153,6 +153,74 @@ const Dashboard = () => {
               </div>
             </div>
           )}
+          {showEditModal && selectedRecord && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-xl">
+      <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Editar Registro</h2>
+      <form>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-bold">Folio</label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+              value={selectedRecord.folio}
+              readOnly
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Fecha</label>
+            <input
+              type="date"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+              value={selectedRecord.fecha}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Dependencia</label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+              value={selectedRecord.dependencia}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Asunto</label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]"
+              value={selectedRecord.asunto}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Status</label>
+            <select className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#BC995B]">
+              <option value="Pendiente">Pendiente</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Finalizado">Finalizado</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mr-2"
+            onClick={() => setShowEditModal(false)}
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+          >
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
         </div>
       </div>
     </Layout>
