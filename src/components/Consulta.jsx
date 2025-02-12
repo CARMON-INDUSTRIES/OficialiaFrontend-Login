@@ -11,7 +11,9 @@ const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [records, setRecords] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [editedRecord, setEditedRecord] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,23 +52,40 @@ const Dashboard = () => {
     setShowModal(true);
   };
 
+  const handleEdit = (record) => {
+    setEditedRecord(record);
+    setShowEditModal(true);
+  };
+
   const closeModal = () => {
     setShowModal(false);
     setSelectedRecord(null);
   };
 
-  // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
-  const filteredRecords = records.filter(record => {
-    const searchLower = search.toLowerCase();
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditedRecord(null);
+  };
 
-    return (
-      String(record.folio).includes(search) ||  
-      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
-      (record.dependencia && record.dependencia.toLowerCase().includes(searchLower)) ||
-      (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-      (record.estatus && record.estatus.toLowerCase().includes(searchLower))
-    );
-  });
+  const handleInputChange = (e) => {
+    setEditedRecord({
+      ...editedRecord,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(`https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editedRecord.folio}`, editedRecord, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setRecords(records.map(record => record.folio === editedRecord.folio ? editedRecord : record));
+      closeEditModal();
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+    }
+  };
 
   return (
     <Layout>
@@ -94,7 +113,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredRecords.map((record) => (
+                {records.map((record) => (
                   <tr key={record.folio} className="border-b">
                     <td className="py-3 px-6">{record.folio}</td>
                     <td className="py-3 px-6">{record.fecha}</td>
@@ -105,7 +124,9 @@ const Dashboard = () => {
                       <button className="text-blue-500 hover:underline" onClick={() => handleView(record)}>
                         <FaEye />
                       </button>
-                      <button className="text-green-500 hover:underline"><FaEdit /></button>
+                      <button className="text-green-500 hover:underline" onClick={() => handleEdit(record)}>
+                        <FaEdit />
+                      </button>
                       <button className="text-red-500 hover:underline" onClick={() => handleDelete(record.folio)}>
                         <FaTrashAlt />
                       </button>
@@ -116,39 +137,39 @@ const Dashboard = () => {
             </table>
           </div>
 
-          {showModal && selectedRecord && (
+          {showEditModal && editedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg w-full max-w-3xl flex overflow-hidden min-h-[400px]">
-                <div className="w-1/3">
-                  <img
-                    src="/images/consulta.jpeg"
-                    alt="Registro"
-                    className="w-full h-full object-cover rounded-l-lg"
-                  />
-                </div>
-                <div className="w-2/3 p-6 flex flex-col justify-between">
+              <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-lg">
+                <h2 className="text-2xl font-bold text-[#691B31] mb-4">Editar Registro</h2>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
-                    <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.fecha}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.dependencia}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.asunto}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Status:</span> {selectedRecord.estatus}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}</p>
-                    <p className="text-lg mb-2"><span className="font-bold">Area:</span> {selectedRecord.area}</p>
+                    <label className="block font-semibold">Folio</label>
+                    <input type="text" value={editedRecord.folio} disabled className="w-full px-4 py-2 border rounded-lg bg-gray-200" />
                   </div>
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={closeModal}
-                      className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
-                    >
-                      Cerrar
-                    </button>
+                  <div>
+                    <label className="block font-semibold">Fecha</label>
+                    <input type="date" name="fecha" value={editedRecord.fecha} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
                   </div>
+                  <div>
+                    <label className="block font-semibold">Dependencia</label>
+                    <input type="text" name="dependencia" value={editedRecord.dependencia} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
+                  </div>
+                  <div>
+                    <label className="block font-semibold">Asunto</label>
+                    <input type="text" name="asunto" value={editedRecord.asunto} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
+                  </div>
+                  <div>
+                    <label className="block font-semibold">Status</label>
+                    <input type="text" name="estatus" value={editedRecord.estatus} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-4 mt-6">
+                  <button onClick={closeEditModal} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                    Cancelar
+                  </button>
+                  <button onClick={handleSave} className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]">
+                    Guardar Cambios
+                  </button>
                 </div>
               </div>
             </div>
