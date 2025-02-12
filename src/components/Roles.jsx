@@ -7,7 +7,6 @@ import Image from "next/image";
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
 
-
 const usuariosIniciales = [
   { id: 1, nombre: "Juan Pérez", correo: "juan@example.com", rol: "Administrador" },
   { id: 2, nombre: "María López", correo: "maria@example.com", rol: "Editor" },
@@ -20,14 +19,13 @@ const Roles = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false); // Estado para el mensaje de error
   const [searching, setSearching] = useState(false); // Estado para controlar la animación de rotación
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el montaje
 
   useEffect(() => {
-    // Activamos la animación de rotación tan pronto como se carga la página
     setRotateOnLoad(true);
-    // Detenemos la animación después de 1 segundo
-    setTimeout(() => setRotateOnLoad(false), 1000); // La animación dura 1 segundo
+    setTimeout(() => setRotateOnLoad(false), 1000);
   }, []);
 
   const openModal = (user) => {
@@ -42,23 +40,31 @@ const Roles = () => {
   };
 
   const saveChanges = () => {
-    setUsuarios((prevUsers) =>
-      prevUsers.map((user) =>
-        user.id === selectedUser.id ? { ...user, rol: newRole } : user
-      )
-    );
-    setModalOpen(false);
-    setShowConfirmation(true);
-    setTimeout(() => setShowConfirmation(false), 2000);
+    // Simular un error en la guardado
+    const isSuccess = Math.random() > 0.5; // Aleatorio, puedes simularlo con tu lógica
+
+    if (isSuccess) {
+      setUsuarios((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === selectedUser.id ? { ...user, rol: newRole } : user
+        )
+      );
+      setModalOpen(false);
+      setShowConfirmation(true);
+      setShowErrorMessage(false);
+      setTimeout(() => setShowConfirmation(false), 2000);
+    } else {
+      setShowErrorMessage(true);
+      setModalOpen(false);
+      setTimeout(() => setShowErrorMessage(false), 2000);
+    }
   };
 
   return (
     <div 
-  className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center" 
-  style={{ backgroundImage: `url(${fondoRoles})` }}
->
-
-
+      className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center" 
+      style={{ backgroundImage: `url(${fondoRoles})` }}
+    >
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-4">
         <div className="flex items-center justify-center gap-4 mb-4">
           <h1 className="text-4xl font-bold text-[#621132]">USUARIOS</h1>
@@ -115,7 +121,6 @@ const Roles = () => {
                 <p className="text-gray-600 text-lg"><strong>Correo:</strong> {selectedUser?.correo}</p>
               </div>
 
-              {/* Dropdown de selección de rol */}
               <div className="mt-4">
                 <label className="block text-gray-600 text-lg mb-2">Selecciona un nuevo rol:</label>
                 <select
@@ -128,7 +133,6 @@ const Roles = () => {
                 </select>
               </div>
 
-              {/* Botones */}
               <div className="flex justify-end gap-2 mt-6">
                 <button
                   className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500 transition text-lg"
@@ -156,7 +160,13 @@ const Roles = () => {
         </div>
       )}
 
-      {/* Animación para la pantalla de confirmación */}
+      {/* Pantalla de error */}
+      {showErrorMessage && (
+        <div className="fixed top-20 right-5 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slideIn">
+          <span className="text-lg">Ha ocurrido un error...</span>
+        </div>
+      )}
+
       <style jsx>{`
         @keyframes slideIn {
           from {
@@ -189,4 +199,3 @@ const Roles = () => {
 };
 
 export default Roles;
-
