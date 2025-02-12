@@ -187,7 +187,7 @@ const Formulario = () => {
             </select>
           </div>
           <div>
-            <label className="block font-bold">Status</label>
+            <label className="block font-bold">Estatus</label>
             <select onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Status</option>
               {status.map((com) => (
