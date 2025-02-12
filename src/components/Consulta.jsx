@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [editedRecord, setEditedRecord] = useState(null);
+  const [editData, setEditData] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -53,7 +53,7 @@ const Dashboard = () => {
   };
 
   const handleEdit = (record) => {
-    setEditedRecord(record);
+    setEditData(record);
     setShowEditModal(true);
   };
 
@@ -64,27 +64,7 @@ const Dashboard = () => {
 
   const closeEditModal = () => {
     setShowEditModal(false);
-    setEditedRecord(null);
-  };
-
-  const handleInputChange = (e) => {
-    setEditedRecord({
-      ...editedRecord,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSave = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put(`https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editedRecord.folio}`, editedRecord, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setRecords(records.map(record => record.folio === editedRecord.folio ? editedRecord : record));
-      closeEditModal();
-    } catch (error) {
-      console.error("Error al actualizar:", error);
-    }
+    setEditData({});
   };
 
   return (
@@ -99,7 +79,6 @@ const Dashboard = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
           <div className="overflow-auto max-h-[500px] mt-6">
             <table className="min-w-full bg-white rounded-lg overflow-hidden">
               <thead className="bg-[#BC995B] text-white">
@@ -137,40 +116,17 @@ const Dashboard = () => {
             </table>
           </div>
 
-          {showEditModal && editedRecord && (
+          {showModal && selectedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-lg">
-                <h2 className="text-2xl font-bold text-[#691B31] mb-4">Editar Registro</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-semibold">Folio</label>
-                    <input type="text" value={editedRecord.folio} disabled className="w-full px-4 py-2 border rounded-lg bg-gray-200" />
-                  </div>
-                  <div>
-                    <label className="block font-semibold">Fecha</label>
-                    <input type="date" name="fecha" value={editedRecord.fecha} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
-                  </div>
-                  <div>
-                    <label className="block font-semibold">Dependencia</label>
-                    <input type="text" name="dependencia" value={editedRecord.dependencia} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
-                  </div>
-                  <div>
-                    <label className="block font-semibold">Asunto</label>
-                    <input type="text" name="asunto" value={editedRecord.asunto} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
-                  </div>
-                  <div>
-                    <label className="block font-semibold">Status</label>
-                    <input type="text" name="estatus" value={editedRecord.estatus} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:border-[#BC995B]" />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-4 mt-6">
-                  <button onClick={closeEditModal} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
-                    Cancelar
-                  </button>
-                  <button onClick={handleSave} className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]">
-                    Guardar Cambios
-                  </button>
-                </div>
+              <div className="bg-white rounded-lg w-full max-w-3xl p-6">
+                <img src="/images/consulta.jpeg" alt="Registro" className="w-full rounded-lg mb-4" />
+                <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
+                <p className="text-lg"><strong>Folio:</strong> {selectedRecord.folio}</p>
+                <p className="text-lg"><strong>Fecha:</strong> {selectedRecord.fecha}</p>
+                <p className="text-lg"><strong>Dependencia:</strong> {selectedRecord.dependencia}</p>
+                <p className="text-lg"><strong>Asunto:</strong> {selectedRecord.asunto}</p>
+                <p className="text-lg"><strong>Status:</strong> {selectedRecord.estatus}</p>
+                <button onClick={closeModal} className="mt-4 px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]">Cerrar</button>
               </div>
             </div>
           )}
@@ -181,3 +137,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
