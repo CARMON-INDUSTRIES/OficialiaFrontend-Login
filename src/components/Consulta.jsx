@@ -131,78 +131,10 @@ const Dashboard = () => {
             </table>
           </div>
 
-          {showModal && selectedRecord && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg w-full max-w-3xl flex overflow-hidden min-h-[400px]">
-                <div className="w-1/3">
-                  <img
-                    src="/images/consulta.jpeg"
-                    alt="Registro"
-                    className="w-full h-full object-cover rounded-l-lg"
-                  />
-                </div>
-                <div className="w-2/3 p-6 flex flex-col justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">
-                      Detalles del Registro
-                    </h2>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Folio:</span>{" "}
-                      {selectedRecord.folio}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Fecha:</span>{" "}
-                      {selectedRecord.fecha}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Destinatario:</span>{" "}
-                      {selectedRecord.dependencia}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Asunto:</span>{" "}
-                      {selectedRecord.asunto}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Status:</span>{" "}
-                      {selectedRecord.estatus}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Remitente:</span>{" "}
-                      {selectedRecord.remitente}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Cargo Remitente:</span>{" "}
-                      {selectedRecord.cargoRemitente}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Destinatario:</span>{" "}
-                      {selectedRecord.destinatario}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Cargo Destinatario:</span>{" "}
-                      {selectedRecord.cargoDestinatario}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Area:</span>{" "}
-                      {selectedRecord.area}
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={closeModal}
-                      className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
-                    >
-                      Cerrar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
           {showEditModal && selectedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <div className="bg-white rounded-lg w-full max-w-3xl p-6 shadow-xl relative">
+                {/* Encabezado con animación */}
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold text-[#691B31]">
                     Editar Registro
@@ -212,7 +144,19 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <form>
+                {/* Formulario */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    // Simulación de guardado
+                    const success = Math.random() > 0.2; // 80% éxito, 20% error
+                    if (success) {
+                      alert("✅ Cambios guardados exitosamente");
+                    } else {
+                      alert("❌ Ha ocurrido un error");
+                    }
+                  }}
+                >
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <div>
                       <label className="block text-gray-700 font-bold">
@@ -225,8 +169,144 @@ const Dashboard = () => {
                         readOnly
                       />
                     </div>
-                    {/* Resto de los campos... */}
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Fecha
+                      </label>
+                      <input
+                        type="date"
+                        className="input-field"
+                        defaultValue={selectedRecord.fecha}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Dependencia
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.dependencia}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Asunto
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.asunto}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Remitente
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.remitente}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Destinatario
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.destinatario}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Comunidad
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.comunidad}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Cargo Remitente
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.cargoRemitente}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Cargo Destinatario
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.cargoDestinatario}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Área
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.area}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Documento
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.documento}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Status
+                      </label>
+                      <select className="input-field">
+                        <option
+                          value="Pendiente"
+                          selected={selectedRecord.estatus === "Pendiente"}
+                        >
+                          Pendiente
+                        </option>
+                        <option
+                          value="En proceso"
+                          selected={selectedRecord.estatus === "En proceso"}
+                        >
+                          En proceso
+                        </option>
+                        <option
+                          value="Finalizado"
+                          selected={selectedRecord.estatus === "Finalizado"}
+                        >
+                          Finalizado
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Importancia
+                      </label>
+                      <select className="input-field">
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                      </select>
+                    </div>
                   </div>
+
+                  {/* Botones */}
                   <div className="flex justify-end mt-6">
                     <button
                       type="button"
@@ -241,7 +321,6 @@ const Dashboard = () => {
                   </div>
                 </form>
               </div>
-
               {/* Estilos JSX */}
               <style jsx>{`
                 .input-field {
