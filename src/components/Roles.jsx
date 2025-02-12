@@ -5,6 +5,8 @@ import { FaEdit, FaCheckCircle, FaSearch } from "react-icons/fa"; // Añadimos F
 import Image from "next/image";
 
 const fondoModal = "/images/fondoModal.jpg";
+const fondoRoles = "/images/roles.jpg";
+
 
 const usuariosIniciales = [
   { id: 1, nombre: "Juan Pérez", correo: "juan@example.com", rol: "Administrador" },
@@ -51,7 +53,12 @@ const Roles = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-[#621132] p-6">
+    <div 
+  className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center" 
+  style={{ backgroundImage: `url(${fondoRoles})` }}
+>
+
+
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-4">
         <div className="flex items-center justify-center gap-4 mb-4">
           <h1 className="text-4xl font-bold text-[#621132]">USUARIOS</h1>
