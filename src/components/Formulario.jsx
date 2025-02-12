@@ -117,19 +117,7 @@ const Formulario = () => {
 
 
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
-          <select name="importancia" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
-            <option value="">Seleccionar Importancia</option>
-            {importancia.map((imp) => (
-              <option key={imp.idImportancia} value={imp.idImportancia}>{imp.nivel}</option>
-            ))}
-          </select>
-
-          <select name="status" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
-            <option value="">Seleccionar Status</option>
-            {status.map((st) => (
-              <option key={st.idStatus} value={st.idStatus}>{st.estado}</option>
-            ))}
-          </select>
+      
           <input type="text" name="documento" placeholder="Documento" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
 
           <div>
