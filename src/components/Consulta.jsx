@@ -118,15 +118,38 @@ const Dashboard = () => {
 
           {showModal && selectedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg w-full max-w-3xl p-6">
-                <img src="/images/consulta.jpeg" alt="Registro" className="w-full rounded-lg mb-4" />
-                <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
-                <p className="text-lg"><strong>Folio:</strong> {selectedRecord.folio}</p>
-                <p className="text-lg"><strong>Fecha:</strong> {selectedRecord.fecha}</p>
-                <p className="text-lg"><strong>Dependencia:</strong> {selectedRecord.dependencia}</p>
-                <p className="text-lg"><strong>Asunto:</strong> {selectedRecord.asunto}</p>
-                <p className="text-lg"><strong>Status:</strong> {selectedRecord.estatus}</p>
-                <button onClick={closeModal} className="mt-4 px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]">Cerrar</button>
+              <div className="bg-white rounded-lg w-full max-w-3xl flex overflow-hidden min-h-[400px]">
+                <div className="w-1/3">
+                  <img
+                    src="/images/consulta.jpeg"
+                    alt="Registro"
+                    className="w-full h-full object-cover rounded-l-lg"
+                  />
+                </div>
+                <div className="w-2/3 p-6 flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles del Registro</h2>
+                    <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.fecha}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.dependencia}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.asunto}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Status:</span> {selectedRecord.estatus}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}</p>
+                    <p className="text-lg mb-2"><span className="font-bold">Area:</span> {selectedRecord.area}</p>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
