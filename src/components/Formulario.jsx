@@ -76,22 +76,26 @@ const Formulario = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
-        formData,
-        { method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", }
-      );
+        const response = await axios.post(
+            "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
+            formData,
+            { 
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
 
-      console.log("Registro exitoso:", response.data);
-      alert("Documento registrado exitosamente");
-      router.replace("/consulta"); // Redirige tras el registro
+        console.log("Registro exitoso:", response.data);
+        alert("Documento registrado exitosamente");
+        router.replace("/consulta"); // Redirige tras el registro
     } catch (error) {
-      console.error("Error al registrar:", error);
-      alert("Hubo un error al registrar el documento");
+        console.error("Error al registrar:", error);
+        alert("Hubo un error al registrar el documento");
     }
-  };
+};
+
 
   const areaOptions = area.map((com) => ({
     value: com.idArea,
