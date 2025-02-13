@@ -84,8 +84,9 @@ const Formulario = () => {
   const handleSelectChange = (selectedOptions, field) => {
     setFormData({
       ...formData,
-      [field]: selectedOptions.map((option) => option.value),
+      [field]: selectedOptions ? selectedOptions : [], // Actualizamos con los objetos completos
     });
+    setAreasDestino(selectedOptions); // Actualizamos areasDestino con los objetos completos
   };
 
   const handleSubmit = async (e) => {
@@ -259,7 +260,7 @@ const Formulario = () => {
               options={areaOptions}
               isMulti
               value={areasDestino}
-              onChange={(selected) => handleSelectChange(selected, "area")}
+              onChange={(selected) => handleSelectChange(selected, "areaDestino")}
               className="w-full border border-[#691B31] rounded-lg"
             />
           </div>
