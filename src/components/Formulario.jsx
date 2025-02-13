@@ -286,13 +286,7 @@ const Formulario = () => {
           </div>
           <div>
             <label className="block font-bold">Subir Archivo</label>
-            <UploadButton
-              route="default"
-              accept="application/pdf"
-              onUploadComplete={({ file }) => {
-                alert(`Uploaded ${file.name}`);
-              }}
-            />
+            <input type="text" name="documento" placeholder="Documento" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div className="col-span-3 flex justify-end items-end">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
