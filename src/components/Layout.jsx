@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,7 +28,7 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <aside
         className={`fixed sm:relative w-64 bg-[#691B31] text-white flex flex-col justify-between p-4 transition-all duration-300
-          ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full`}
+          ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full z-40`}  // Añado z-40 para asegurar que se superponga
       >
         <div>
           <div className="text-center p-6 border-b border-[#BC995B]">
@@ -70,9 +69,12 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Contenido principal */}
-      <main className="flex-1 overflow-y-auto p-4">{children}</main>
+      <main className={`flex-1 overflow-y-auto p-4 transition-all duration-300 ${isOpen ? "pl-64" : ""}`}>
+        {children}
+      </main>
     </div>
   );
 };
 
 export default Layout;
+
