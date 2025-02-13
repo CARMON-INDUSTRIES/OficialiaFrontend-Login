@@ -151,14 +151,6 @@ const Formulario = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
-          <input
-            type="text"
-            name="documento"
-            placeholder="Documento"
-            onChange={handleChange}
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-
           <div>
             <label className="block font-bold">Folio</label>
             <input
@@ -257,10 +249,8 @@ const Formulario = () => {
             <label className="block font-bold">Área de Destino</label>
             <Select
               options={areaOptions}
+              onChange={(e) => handleSelectChange(e, "areaDestino")}
               isMulti
-              value={areasDestino}
-              onChange={(selected) => handleSelectChange(selected, "area")}
-              className="w-full border border-[#691B31] rounded-lg"
             />
           </div>
           <div>
@@ -294,9 +284,9 @@ const Formulario = () => {
             </select>
           </div>
           <div>
-          <label className="block font-bold">Subir Archivo</label>
+            <label className="block font-bold">Subir Archivo</label>
             <UploadButton
-              route="demo"
+              route="default"
               accept="application/pdf"
               onUploadComplete={({ file }) => {
                 alert(`Uploaded ${file.name}`);
