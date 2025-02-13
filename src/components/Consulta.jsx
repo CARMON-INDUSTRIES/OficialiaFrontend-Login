@@ -20,7 +20,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
-    } else {
+    } else if (records.length === 0){
       fetchRecords(token);
     }
   }, []);
@@ -33,6 +33,8 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log("Datos obtenidos:", response.data);
+
       setRecords(response.data);
     } catch (error) {
       console.error("Error al obtener registros:", error);
@@ -99,9 +101,8 @@ const Dashboard = () => {
   };
 
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
-  const filteredRecords = records.filter(record => {
+  const filteredRecords = [...new Map(records.map(item => [item.folio, item])).values()].filter(record => {
     const searchLower = search.toLowerCase();
-
     return (
       String(record.folio).includes(search) ||  
       (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
@@ -110,6 +111,7 @@ const Dashboard = () => {
       (record.estatus && record.estatus.toLowerCase().includes(searchLower))
     );
   });
+  
 
   // Dentro del componente
 const formatDate = (dateString) => {
