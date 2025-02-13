@@ -282,15 +282,16 @@ const Formulario = () => {
               ))}
             </select>
           </div>
-          <main className="flex min-h-screen flex-col items-center justify-center">
+          <div>
+          <label className="block font-bold">Subir Archivo</label>
             <UploadButton
               route="demo"
-              accept="image/*"
+              accept="application/pdf"
               onUploadComplete={({ file }) => {
                 alert(`Uploaded ${file.name}`);
               }}
             />
-          </main>
+          </div>
           <div className="col-span-3 flex justify-end items-end">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
               Registrar
