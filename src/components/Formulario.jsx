@@ -5,6 +5,7 @@ import { FaFileAlt } from "react-icons/fa";
 import { UploadButton } from "@/components/ui/upload-button";
 import Select from "react-select";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Formulario = () => {
   const router = useRouter();
@@ -104,11 +105,21 @@ const Formulario = () => {
       );
 
       console.log("Registros exitosos:", response.data);
-      alert("Documento registrado exitosamente");
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "Documento registrado correctamente",
+        icon: "success",
+        confirmButtonColor: "#691B31",
+      });
       router.replace("/consulta"); // Redirige tras el registro
     } catch (error) {
       console.error("Error al registrar:", error);
-      alert("Hubo un error al registrar el documento");
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un error al registrar el documento",
+        icon: "error",
+        confirmButtonColor: "#691B31",
+      });
     }
   };
 
