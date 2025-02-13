@@ -294,7 +294,7 @@ const Formulario = () => {
             </select>
           </div>
           <div>
-          <label className="block font-bold">Subir Archivo</label>
+          <label className="block font-bold">Archivo</label>
             <UploadButton
               route="demo"
               accept="application/pdf"
