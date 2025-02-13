@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FaSignOutAlt, FaHome, FaUsers, FaBars, FaTimes } from "react-icons/fa";
+import { FaSignOutAlt, FaHome, FaUsers, FaBars, FaTimes, FaInbox, FaCog } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 
 const Layout = ({ children }) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false); // Estado para abrir/cerrar el menú
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <aside
         className={`fixed sm:relative w-64 bg-[#691B31] text-white flex flex-col justify-between p-4 transition-all duration-300
-          ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full z-40`}  // Añado z-40 para asegurar que se superponga
+          ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full z-40`}
       >
         <div>
           <div className="text-center p-6 border-b border-[#BC995B]">
@@ -39,33 +39,33 @@ const Layout = ({ children }) => {
             </div>
           </div>
           <nav className="flex flex-col gap-4 px-4 mt-4">
-            <Link
-              href="/consulta"
-              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
-            >
+            <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
               <FaHome /> Inicio
             </Link>
-            <Link
-              href="/formulario"
-              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
-            >
+            <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
               <FiFilePlus /> Nuevo Registro
             </Link>
-            <Link
-              href="/roles"
-              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
-            >
+            <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
               <FaUsers /> Roles y usuarios
+            </Link>
+            <Link href="/buzon" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
+              <FaInbox /> Buzón
             </Link>
           </nav>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B] transition-colors"
-        >
-          <FaSignOutAlt /> Cerrar Sesión
-        </button>
+        {/* Sección de Configuración y Cerrar Sesión */}
+        <div className="mt-auto px-4 ">
+          <Link href="/configuracion" className="flex items-center gap-3 py-2  hover:text-[#BC995B] transition-colors">
+            <FaCog /> Configuración
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full py-2 mt-2 text-left hover:text-[#BC995B] transition-colors"
+          >
+            <FaSignOutAlt /> Cerrar Sesión
+          </button>
+        </div>
       </aside>
 
       {/* Contenido principal */}
@@ -77,4 +77,5 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
+
 
