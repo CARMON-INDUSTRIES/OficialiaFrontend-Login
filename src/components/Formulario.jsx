@@ -25,7 +25,7 @@ const Formulario = () => {
     destinatario: "",
     cargoDestinatario: "",
     asunto: "",
-    areaDestino: [],
+    areasDestino: [],
     importancia: "",
     status: "",
   });
