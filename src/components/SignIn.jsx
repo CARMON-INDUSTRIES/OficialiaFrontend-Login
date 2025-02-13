@@ -80,7 +80,7 @@ export const SignIn = () => {
           transition={{ duration: 1 }}
           className="top-8 left-8 absolute text-3xl font-bold sm:hidden"
         >
-          BIENVENIDO
+         
         </motion.h1>
 
         {/* Animación del formulario */}

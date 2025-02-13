@@ -36,7 +36,7 @@ export const Register = () => {
       if (!response.ok) throw new Error("Error al registrar usuario");
       const data = await response.json();
       setError("");
-      router.push("/Consulta");
+      router.push("/login");
     } catch (err) {
       setError(err.message);
     }
@@ -71,7 +71,7 @@ export const Register = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="top-8 left-8 absolute text-3xl font-bold sm:hidden"
+          className="top-8  absolute text-center text-3xl font-bold sm:hidden"
         >
           REGISTRO
         </motion.h1>

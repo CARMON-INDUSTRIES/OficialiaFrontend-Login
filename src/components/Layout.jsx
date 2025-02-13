@@ -1,26 +1,36 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaSignOutAlt, FaHome, FaUsers } from "react-icons/fa";
+import { useState } from "react";
+import { FaSignOutAlt, FaHome, FaUsers, FaBars, FaTimes } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 
 const Layout = ({ children }) => {
-  const router = useRouter(); // Hook para redirección
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false); // Estado para abrir/cerrar el menú
 
   const handleLogout = () => {
-    // Eliminar el token de las cookies
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    localStorage.getItem("token");
-
-
-    // Redirigir al usuario a la página de inicio de sesión
+    localStorage.removeItem("token");
     router.push("/");
   };
 
   return (
     <div className="flex h-screen bg-[#F5F5F5]">
+      {/* Botón para abrir/cerrar el menú en móviles */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="sm:hidden fixed top-4 left-4 z-50 bg-[#691B31] text-white p-2 rounded-full"
+      >
+        {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+      </button>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-[#691B31] text-white flex flex-col justify-between">
+      <aside
+        className={`fixed sm:relative w-64 bg-[#691B31] text-white flex flex-col justify-between p-4 transition-all duration-300
+          ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full`}
+      >
         <div>
           <div className="text-center p-6 border-b border-[#BC995B]">
             <h1 className="text-2xl font-bold">Unidad Central</h1>
@@ -29,28 +39,38 @@ const Layout = ({ children }) => {
               <FaUsers className="text-6xl text-slate-50" />
             </div>
           </div>
-          <nav className="flex flex-col gap-4 px-6 mt-4">
-            <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+          <nav className="flex flex-col gap-4 px-4 mt-4">
+            <Link
+              href="/consulta"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
+            >
               <FaHome /> Inicio
             </Link>
-            <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+            <Link
+              href="/formulario"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
+            >
               <FiFilePlus /> Nuevo Registro
             </Link>
-            <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B]">
+            <Link
+              href="/roles"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors"
+            >
               <FaUsers /> Roles y usuarios
             </Link>
           </nav>
         </div>
+
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B]"
+          className="flex items-center gap-3 px-6 py-4 hover:text-[#BC995B] transition-colors"
         >
           <FaSignOutAlt /> Cerrar Sesión
         </button>
       </aside>
 
-      {/* Contenido dinámico */}
-      <main className="flex-1 ">{children}</main>
+      {/* Contenido principal */}
+      <main className="flex-1 overflow-y-auto p-4">{children}</main>
     </div>
   );
 };
