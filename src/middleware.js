@@ -13,5 +13,5 @@ export function middleware(request) {
 
 // Aplica el middleware a todas las rutas internas
 export const config = {
-  matcher: [ "/formulario, /roles"], // Agrega más rutas protegidas si es necesario
+  matcher: [ "/formulario, /roles, /consulta"], // Agrega más rutas protegidas si es necesario
 };
