@@ -252,12 +252,6 @@ const Formulario = () => {
               options={areaOptions}
               onChange={(e) => handleSelectChange(e, "areaDestino")}
               isMulti
-<<<<<<< HEAD
-=======
-              value={areasDestino}
-              onChange={(selected) => handleSelectChange(selected, "areaDestino")}
-              className="w-full border border-[#691B31] rounded-lg"
->>>>>>> origin/main
             />
           </div>
           <div>
