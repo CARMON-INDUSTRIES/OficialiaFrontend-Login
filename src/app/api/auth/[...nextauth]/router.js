@@ -8,7 +8,7 @@ export const { POST } = createUploadRouteHandler({
   bucketName: "oficialia-documentos",
   routes: {
     demo: route({
-      fileTypes: ["image/*"],
+      fileTypes: ["application/pdf"],
     }),
   },
 });
