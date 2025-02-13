@@ -98,6 +98,29 @@ const Dashboard = () => {
     setEditData({});
   };
 
+  // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
+  const filteredRecords = records.filter(record => {
+    const searchLower = search.toLowerCase();
+
+    return (
+      String(record.folio).includes(search) ||  
+      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
+      (record.dependencia && record.dependencia.toLowerCase().includes(searchLower)) ||
+      (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
+      (record.estatus && record.estatus.toLowerCase().includes(searchLower))
+    );
+  });
+
+  // Dentro del componente
+const formatDate = (dateString) => {
+  const date = new Date(dateString); // Convierte la cadena en un objeto Date
+  return date.toLocaleDateString("es-ES", { // Formatea la fecha
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
   return (
     <Layout>
       <div className="h-full w-full flex flex-col items-center bg-gradient-to-br from-[#ffffff] to-[#BC995B] p-6">
@@ -111,50 +134,49 @@ const Dashboard = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="overflow-auto max-h-[500px] mt-6">
-          <table className="min-w-full bg-white rounded-lg overflow-x-auto">
-  <thead className="bg-[#BC995B] text-white">
-    <tr>
-      <th className="py-3 px-6 text-left">Folio</th>
-      <th className="py-3 px-6 text-left">Fecha</th>
-      <th className="py-3 px-6 text-left">Dependencia</th>
-      <th className="py-3 px-6 text-left">Asunto</th>
-      <th className="py-3 px-6 text-left">Status</th>
-      <th className="py-3 px-6 text-center">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {records.map((record) => (
-      <tr key={record.folio} className="border-b">
-        <td className="py-3 px-6">{record.folio}</td>
-        <td className="py-3 px-6">{record.fecha}</td>
-        <td className="py-3 px-6">{record.dependencia}</td>
-        <td className="py-3 px-6">{record.asunto}</td>
-        <td className="py-3 px-6">{record.estatus}</td>
-        <td className="py-3 px-6 flex justify-center gap-4">
-          <button
-            className="text-blue-500 hover:underline"
-            onClick={() => handleView(record)}
-          >
-            <FaEye />
-          </button>
-          <button
-            className="text-green-500 hover:underline"
-            onClick={() => handleEdit(record)}
-          >
-            <FaEdit />
-          </button>
-          <button
-            className="text-red-500 hover:underline"
-            onClick={() => handleDeleteConfirmation(record.folio)}
-          >
-            <FaTrashAlt />
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
+            <table className="min-w-full bg-white rounded-lg overflow-hidden">
+              <thead className="bg-[#BC995B] text-white">
+                <tr>
+                  <th className="py-3 px-6 text-left">Folio</th>
+                  <th className="py-3 px-6 text-left">Fecha</th>
+                  <th className="py-3 px-6 text-left">Dependencia</th>
+                  <th className="py-3 px-6 text-left">Asunto</th>
+                  <th className="py-3 px-6 text-left">Status</th>
+                  <th className="py-3 px-6 text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRecords.map((record) => (
+                  <tr key={record.folio} className="border-b">
+                    <td className="py-3 px-6">{record.folio}</td>
+                    <td className="py-3 px-6">{record.fecha ? formatDate(record.fecha) : "Fecha no disponible"}</td>
+                    <td className="py-3 px-6">{record.dependencia}</td>
+                    <td className="py-3 px-6">{record.asunto}</td>
+                    <td className="py-3 px-6">{record.estatus}</td>
+                    <td className="py-3 px-6 flex justify-center gap-4">
+                      <button
+                        className="text-blue-500 hover:underline"
+                        onClick={() => handleView(record)}
+                      >
+                        <FaEye />
+                      </button>
+                      <button
+                        className="text-green-500 hover:underline"
+                        onClick={() => handleEdit(record)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500 hover:underline"
+                        onClick={() => handleDeleteConfirmation(record.folio)}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           {showModal && selectedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
