@@ -20,7 +20,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
-    } else if (records.length === 0){
+    } else if (records.length === 0) {
       fetchRecords(token);
     }
   }, []);
@@ -101,27 +101,30 @@ const Dashboard = () => {
   };
 
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
-  const filteredRecords = [...new Map(records.map(item => [item.folio, item])).values()].filter(record => {
+  const filteredRecords = [
+    ...new Map(records.map((item) => [item.folio, item])).values(),
+  ].filter((record) => {
     const searchLower = search.toLowerCase();
     return (
-      String(record.folio).includes(search) ||  
-      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
-      (record.dependencia && record.dependencia.toLowerCase().includes(searchLower)) ||
+      String(record.folio).includes(search) ||
+      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) ||
+      (record.dependencia &&
+        record.dependencia.toLowerCase().includes(searchLower)) ||
       (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
       (record.estatus && record.estatus.toLowerCase().includes(searchLower))
     );
   });
-  
 
   // Dentro del componente
-const formatDate = (dateString) => {
-  const date = new Date(dateString); // Convierte la cadena en un objeto Date
-  return date.toLocaleDateString("es-ES", { // Formatea la fecha
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-};
+  const formatDate = (dateString) => {
+    const date = new Date(dateString); // Convierte la cadena en un objeto Date
+    return date.toLocaleDateString("es-ES", {
+      // Formatea la fecha
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
 
   return (
     <Layout>
@@ -135,9 +138,9 @@ const formatDate = (dateString) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <div className="overflow-auto max-h-[500px] mt-6">
-            <table className="min-w-full bg-white rounded-lg overflow-hidden">
-              <thead className="bg-[#BC995B] text-white">
+          <div className="overflow-y-auto max-h-[500px] mt-6 border rounded-lg">
+            <table className="min-w-full bg-white">
+              <thead className="bg-[#BC995B] text-white sticky top-0 z-10">
                 <tr>
                   <th className="py-3 px-6 text-left">Folio</th>
                   <th className="py-3 px-6 text-left">Fecha</th>
@@ -147,11 +150,15 @@ const formatDate = (dateString) => {
                   <th className="py-3 px-6 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y">
                 {filteredRecords.map((record) => (
                   <tr key={record.folio} className="border-b">
                     <td className="py-3 px-6">{record.folio}</td>
-                    <td className="py-3 px-6">{record.fecha ? formatDate(record.fecha) : "Fecha no disponible"}</td>
+                    <td className="py-3 px-6">
+                      {record.fecha
+                        ? formatDate(record.fecha)
+                        : "Fecha no disponible"}
+                    </td>
                     <td className="py-3 px-6">{record.dependencia}</td>
                     <td className="py-3 px-6">{record.asunto}</td>
                     <td className="py-3 px-6">{record.estatus}</td>
@@ -180,6 +187,7 @@ const formatDate = (dateString) => {
               </tbody>
             </table>
           </div>
+
           {showModal && selectedRecord && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
               <div className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden">
