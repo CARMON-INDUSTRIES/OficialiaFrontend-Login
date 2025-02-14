@@ -189,7 +189,7 @@ const Dashboard = () => {
           </div>
 
           {showModal && selectedRecord && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
               <div className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden">
                 <div className="w-full md:w-1/3">
                   <img
@@ -259,7 +259,7 @@ const Dashboard = () => {
           )}
 
           {showEditModal && selectedRecord && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
               <div className="bg-gradient-to-br from-[#BC995B] to-[#ffffff] rounded-lg w-full max-w-3xl p-6 shadow-xl relative">
                 {/* Encabezado con animación */}
                 <div className="flex justify-between items-center">

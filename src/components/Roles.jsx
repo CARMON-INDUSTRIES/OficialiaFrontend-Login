@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaCheckCircle, FaSearch } from "react-icons/fa"; // Añadimos FaSearch
+import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
 
 const fondoModal = "/images/fondoModal.jpg";
@@ -16,8 +16,10 @@ const Roles = () => {
   const [usuarios, setUsuarios] = useState(usuariosIniciales);
   const [filteredUsuarios, setFilteredUsuarios] = useState(usuariosIniciales); // Estado para los usuarios filtrados
   const [modalOpen, setModalOpen] = useState(false);
+  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
+  const {newUser, setNewUser} = useState({area: "", correo:"", rol:"Usuario", });
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false); // Estado para el mensaje de error
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
@@ -32,6 +34,18 @@ const Roles = () => {
     setSelectedUser(user);
     setNewRole(user.rol);
     setModalOpen(true);
+  };
+
+  const openAddUserModal = () => setAddUserModalOpen(true);
+  const closeAddUserModal = () => {
+    setAddUserModalOpen(false);
+    setNewUser({ area: "", correo: "", rol: "Usuario" });
+  };
+
+  const saveNewUser = () => {
+    setUsuarios([...usuarios, { ...newUser, id: usuarios.length + 1 }]);
+    setFilteredUsuarios([...usuarios, { ...newUser, id: usuarios.length + 1 }]);
+    closeAddUserModal();
   };
 
   const closeModal = () => {
@@ -130,6 +144,16 @@ const Roles = () => {
           </table>
         </div>
       </div>
+
+       {/* 🔹 Botón flotante para agregar usuario */}
+       <button
+        onClick={openAddUserModal}
+        className="fixed bottom-6 right-6 bg-[#621132] text-white p-4 rounded-full shadow-lg hover:bg-[#891b45] transition transform hover:scale-110"
+      >
+        <FaPlus className="text-2xl" />
+      </button>
+
+      
 
       {/* Modal */}
       {modalOpen && (
