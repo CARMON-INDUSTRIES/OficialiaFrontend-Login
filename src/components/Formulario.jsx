@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaFileAlt } from "react-icons/fa";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebaseConfig";
 import Select from "react-select";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -16,10 +14,7 @@ const Formulario = () => {
   const [importancia, setImportancias] = useState([]);
   const [area, setAreas] = useState([]);
   const [status, setStatus] = useState([]);
-  const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [downloadURL, setDownloadURL] = useState("");
-
+  
   const [formData, setFormData] = useState({
     folio: "",
     fecha: "",
@@ -44,22 +39,10 @@ const Formulario = () => {
     const fetchData = async () => {
       try {
         const [comResp, areasResp, impResp, statusResp] = await Promise.all([
-          axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
-            { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
-            { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
-            { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
-            { headers: { Authorization: `Bearer ${token}` } }
-          ),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
         setComunidades(comResp.data);
@@ -86,14 +69,7 @@ const Formulario = () => {
   };
 
   const handleSelectChange = (selectedOptions, field) => {
-    setFormData({
-      ...formData,
-      [field]: selectedOptions.map((option) => option.value),
-    });
-  };
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    setFormData({ ...formData, [field]: selectedOptions.map((option) => option.value) });
   };
 
   const handleSubmit = async (e) => {
@@ -101,59 +77,36 @@ const Formulario = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log("Registros exitosos:", response.data);
-      Swal.fire({
-        title: "¡Éxito!",
-        text: "Documento registrado correctamente",
-        icon: "success",
-        confirmButtonColor: "#691B31",
-      });
-      router.replace("/consulta"); // Redirige tras el registro
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      Swal.fire({
-        title: "Error",
-        text: "Hubo un error al registrar el documento",
-        icon: "error",
-        confirmButtonColor: "#691B31",
-      });
-    }
-  };
-
-  const handleUpload = () => {
-    if (!file) return;
-
-    const fileRef = ref(storage, `pdfs/${file.name}`);
-    const uploadTask = uploadBytesResumable(fileRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const percent = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        const response = await axios.post(
+            "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
+            formData,
+            { 
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }
         );
-        setProgress(percent);
-      },
-      (error) => {
-        console.error("Error al subir el archivo:", error);
-      },
-      async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref);
-        setDownloadURL(url);
-      }
-    );
-  };
+
+        console.log("Registros exitosos:", response.data);
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Documento registrado correctamente",
+          icon: "success",
+          confirmButtonColor: "#691B31",
+        });
+        router.replace("/consulta"); // Redirige tras el registro
+    } catch (error) {
+        console.error("Error al registrar:", error);
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un error al registrar el documento",
+          icon: "error",
+          confirmButtonColor: "#691B31",
+        });
+    }
+};
+
 
   const areaOptions = area.map((com) => ({
     value: com.idArea,
@@ -165,181 +118,84 @@ const Formulario = () => {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-6">
         <div
           className="relative w-full h-24 bg-cover bg-center rounded-t-lg"
-          style={{ backgroundImage: "url('/images/fondo.jpg')" }}
-        >
+          style={{ backgroundImage: "url('/images/fondo.jpg')" }} >
           <div className="absolute inset-y-0 right-4 flex justify-center items-center">
+
             <h2 className="text-2xl font-bold text-[#691B31] text-center mt-4">
               REGISTRAR DOCUMENTOS ㅤㅤ
             </h2>
 
             <div className="bg-white p-3 rounded-full shadow-lg">
-              <FaFileAlt
-                className={`text-4xl text-[#691B31] ${
-                  isRotating ? "animate-spin" : ""
-                }`}
-              />
+              <FaFileAlt className={`text-4xl text-[#691B31] ${isRotating ? "animate-spin" : ""}`} />
             </div>
           </div>
         </div>
 
+
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
-          <div>
-            <label className="block font-bold">Subir Documento PDF</label>
-            <input
-              type="file"
-              onChange={handleFileChange}
-              accept="application/pdf"
-            />
-            <button type="button" onClick={handleUpload}>
-              Subir PDF
-            </button>
-            {progress > 0 && <p>Progreso: {progress}%</p>}
-            {downloadURL && (
-              <input type="hidden" name="documento" value={downloadURL} />
-            )}
-            {downloadURL && (
-              <p>
-                Archivo subido:{" "}
-                <a href={downloadURL} target="_blank" rel="noopener noreferrer">
-                  Ver PDF
-                </a>
-              </p>
-            )}
-          </div>
+      
+          <input type="text" name="documento" placeholder="Documento" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
 
           <div>
             <label className="block font-bold">Folio</label>
-            <input
-              type="text"
-              name="folio"
-              onChange={handleChange}
-              placeholder="Folio"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="folio" onChange={handleChange} placeholder="Folio" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Fecha de Registro</label>
-            <input
-              type="date"
-              name="fecha"
-              onChange={handleChange}
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="date" name="fecha" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Dependencia</label>
-            <input
-              type="text"
-              name="dependencia"
-              onChange={handleChange}
-              placeholder="Dependencia remitente"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="dependencia" onChange={handleChange} placeholder="Dependencia remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Comunidades</label>
-            <select
-              name="comunidad"
-              onChange={handleChange}
-              className="w-full p-2 border rounded border-[#691B31]"
-            >
+            <select name="comunidad" onChange={handleChange} className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Comunidad</option>
               {comunidades.map((com) => (
-                <option key={com.idComunidad} value={com.idComunidad}>
-                  {com.nombreComunidad}
-                </option>
+                <option key={com.idComunidad} value={com.idComunidad}>{com.nombreComunidad}</option>
               ))}
             </select>
           </div>
           <div>
             <label className="block font-bold">Remitente</label>
-            <input
-              type="text"
-              name="remitente"
-              onChange={handleChange}
-              placeholder="Remitente"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="remitente" onChange={handleChange} placeholder="Remitente" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Remitente</label>
-            <input
-              type="text"
-              name="cargoRemitente"
-              onChange={handleChange}
-              placeholder="Cargo"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="cargoRemitente" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Destinatario</label>
-            <input
-              type="text"
-              name="destinatario"
-              onChange={handleChange}
-              placeholder="Nombre del destinatario"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="destinatario" onChange={handleChange} placeholder="Nombre del destinatario" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Cargo del Destinatario</label>
-            <input
-              type="text"
-              name="cargoDestinatario"
-              onChange={handleChange}
-              placeholder="Cargo"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="cargoDestinatario" onChange={handleChange} placeholder="Cargo" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div>
             <label className="block font-bold">Asunto</label>
-            <input
-              type="text"
-              name="asunto"
-              onChange={handleChange}
-              placeholder="Asunto o descripción"
-              className="w-full p-2 border rounded border-[#691B31]"
-            />
+            <input type="text" name="asunto" onChange={handleChange} placeholder="Asunto o descripción" className="w-full p-2 border rounded border-[#691B31]" />
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select
-              options={areaOptions}
-              isMulti
-              value={areasDestino}
-              onChange={(selected) =>
-                handleSelectChange(selected, "area")
-              }
-              className="w-full border border-[#691B31] rounded-lg"
-            />
+            <Select options={areaOptions}  isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "areaDestino")} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
-            <select
-              onChange={handleChange}
-              name="importancia"
-              className="w-full p-2 border rounded border-[#691B31]"
-            >
+            <select onChange={handleChange} name="importancia" className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Importancia</option>
               {importancia.map((com) => (
-                <option key={com.idImportancia} value={com.idImportancia}>
-                  {com.nivel}
-                </option>
+                <option key={com.idImportancia} value={com.idImportancia}>{com.nivel}</option>
               ))}
             </select>
           </div>
           <div>
             <label className="block font-bold">Status</label>
-            <select
-              onChange={handleChange}
-              name="status"
-              className="w-full p-2 border rounded border-[#691B31]"
-            >
+            <select onChange={handleChange} name="status" className="w-full p-2 border rounded border-[#691B31]">
               <option>Seleccionar Status</option>
               {status.map((com) => (
-                <option key={com.idStatus} value={com.idStatus}>
-                  {com.estado}
-                </option>
+                <option key={com.idStatus} value={com.idStatus}>{com.estado}</option>
               ))}
             </select>
           </div>
