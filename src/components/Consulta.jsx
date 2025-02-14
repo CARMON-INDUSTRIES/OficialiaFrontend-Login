@@ -108,7 +108,7 @@ const Dashboard = () => {
       (record.fecha && record.fecha.toLowerCase().includes(searchLower)) || 
       (record.dependencia && record.dependencia.toLowerCase().includes(searchLower)) ||
       (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-      (record.estatus && record.estatus.toLowerCase().includes(searchLower))
+      (record.status && record.status.toLowerCase().includes(searchLower))
     );
   });
   
@@ -154,7 +154,7 @@ const formatDate = (dateString) => {
                     <td className="py-3 px-6">{record.fecha ? formatDate(record.fecha) : "Fecha no disponible"}</td>
                     <td className="py-3 px-6">{record.dependencia}</td>
                     <td className="py-3 px-6">{record.asunto}</td>
-                    <td className="py-3 px-6">{record.estatus}</td>
+                    <td className="py-3 px-6">{record.statusDescripcion}</td>
                     <td className="py-3 px-6 flex justify-center gap-4">
                       <button
                         className="text-blue-500 hover:underline"
@@ -213,7 +213,7 @@ const formatDate = (dateString) => {
                     </p>
                     <p className="text-lg mb-2">
                       <span className="font-bold">Status:</span>{" "}
-                      {selectedRecord.estatus}
+                      {selectedRecord.statusDescripcion}
                     </p>
                     <p className="text-lg mb-2">
                       <span className="font-bold">Remitente:</span>{" "}
@@ -233,7 +233,7 @@ const formatDate = (dateString) => {
                     </p>
                     <p className="text-lg mb-2">
                       <span className="font-bold">Area:</span>{" "}
-                      {selectedRecord.area}
+                      {selectedRecord.areaDescripcion}
                     </p>
                   </div>
                   <div className="flex justify-end mt-4">
@@ -385,7 +385,7 @@ const formatDate = (dateString) => {
                       <input
                         type="text"
                         className="input-field"
-                        defaultValue={selectedRecord.area}
+                        defaultValue={selectedRecord.areaDescripcion}
                       />
                     </div>
                     <div>
@@ -405,19 +405,19 @@ const formatDate = (dateString) => {
                       <select className="input-field">
                         <option
                           value="Pendiente"
-                          selected={selectedRecord.estatus === "Pendiente"}
+                          selected={selectedRecord.status === "Pendiente"}
                         >
                           Pendiente
                         </option>
                         <option
                           value="En proceso"
-                          selected={selectedRecord.estatus === "En proceso"}
+                          selected={selectedRecord.status === "En proceso"}
                         >
                           En proceso
                         </option>
                         <option
                           value="Finalizado"
-                          selected={selectedRecord.estatus === "Finalizado"}
+                          selected={selectedRecord.status === "Finalizado"}
                         >
                           Finalizado
                         </option>

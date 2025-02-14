@@ -179,7 +179,7 @@ const Formulario = () => {
           </div>
           <div className="col-span-2">
             <label className="block font-bold">Área de Destino</label>
-            <Select options={areaOptions}  isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "area")} className="w-full border border-[#691B31] rounded-lg" />
+            <Select options={areaOptions}  isMulti value={areasDestino} onChange={(selected) => handleSelectChange(selected, "areaDestino")} className="w-full border border-[#691B31] rounded-lg" />
           </div>
           <div>
             <label className="block font-bold">Importancia</label>
