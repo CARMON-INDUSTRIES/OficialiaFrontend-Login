@@ -68,6 +68,7 @@ export const Register = () => {
           className="lg:w-[26.5rem] w-80 flex flex-col gap-4"
         >
           <div className="text-center sm:text-left">
+            <h1 className="text-center text-3xl font-bold text-[#621132] ">Nuevo Usuario</h1>
             <br />
             <img src="/images/presidencia.jpeg" alt="Presidencia" className="w-36 h-auto object-cover mb-4 mx-auto" />
           </div>

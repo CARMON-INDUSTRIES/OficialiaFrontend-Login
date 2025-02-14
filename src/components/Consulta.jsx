@@ -212,16 +212,12 @@ const Dashboard = () => {
                       {selectedRecord.fecha}
                     </p>
                     <p className="text-lg mb-2">
-                      <span className="font-bold">Destinatario:</span>{" "}
+                      <span className="font-bold">Dependencia:</span>{" "}
                       {selectedRecord.dependencia}
                     </p>
                     <p className="text-lg mb-2">
-                      <span className="font-bold">Asunto:</span>{" "}
-                      {selectedRecord.asunto}
-                    </p>
-                    <p className="text-lg mb-2">
-                      <span className="font-bold">Status:</span>{" "}
-                      {selectedRecord.statusDescripcion}
+                      <span className="font-bold">Comunidad:</span>{" "}
+                      {selectedRecord.comunidadDescripcion}
                     </p>
                     <p className="text-lg mb-2">
                       <span className="font-bold">Remitente:</span>{" "}
@@ -232,6 +228,10 @@ const Dashboard = () => {
                       {selectedRecord.cargoRemitente}
                     </p>
                     <p className="text-lg mb-2">
+                      <span className="font-bold">Asunto:</span>{" "}
+                      {selectedRecord.asunto}
+                    </p>
+                    <p className="text-lg mb-2">
                       <span className="font-bold">Destinatario:</span>{" "}
                       {selectedRecord.destinatario}
                     </p>
@@ -240,9 +240,22 @@ const Dashboard = () => {
                       {selectedRecord.cargoDestinatario}
                     </p>
                     <p className="text-lg mb-2">
-                      <span className="font-bold">Area:</span>{" "}
+                      <span className="font-bold">Área(s) turnada(s):</span>{" "}
                       {selectedRecord.areaDescripcion}
                     </p>
+                    <p className="text-lg mb-2">
+                      <span className="font-bold text-red-600">Importancia:</span>{" "}
+                      {selectedRecord.importanciaDescripcion}
+                    </p>
+                  
+                    
+                    <p className="text-lg mb-2">
+                      <span className="font-bold text-[#621132]">Status:</span>{" "}
+                      {selectedRecord.statusDescripcion}
+                    </p>
+                   
+                    
+                    
                   </div>
                   <div className="flex justify-end mt-4">
                     <button
@@ -328,12 +341,12 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 font-bold">
-                        Asunto
+                        Comunidad
                       </label>
                       <input
                         type="text"
                         className="input-field"
-                        defaultValue={selectedRecord.asunto}
+                        defaultValue={selectedRecord.comunidadesDescripcion}
                       />
                     </div>
                     <div>
@@ -348,26 +361,6 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 font-bold">
-                        Destinatario
-                      </label>
-                      <input
-                        type="text"
-                        className="input-field"
-                        defaultValue={selectedRecord.destinatario}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 font-bold">
-                        Comunidad
-                      </label>
-                      <input
-                        type="text"
-                        className="input-field"
-                        defaultValue={selectedRecord.comunidad}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 font-bold">
                         Cargo Remitente
                       </label>
                       <input
@@ -376,6 +369,29 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.cargoRemitente}
                       />
                     </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Asunto
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.asunto}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Destinatario
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.destinatario}
+                      />
+                    </div>
+                  
+                
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Cargo Destinatario
@@ -398,6 +414,26 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 font-bold">
+                        Importancia
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.importanciaDescripcion}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
+                        Status
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        defaultValue={selectedRecord.statusDescripcion}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold">
                         Documento
                       </label>
                       <input
@@ -406,41 +442,7 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.documento}
                       />
                     </div>
-                    <div>
-                      <label className="block text-gray-700 font-bold">
-                        Status
-                      </label>
-                      <select className="input-field">
-                        <option
-                          value="Pendiente"
-                          selected={selectedRecord.status === "Pendiente"}
-                        >
-                          Pendiente
-                        </option>
-                        <option
-                          value="En proceso"
-                          selected={selectedRecord.status === "En proceso"}
-                        >
-                          En proceso
-                        </option>
-                        <option
-                          value="Finalizado"
-                          selected={selectedRecord.status === "Finalizado"}
-                        >
-                          Finalizado
-                        </option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 font-bold">
-                        Importancia
-                      </label>
-                      <select className="input-field">
-                        <option value="Alta">Alta</option>
-                        <option value="Media">Media</option>
-                        <option value="Baja">Baja</option>
-                      </select>
-                    </div>
+                    
                   </div>
 
                   {/* Botones */}
