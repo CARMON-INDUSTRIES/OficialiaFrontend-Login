@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
+import RegisterModal from "../components/RegisterModal";  // Asegúrate de que la ruta sea correcta
+
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
@@ -16,7 +18,7 @@ const Roles = () => {
   const [usuarios, setUsuarios] = useState(usuariosIniciales);
   const [filteredUsuarios, setFilteredUsuarios] = useState(usuariosIniciales); // Estado para los usuarios filtrados
   const [modalOpen, setModalOpen] = useState(false);
-  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
   const {newUser, setNewUser} = useState({area: "", correo:"", rol:"Usuario", });
@@ -36,10 +38,10 @@ const Roles = () => {
     setModalOpen(true);
   };
 
-  const openAddUserModal = () => setAddUserModalOpen(true);
+const openAddUserModal = () => setAddUserModalOpen(true);
   const closeAddUserModal = () => {
     setAddUserModalOpen(false);
-    setNewUser({ area: "", correo: "", rol: "Usuario" });
+    setNewUser({ area: "", correo: "", rol: "Usuario", password: "" });
   };
 
   const saveNewUser = () => {
@@ -147,13 +149,15 @@ const Roles = () => {
 
        {/* 🔹 Botón flotante para agregar usuario */}
        <button
-        onClick={openAddUserModal}
+        onClick={() => setIsRegisterOpen(true)}
         className="fixed bottom-6 right-6 bg-[#621132] text-white p-4 rounded-full shadow-lg hover:bg-[#891b45] transition transform hover:scale-110"
       >
         <FaPlus className="text-2xl" />
       </button>
 
-      
+      {/* Modal de Registro */}
+      <RegisterModal isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
+    
 
       {/* Modal */}
       {modalOpen && (

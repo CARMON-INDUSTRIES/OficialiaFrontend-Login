@@ -143,10 +143,6 @@ export const SignIn = () => {
               Iniciar Sesión
             </button>
 
-            <p>
-              <Link href="/register" className="text-[#A02142]">REGISTRATE</Link>
-            </p>
-
             <Link href="/">
               <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
                 <FaArrowLeft />

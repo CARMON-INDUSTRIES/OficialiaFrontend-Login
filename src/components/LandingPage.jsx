@@ -18,7 +18,7 @@ const LandingPage = () => {
           Tula de Allende
         </h2>
         <p className="text-base sm:text-lg text-[#333] mb-6 sm:mb-8">
-          Selecciona una opción para continuar:
+          Inicie sesión para continuar:
         </p>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
           <Link href="/login">
@@ -26,11 +26,7 @@ const LandingPage = () => {
               Iniciar Sesión
             </button>
           </Link>
-          <Link href="/register">
-            <button className="bg-[#BC995B] text-white px-6 sm:px-7 py-2 sm:py-3 rounded-lg shadow-md hover:bg-[#A37F4D] transition-all">
-              Registrate
-            </button>
-          </Link>
+          
         </div>
         <div className="mt-6 sm:mt-8">
           <Carousel />
