@@ -261,6 +261,8 @@ const Dashboard = () => {
         setShowEditModal={setShowEditModal}
         selectedRecord={selectedRecord}
         comunidades={comunidades}
+        importancias={importancias}
+        status={status}
         handleChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
         editData={editData}
       />
