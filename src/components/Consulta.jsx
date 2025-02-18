@@ -162,7 +162,8 @@ const Dashboard = () => {
       (record.dependencia &&
         record.dependencia.toLowerCase().includes(searchLower)) ||
       (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-      (record.status && record.status.toLowerCase().includes(searchLower))
+      (record.status?.toString().toLowerCase().includes(searchLower))
+
     );
   });
 
