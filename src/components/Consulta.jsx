@@ -15,6 +15,10 @@ const Dashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [editData, setEditData] = useState({});
+  const [comunidades, setComunidades] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [importancias, setImportancias] = useState([]);
+  const [status, setStatus] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,6 +28,43 @@ const Dashboard = () => {
       fetchRecords(token);
     }
   }, []);
+
+  useEffect(() => {
+    if (showEditModal) {
+      fetchData();
+    }
+  }, [showEditModal]);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const [comResp, areasResp, impResp, statusResp] = await Promise.all([
+        axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+      ]);
+
+      setComunidades(comResp.data);
+      setAreas(areasResp.data);
+      setImportancias(impResp.data);
+      setStatus(statusResp.data);
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+    }
+  };
 
   const fetchRecords = async (token) => {
     try {
@@ -78,6 +119,14 @@ const Dashboard = () => {
         }
       },
     });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({
+      ...prev,
+      [name]: value, // Actualiza el valor seleccionado
+    }));
   };
 
   const handleView = (record) => {
@@ -244,18 +293,16 @@ const Dashboard = () => {
                       {selectedRecord.areaDescripcion}
                     </p>
                     <p className="text-lg mb-2">
-                      <span className="font-bold text-red-600">Importancia:</span>{" "}
+                      <span className="font-bold text-red-600">
+                        Importancia:
+                      </span>{" "}
                       {selectedRecord.importanciaDescripcion}
                     </p>
-                  
-                    
+
                     <p className="text-lg mb-2">
                       <span className="font-bold text-[#621132]">Status:</span>{" "}
                       {selectedRecord.statusDescripcion}
                     </p>
-                   
-                    
-                    
                   </div>
                   <div className="flex justify-end mt-4">
                     <button
@@ -339,16 +386,32 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.dependencia}
                       />
                     </div>
+                    {/* Comunidad - Dropdown */}
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Comunidad
                       </label>
                       <input
                         type="text"
-                        className="input-field"
-                        defaultValue={selectedRecord.comunidadesDescripcion}
+                        className="input-field mb-2"
+                        defaultValue={selectedRecord.comunidadDescripcion}
+                        disabled // Solo para mostrar el valor actual sin edición
                       />
+                      <select
+                        name="comunidad"
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded border-[#691B31]"
+                        value={editData.comunidad || selectedRecord.idComunidad} // Carga el valor actual de la API
+                      >
+                        <option value="">Seleccionar Comunidad</option>
+                        {comunidades.map((com) => (
+                          <option key={com.idComunidad} value={com.idComunidad}>
+                            {com.nombreComunidad}
+                          </option>
+                        ))}
+                      </select>
                     </div>
+
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Remitente
@@ -379,7 +442,7 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.asunto}
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Destinatario
@@ -390,8 +453,7 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.destinatario}
                       />
                     </div>
-                  
-                
+
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Cargo Destinatario
@@ -402,6 +464,7 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.cargoDestinatario}
                       />
                     </div>
+                    {/* Área - Dropdown */}
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Área
@@ -412,6 +475,7 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.areaDescripcion}
                       />
                     </div>
+                    {/* Importancia - Dropdown */}
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Importancia
@@ -422,6 +486,8 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.importanciaDescripcion}
                       />
                     </div>
+
+                    {/* Status - Dropdown */}
                     <div>
                       <label className="block text-gray-700 font-bold">
                         Status
@@ -442,7 +508,6 @@ const Dashboard = () => {
                         defaultValue={selectedRecord.documento}
                       />
                     </div>
-                    
                   </div>
 
                   {/* Botones */}
