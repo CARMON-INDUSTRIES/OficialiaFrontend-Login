@@ -330,34 +330,67 @@ const Formulario = () => {
             </select>
           </div>
           <div>
-            <label className="block font-bold">Subir PDF</label>
-            <input
-              type="file"
-              onChange={handleFileChange}
-              accept="application/pdf"
-            />
-            <button type="button" onClick={handleUpload}>
+            <label className="block font-bold text-[#691B31]">
               Subir PDF
-            </button>
+            </label>
 
-            {progress > 0 && <p>Progreso: {progress}%</p>}
+            {/* Contenedor para el input de archivo y el botón */}
+            <div className="flex items-center gap-4">
+              {/* Input de archivo con un id y oculto */}
+              <input
+                type="file"
+                id="file-upload"
+                onChange={handleFileChange}
+                accept="application/pdf"
+                className="w-full px-3 py-2 border border-[#691B31] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm cursor-pointer text-center" // Ocultamos el input
+              />
 
+              {/* Botón de subir PDF estilizado junto al input */}
+              <button
+                type="button"
+                onClick={handleUpload}
+                className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50] focus:outline-none focus:ring-4 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm"
+              >
+                Subir
+              </button>
+            </div>
+
+            {/* Mostrar progreso de subida */}
+            {progress > 0 && (
+              <p className="text-sm font-semibold text-gray-700">
+                Progreso: {progress}%
+              </p>
+            )}
+
+            {/* Mostrar archivo subido */}
             {downloadURL && (
               <>
-                <p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">
                   Archivo subido:{" "}
                   <a
                     href={downloadURL}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 font-bold"
                   >
                     Ver PDF
                   </a>
                 </p>
+<<<<<<< HEAD
                 <input type="text" name="documento" readOnly />
+=======
+
+                <input
+                  type="text"
+                  name="documento"
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm"
+                />
+>>>>>>> origin/main
               </>
             )}
           </div>
+
           <div className="col-span-3 flex justify-end items-end">
             <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
               Registrar
