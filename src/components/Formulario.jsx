@@ -326,7 +326,7 @@ const Formulario = () => {
             </select>
           </div>
           <div>
-            <label className="block font-bold">Subir Documento PDF</label>
+            <label className="block font-bold">Subir PDF</label>
             <input
               type="file"
               onChange={handleFileChange}
