@@ -4,10 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
+import DetalleModal from "@/components/DetalleModal"; 
+import ModalEditar from '@/components/ModalEditar'; // Ajusta la ruta si es necesario
+
 import axios from "axios";
 import Swal from "sweetalert2";
-import DetalleModal from "@/components/DetalleModal";
-import ModalEditar from "@/components/ModalEditar"; 
 
 const Dashboard = () => {
   const router = useRouter();
@@ -21,9 +22,7 @@ const Dashboard = () => {
   const [areas, setAreas] = useState([]);
   const [importancias, setImportancias] = useState([]);
   const [status, setStatus] = useState([]);
-  const [numPages, setNumPages] = useState(null);
 
-  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -154,9 +153,8 @@ const Dashboard = () => {
   };
 
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
-  const filteredRecords = [
-    ...new Map(records.map((item) => [item.folio, item])).values(),
-  ].filter((record) => {
+  const filteredRecords = records
+  .filter((record) => {
     const searchLower = search.toLowerCase();
     return (
       String(record.folio).includes(search) ||
@@ -164,10 +162,21 @@ const Dashboard = () => {
       (record.dependencia &&
         record.dependencia.toLowerCase().includes(searchLower)) ||
       (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-      (record.status?.toString().toLowerCase().includes(searchLower))
-
+      (record.status?.toString().toLowerCase().includes(searchLower)) ||
+      (record.area && typeof record.area === 'string' && record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
     );
-  });
+  })
+  .reduce((acc, record) => {
+    // Aquí solo agregamos registros con el mismo folio si pertenecen a un área diferente
+    const existingRecord = acc.find(
+      (item) => item.folio === record.folio && item.area === record.area
+    );
+    if (!existingRecord) {
+      acc.push(record); // Si no existe el registro, lo agregamos
+    }
+    return acc;
+  }, []);
+
 
   // Dentro del componente
   const formatDate = (dateString) => {
@@ -205,8 +214,8 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filteredRecords.map((record) => (
-                  <tr key={record.folio} className="border-b">
+                {filteredRecords.map((record, index) => (
+                  <tr key={`${record.folio}-${record.area}-${index}`} className="border-b">
                     <td className="py-3 px-6">{record.folio}</td>
                     <td className="py-3 px-6">
                       {record.fecha
@@ -243,24 +252,20 @@ const Dashboard = () => {
           </div>
 
           {showModal && selectedRecord && (
-            <DetalleModal
-            selectedRecord={selectedRecord}
-            closeModal={closeModal}
-          />
+            <DetalleModal selectedRecord={selectedRecord} closeModal={closeModal} />
           )}
 
-          {showEditModal && selectedRecord && (
-            <ModalEditar
-            showEditModal={showEditModal}
-            setShowEditModal={setShowEditModal}
-            selectedRecord={selectedRecord}
-            comunidades={comunidades}
-            handleChange={(e) =>
-              setEditData({ ...editData, [e.target.name]: e.target.value })
-            }
-            editData={editData}
-          />
-          )}
+
+<ModalEditar
+        showEditModal={showEditModal}
+        setShowEditModal={setShowEditModal}
+        selectedRecord={selectedRecord}
+        comunidades={comunidades}
+        importancias={importancias}
+        status={status}
+        handleChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
+        editData={editData}
+      />
         </div>
       </div>
     </Layout>

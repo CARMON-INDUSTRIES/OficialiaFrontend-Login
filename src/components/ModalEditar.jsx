@@ -1,11 +1,21 @@
 "use client";
-import { FaEdit } from 'react-icons/fa';
-import Swal from 'sweetalert2';
+import { FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
 
-const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunidades, handleChange, editData }) => {
+const ModalEditar = ({
+  showEditModal,
+  setShowEditModal,
+  selectedRecord,
+  comunidades,
+  importancias,
+  status,
+  handleChange,
+  editData,
+}) => {
   return (
-    showEditModal && selectedRecord && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
+    showEditModal &&
+    selectedRecord && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
         <div className="bg-gradient-to-br from-[#BC995B] to-[#ffffff] rounded-lg w-full max-w-3xl p-6 shadow-xl relative">
           {/* Encabezado con animación */}
           <div className="flex justify-between items-center">
@@ -42,9 +52,7 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
           >
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
-                <label className="block text-gray-700 font-bold">
-                  Folio
-                </label>
+                <label className="block text-gray-700 font-bold">Folio</label>
                 <input
                   type="text"
                   className="input-field"
@@ -53,9 +61,7 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-bold">
-                  Fecha
-                </label>
+                <label className="block text-gray-700 font-bold">Fecha</label>
                 <input
                   type="date"
                   className="input-field"
@@ -72,24 +78,21 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
                   defaultValue={selectedRecord.dependencia}
                 />
               </div>
-              {/* Comunidad - Dropdown */}
+              {/* Comunidad - Dropdown Compacto */}
               <div>
                 <label className="block text-gray-700 font-bold">
                   Comunidad
                 </label>
-                <input
-                  type="text"
-                  className="input-field mb-2"
-                  defaultValue={selectedRecord.comunidadDescripcion}
-                  disabled // Solo para mostrar el valor actual sin edición
-                />
                 <select
                   name="comunidad"
                   onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31]"
-                  value={editData.comunidad || selectedRecord.idComunidad} // Carga el valor actual de la API
+                  className="w-full p-2 border rounded border-[#691B31] bg-white"
+                  value={editData.comunidad || selectedRecord.idComunidad}
                 >
-                  <option value="">Seleccionar Comunidad</option>
+                  <option value={selectedRecord.idComunidad} hidden>
+                    {selectedRecord.comunidadDescripcion}{" "}
+                    {/* Muestra la comunidad actual */}
+                  </option>
                   {comunidades.map((com) => (
                     <option key={com.idComunidad} value={com.idComunidad}>
                       {com.nombreComunidad}
@@ -119,9 +122,7 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-bold">
-                  Asunto
-                </label>
+                <label className="block text-gray-700 font-bold">Asunto</label>
                 <input
                   type="text"
                   className="input-field"
@@ -152,9 +153,7 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
               </div>
               {/* Área - Dropdown */}
               <div>
-                <label className="block text-gray-700 font-bold">
-                  Área
-                </label>
+                <label className="block text-gray-700 font-bold">Área</label>
                 <input
                   type="text"
                   className="input-field"
@@ -166,24 +165,46 @@ const ModalEditar = ({ showEditModal, setShowEditModal, selectedRecord, comunida
                 <label className="block text-gray-700 font-bold">
                   Importancia
                 </label>
-                <input
-                  type="text"
-                  className="input-field"
-                  defaultValue={selectedRecord.importanciaDescripcion}
-                />
+                <select
+                  name="importancia"
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded border-[#691B31]"
+                  value={editData.importancia !== undefined ? editData.importancia : selectedRecord.idImportancia}
+
+// ✅ Ahora selecciona el valor correcto
+                >
+                    <option value={selectedRecord.idImportancia} hidden>
+                    {selectedRecord.nivel}{" "}
+                    {/* Muestra la comunidad actual */}
+                  </option>
+                  
+                  {importancias.map((com) => (
+                    <option key={com.idImportancia} value={com.idImportancia}>
+                      {com.nivel}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Status - Dropdown */}
               <div>
-                <label className="block text-gray-700 font-bold">
-                  Status
-                </label>
-                <input
-                  type="text"
-                  className="input-field"
-                  defaultValue={selectedRecord.statusDescripcion}
-                />
+                <label className="block text-gray-700 font-bold">Status</label>
+                <select
+                  name="status"
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded border-[#691B31]"
+                  value={editData.status !== undefined ? editData.status : selectedRecord.idStatus}
+ // ✅ Ahora selecciona el valor correcto
+                >
+                  <option value="">Seleccionar Status</option>
+                  {status.map((com) => (
+                    <option key={com.idStatus} value={com.idStatus}>
+                      {com.estado}
+                    </option>
+                  ))}
+                </select>
               </div>
+
               <div>
                 <label className="block text-gray-700 font-bold">
                   Documento
