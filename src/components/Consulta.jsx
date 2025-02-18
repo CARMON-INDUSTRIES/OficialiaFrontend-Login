@@ -243,7 +243,6 @@ const Dashboard = () => {
           </div>
 
           {showModal && selectedRecord && (
-<<<<<<< HEAD
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
               <div className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden">
                 <div className="w-full md:w-1/3">
@@ -324,12 +323,6 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-=======
-            <DetalleModal
-              selectedRecord={selectedRecord}
-              closeModal={closeModal}
-            />
->>>>>>> origin/main
           )}
 
           <ModalEditar
