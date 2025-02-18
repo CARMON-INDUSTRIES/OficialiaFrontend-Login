@@ -48,7 +48,7 @@ const Layout = ({ children }) => {
             <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
               <FaUsers /> Roles y usuarios
             </Link>
-            <Link href="/buzon" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
+            <Link href="" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
               <FaInbox /> Buzón
             </Link>
           </nav>
