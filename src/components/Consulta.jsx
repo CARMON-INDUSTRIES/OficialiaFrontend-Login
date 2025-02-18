@@ -86,7 +86,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteConfirmation = (folio) => {
+  const handleDeleteConfirmation = (id) => {
     Swal.fire({
       title: "¿Estás seguro de querer eliminar este registro?",
       text: "¡Esta acción no se puede deshacer!",
@@ -101,12 +101,12 @@ const Dashboard = () => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener${folio}`,
+            `https://oficialialoginbackend.somee.com/api/Correspondencia/eliminar/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
-          setRecords(records.filter((record) => record.folio !== folio));
+          setRecords(records.filter((record) => record.id !== id));
           Swal.fire({
             icon: "success",
             title: "Registro eliminado",
@@ -231,7 +231,7 @@ const Dashboard = () => {
                       </button>
                       <button
                         className="text-red-500 hover:underline"
-                        onClick={() => handleDeleteConfirmation(record.folio)}
+                        onClick={() => handleDeleteConfirmation(record.id)}
                       >
                         <FaTrashAlt />
                       </button>
