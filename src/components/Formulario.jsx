@@ -28,7 +28,7 @@ const Formulario = () => {
     destinatario: "",
     cargoDestinatario: "",
     asunto: "",
-    areasDestino: [],
+    area: [],
     importancia: "",
     status: "",
     documento: "",
@@ -102,7 +102,7 @@ const Formulario = () => {
       );
 
       const data = await response.json();
-      
+
       if (data.secure_url) {
         setDownloadURL(data.secure_url);
 
@@ -124,7 +124,9 @@ const Formulario = () => {
   const handleSelectChange = (selectedOptions, field) => {
     setFormData({
       ...formData,
-      [field]: selectedOptions.map((option) => option.value),
+      [field]: selectedOptions
+        ? selectedOptions.map((option) => option.value)
+        : [],
     });
   };
 
@@ -290,8 +292,10 @@ const Formulario = () => {
             <Select
               options={areaOptions}
               isMulti
-              value={areasDestino}
-              onChange={(selected) => handleSelectChange(selected, "area")}
+              value={areaOptions.filter((option) =>
+                formData.area.includes(option.value)
+              )}
+              onChange={(selected) => handleSelectChange(selected, "area")} // Aquí usamos "area" para coincidir con la base de datos
               className="w-full border border-[#691B31] rounded-lg"
             />
           </div>
@@ -350,12 +354,7 @@ const Formulario = () => {
                     Ver PDF
                   </a>
                 </p>
-                <input
-                  type="text"
-                  name="documento"
-
-                  readOnly
-                />
+                <input type="text" name="documento" readOnly />
               </>
             )}
           </div>

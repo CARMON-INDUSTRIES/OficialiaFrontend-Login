@@ -6,6 +6,7 @@ import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import axios from "axios";
 import Swal from "sweetalert2";
+import VisualizarPDF from "./VisualizarPDF";
 
 const Dashboard = () => {
   const router = useRouter();
