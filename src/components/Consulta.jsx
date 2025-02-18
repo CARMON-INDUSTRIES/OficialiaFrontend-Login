@@ -19,7 +19,9 @@ const Dashboard = () => {
   const [areas, setAreas] = useState([]);
   const [importancias, setImportancias] = useState([]);
   const [status, setStatus] = useState([]);
+  const [numPages, setNumPages] = useState(null);
 
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -298,11 +300,13 @@ const Dashboard = () => {
                       </span>{" "}
                       {selectedRecord.importanciaDescripcion}
                     </p>
-
                     <p className="text-lg mb-2">
                       <span className="font-bold text-[#621132]">Status:</span>{" "}
                       {selectedRecord.statusDescripcion}
                     </p>
+
+                    {selectedDocument && <PdfViewer pdfUrl={selectedDocument} />}
+                    
                   </div>
                   <div className="flex justify-end mt-4">
                     <button
