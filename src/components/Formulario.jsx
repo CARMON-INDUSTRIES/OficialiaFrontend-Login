@@ -376,17 +376,7 @@ const Formulario = () => {
                     Ver PDF
                   </a>
                 </p>
-<<<<<<< HEAD
                 <input type="text" name="documento" readOnly />
-=======
-
-                <input
-                  type="text"
-                  name="documento"
-                  readOnly
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm"
-                />
->>>>>>> origin/main
               </>
             )}
           </div>
