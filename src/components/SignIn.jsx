@@ -137,7 +137,7 @@ export const SignIn = () => {
 
             {error && <p className="text-red-500">{error}</p>}
 
-            <p><a href="#" className="text-[#A02142]">¿Olvidaste tu contraseña?</a></p>
+            
 
             <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2">
               Iniciar Sesión
