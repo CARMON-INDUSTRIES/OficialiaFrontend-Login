@@ -168,7 +168,6 @@ const ModalEditar = ({
                 <select
                   name="importancia"
                   onChange={handleChange}
-<<<<<<< HEAD
                   className="w-full p-2 border rounded border-[#691B31]"
                   value={editData.importancias || selectedRecord.idImportancia}
 
@@ -178,15 +177,6 @@ const ModalEditar = ({
                     {selectedRecord.nivel} {/* Muestra la comunidad actual */}
                   </option>
 
-=======
-                  className="w-full p-2 border rounded border-[#691B31] bg-white"
-                  value={editData.importancia || selectedRecord.idImportancia}
-                >
-                  <option value={selectedRecord.idImportancia} hidden>
-                    {selectedRecord.importanciaDescripcion}{" "}
-                    {/* Muestra la comunidad actual */}
-                  </option>
->>>>>>> origin/main
                   {importancias.map((com) => (
                     <option key={com.idImportancia} value={com.idImportancia}>
                       {com.nombreComunidad}
@@ -201,7 +191,6 @@ const ModalEditar = ({
                 <select
                   name="status"
                   onChange={handleChange}
-<<<<<<< HEAD
                   className="w-full p-2 border rounded border-[#691B31]"
                   value={
                     editData.status !== undefined
@@ -212,13 +201,6 @@ const ModalEditar = ({
                 >
                   <option value={selectedRecord.idStatus} hidden>
                     {selectedRecord.estado}{" "}
-=======
-                  className="w-full p-2 border rounded border-[#691B31] bg-white"
-                  value={editData.status || selectedRecord.idStatus}
-                >
-                  <option value={selectedRecord.idStatus} hidden>
-                    {selectedRecord.statusDescripcion}{" "}
->>>>>>> origin/main
                     {/* Muestra la comunidad actual */}
                   </option>
                   {status.map((com) => (
