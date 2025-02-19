@@ -210,17 +210,6 @@ const ModalEditar = ({
                   ))}
                 </select>
               </div>
-
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Documento
-                </label>
-                <input
-                  type="text"
-                  className="input-field"
-                  defaultValue={selectedRecord.documento}
-                />
-              </div>
             </div>
 
             {/* Botones */}

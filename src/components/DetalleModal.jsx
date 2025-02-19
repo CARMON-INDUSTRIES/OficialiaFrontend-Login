@@ -2,8 +2,6 @@
 
 import React from "react";
 
-
-
 const DetalleModal = ({ selectedRecord, closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
@@ -27,50 +25,59 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               <span className="font-bold">Fecha:</span> {selectedRecord.fecha}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Dependencia:</span> {selectedRecord.dependencia}
+              <span className="font-bold">Dependencia:</span>{" "}
+              {selectedRecord.dependencia}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Comunidad:</span> {selectedRecord.comunidadDescripcion}
+              <span className="font-bold">Comunidad:</span>{" "}
+              {selectedRecord.comunidadDescripcion}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Remitente:</span> {selectedRecord.remitente}
+              <span className="font-bold">Remitente:</span>{" "}
+              {selectedRecord.remitente}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}
+              <span className="font-bold">Cargo Remitente:</span>{" "}
+              {selectedRecord.cargoRemitente}
             </p>
             <p className="text-lg mb-2">
               <span className="font-bold">Asunto:</span> {selectedRecord.asunto}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}
+              <span className="font-bold">Destinatario:</span>{" "}
+              {selectedRecord.destinatario}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}
+              <span className="font-bold">Cargo Destinatario:</span>{" "}
+              {selectedRecord.cargoDestinatario}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Área(s) turnada(s):</span> {selectedRecord.areaDescripcion}
+              <span className="font-bold">Área(s) turnada(s):</span>{" "}
+              {selectedRecord.areaDescripcion}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold text-red-600">Importancia:</span> {selectedRecord.importanciaDescripcion}
+              <span className="font-bold text-red-600">Importancia:</span>{" "}
+              {selectedRecord.importanciaDescripcion}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold text-[#621132]">Status:</span> {selectedRecord.statusDescripcion}
+              <span className="font-bold text-[#621132]">Status:</span>{" "}
+              {selectedRecord.statusDescripcion}
             </p>
           </div>
           {/* VISUALIZADOR DE PDF */}
-          {selectedRecord?.documento && selectedRecord.documento.endsWith(".pdf") && (
-  <div className="mt-4">
-   
-    <button
-      onClick={() => window.open(selectedRecord.documento, "_blank")}
-      className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300"
-    >
-      Ver Documento
-    </button>
-  </div>
-)}
-
-
+          {selectedRecord?.documento &&
+            selectedRecord.documento.endsWith(".pdf") && (
+              <div className="mt-4">
+                <button
+                  onClick={() =>
+                    window.open(selectedRecord.documento, "_blank")
+                  }
+                  className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300"
+                >
+                  Ver Documento
+                </button>
+              </div>
+            )}
 
           <div className="flex justify-end mt-4">
             <button
