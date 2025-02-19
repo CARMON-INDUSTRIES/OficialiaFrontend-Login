@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
-import DetalleModal from "@/components/DetalleModal"; 
-import ModalEditar from '@/components/ModalEditar'; // Ajusta la ruta si es necesario
+import DetalleModal from "@/components/DetalleModal";
+import ModalEditar from "@/components/ModalEditar"; // Ajusta la ruta si es necesario
 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -79,8 +79,8 @@ const Dashboard = () => {
       );
       console.log("Datos obtenidos:", response.data);
 
-      const sortedRecords = response.data.sort((a, b) => 
-        new Date(b.fecha) - new Date(a.fecha)
+      const sortedRecords = response.data.sort(
+        (a, b) => new Date(b.fecha) - new Date(a.fecha)
       );
 
       setRecords(response.data);
@@ -128,6 +128,39 @@ const Dashboard = () => {
     });
   };
 
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+  
+    try {
+      await axios.put(
+        `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${id}`,
+        editData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      Swal.fire({
+        icon: "success",
+        title: "Registro actualizado",
+        text: "Los cambios se han guardado exitosamente.",
+        confirmButtonColor: "#691B31",
+      });
+  
+      setShowEditModal(false);
+      fetchRecords(token); // Vuelve a cargar los registros actualizados
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: "Hubo un problema al actualizar el registro.",
+        confirmButtonColor: "#691B31",
+      });
+    }
+  };
+  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({
@@ -158,29 +191,30 @@ const Dashboard = () => {
 
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
   const filteredRecords = records
-  .filter((record) => {
-    const searchLower = search.toLowerCase();
-    return (
-      String(record.folio).includes(search) ||
-      (record.fecha && record.fecha.toLowerCase().includes(searchLower)) ||
-      (record.dependencia &&
-        record.dependencia.toLowerCase().includes(searchLower)) ||
-      (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-      (record.status?.toString().toLowerCase().includes(searchLower)) ||
-      (record.area && typeof record.area === 'string' && record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
-    );
-  })
-  .reduce((acc, record) => {
-    // Aquí solo agregamos registros con el mismo folio si pertenecen a un área diferente
-    const existingRecord = acc.find(
-      (item) => item.folio === record.folio && item.area === record.area
-    );
-    if (!existingRecord) {
-      acc.push(record); // Si no existe el registro, lo agregamos
-    }
-    return acc;
-  }, []);
-
+    .filter((record) => {
+      const searchLower = search.toLowerCase();
+      return (
+        String(record.folio).includes(search) ||
+        (record.fecha && record.fecha.toLowerCase().includes(searchLower)) ||
+        (record.dependencia &&
+          record.dependencia.toLowerCase().includes(searchLower)) ||
+        (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
+        record.status?.toString().toLowerCase().includes(searchLower) ||
+        (record.area &&
+          typeof record.area === "string" &&
+          record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
+      );
+    })
+    .reduce((acc, record) => {
+      // Aquí solo agregamos registros con el mismo folio si pertenecen a un área diferente
+      const existingRecord = acc.find(
+        (item) => item.folio === record.folio && item.area === record.area
+      );
+      if (!existingRecord) {
+        acc.push(record); // Si no existe el registro, lo agregamos
+      }
+      return acc;
+    }, []);
 
   // Dentro del componente
   const formatDate = (dateString) => {
@@ -219,7 +253,10 @@ const Dashboard = () => {
               </thead>
               <tbody className="divide-y">
                 {filteredRecords.map((record, index) => (
-                  <tr key={`${record.folio}-${record.area}-${index}`} className="border-b">
+                  <tr
+                    key={`${record.folio}-${record.area}-${index}`}
+                    className="border-b"
+                  >
                     <td className="py-3 px-6">{record.folio}</td>
                     <td className="py-3 px-6">
                       {record.fecha
@@ -256,20 +293,25 @@ const Dashboard = () => {
           </div>
 
           {showModal && selectedRecord && (
-            <DetalleModal selectedRecord={selectedRecord} closeModal={closeModal} />
+            <DetalleModal
+              selectedRecord={selectedRecord}
+              closeModal={closeModal}
+            />
           )}
 
-
-<ModalEditar
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        selectedRecord={selectedRecord}
-        comunidades={comunidades}
-        importancias={importancias}
-        status={status}
-        handleChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
-        editData={editData}
-      />
+          <ModalEditar
+            showEditModal={showEditModal}
+            setShowEditModal={setShowEditModal}
+            selectedRecord={selectedRecord}
+            comunidades={comunidades}
+            importancias={importancias}
+            status={status}
+            handleChange={(e) =>
+              setEditData({ ...editData, [e.target.name]: e.target.value })
+            }
+            handleEditSubmit={handleEditSubmit} // Ahora sí está definida
+            editData={editData}
+          />
         </div>
       </div>
     </Layout>

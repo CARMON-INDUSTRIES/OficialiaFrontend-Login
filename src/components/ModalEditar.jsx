@@ -10,8 +10,11 @@ const ModalEditar = ({
   importancias,
   status,
   handleChange,
+  handleEditSubmit,
   editData,
 }) => {
+  
+
   return (
     showEditModal &&
     selectedRecord && (
@@ -28,28 +31,7 @@ const ModalEditar = ({
           </div>
 
           {/* Formulario */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              // Simulación de guardado
-              const success = Math.random() > 0.2; // 80% éxito, 20% error
-              if (success) {
-                Swal.fire({
-                  icon: "success",
-                  title: "¡Éxito!",
-                  text: "Cambios guardados exitosamente",
-                  confirmButtonColor: "#BC995B",
-                });
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "¡Error!",
-                  text: " Ha ocurrido un error",
-                  confirmButtonColor: "#BC995B",
-                });
-              }
-            }}
-          >
+          <form onSubmit={handleEditSubmit}>
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
                 <label className="block text-gray-700 font-bold">Folio</label>
