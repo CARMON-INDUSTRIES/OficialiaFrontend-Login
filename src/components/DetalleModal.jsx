@@ -1,11 +1,23 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 
 const DetalleModal = ({ selectedRecord, closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
-      <div className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden">
+      <motion.div
+        className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden"
+        initial={{ opacity: 0, y: -50 }} // Empieza arriba
+        animate={{ opacity: 1, y: 0 }} // Mueve hacia la posición original
+        exit={{ opacity: 0, y: 50 }} // Cuando se cierre, mueve hacia abajo
+        transition={{
+          type: "spring", // Para el efecto de rebote
+          stiffness: 100, // Qué tan fuerte será el rebote
+          damping: 15, // Cuánto se desacelera
+          duration: 0.5, // Duración total
+        }}
+      >
         <div className="w-full md:w-1/3">
           <img
             src="/images/consulta.jpeg"
@@ -13,6 +25,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
             className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
           />
         </div>
+
         <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-4 text-[#691B31]">
@@ -22,7 +35,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               <span className="font-bold">Folio:</span> {selectedRecord.folio}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Fecha:</span> 
+              <span className="font-bold">Fecha:</span>
               {new Date(selectedRecord.fecha).toLocaleDateString("es-MX")}
             </p>
             <p className="text-lg mb-2">
@@ -90,7 +103,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

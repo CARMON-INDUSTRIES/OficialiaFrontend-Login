@@ -1,6 +1,7 @@
 "use client";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion"; // Importa motion
 
 const ModalEditar = ({
   showEditModal,
@@ -29,20 +30,31 @@ const ModalEditar = ({
     showEditModal &&
     selectedRecord && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
-        <div className="bg-gradient-to-br from-[#BC995B] to-[#ffffff] rounded-lg w-full max-w-3xl p-6 shadow-xl relative">
+        {/* Aplica la animación al div que contiene el modal */}
+        <motion.div
+          className=" bg-[#F9F4DD] rounded-lg w-full max-w-3xl p-6 shadow-xl relative"
+          initial={{ opacity: 0, y: -50 }} // Empieza arriba
+          animate={{ opacity: 1, y: 0 }} // Mueve hacia la posición original
+          exit={{ opacity: 0, y: 50 }} // Cuando se cierre, mueve hacia abajo
+          transition={{
+            type: "spring", // Para el efecto de rebote
+            stiffness: 100, // Qué tan fuerte será el rebote
+            damping: 15, // Cuánto se desacelera
+            duration: 0.5, // Duración total
+          }}
+        >
           {/* Encabezado con animación */}
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-[#000000]">
               Editar Registro
             </h2>
-            <div className="text-[#000000] text-3xl animate-spin">
+            <div className="text-[#000000] text-3xl animate-spin duration-2000 ease-in-out">
               <FaEdit />
             </div>
           </div>
 
           {/* Formulario */}
           <form onSubmit={(e) => handleEditSubmit(e, editData)}>
-
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
                 <label className="block text-gray-700 font-bold">Folio</label>
@@ -83,7 +95,7 @@ const ModalEditar = ({
                 <select
                   name="comunidad"
                   onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31] bg-white"
+                  className="w-full p-2 border rounded border-[#BC995B] bg-white"
                   value={editData.comunidad || selectedRecord.idComunidad}
                 >
                   <option value={selectedRecord.idComunidad} hidden>
@@ -176,7 +188,7 @@ const ModalEditar = ({
                 <select
                   name="importancia"
                   onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31] bg-white"
+                  className="w-full p-2 border rounded border-[#BC995B] bg-white"
                   value={editData.importancia || selectedRecord.idImportancia}
                 >
                   <option value={selectedRecord.idImportancia} hidden>
@@ -227,7 +239,7 @@ const ModalEditar = ({
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
 
         {/* Estilos JSX */}
         <style jsx>{`
