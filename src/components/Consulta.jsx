@@ -79,6 +79,10 @@ const Dashboard = () => {
       );
       console.log("Datos obtenidos:", response.data);
 
+      const sortedRecords = response.data.sort((a, b) => 
+        new Date(b.fecha) - new Date(a.fecha)
+      );
+
       setRecords(response.data);
     } catch (error) {
       console.error("Error al obtener registros:", error);
