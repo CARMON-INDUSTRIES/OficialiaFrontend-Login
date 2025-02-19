@@ -14,6 +14,7 @@ const ModalEditar = ({
   editData,
 }) => {
   
+  if (!showEditModal) return null;
 
   return (
     showEditModal &&
@@ -47,7 +48,8 @@ const ModalEditar = ({
                 <input
                   type="date"
                   className="input-field"
-                  defaultValue={selectedRecord.fecha}
+                  value={selectedRecord.fecha}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -57,7 +59,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.dependencia}
+                  value={selectedRecord.dependencia}
+                  onChange={handleChange}
                 />
               </div>
               {/* Comunidad - Dropdown Compacto */}
@@ -90,7 +93,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.remitente}
+                  value={selectedRecord.remitente}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -100,7 +104,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.cargoRemitente}
+                  value={selectedRecord.cargoRemitente}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -108,7 +113,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.asunto}
+                  value={selectedRecord.asunto}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -119,7 +125,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.destinatario}
+                  value={selectedRecord.destinatario}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -130,7 +137,8 @@ const ModalEditar = ({
                 <input
                   type="text"
                   className="input-field"
-                  defaultValue={selectedRecord.cargoDestinatario}
+                  value={selectedRecord.cargoDestinatario}
+                  onChange={handleChange}
                 />
               </div>
               {/* Área - Dropdown */}

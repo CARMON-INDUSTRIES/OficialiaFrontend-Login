@@ -38,6 +38,12 @@ const Dashboard = () => {
     }
   }, [showEditModal]);
 
+  useEffect(() => {
+    if (selectedRecord) {
+      setEditData(selectedRecord); // Carga los datos del registro seleccionado
+    }
+  }, [selectedRecord]);
+
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -131,23 +137,23 @@ const Dashboard = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-  
+    console.log("Editando registro:", editData);
     try {
       await axios.put(
-        `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${id}`,
+        `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editData.id}`,
         editData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       Swal.fire({
         icon: "success",
         title: "Registro actualizado",
         text: "Los cambios se han guardado exitosamente.",
         confirmButtonColor: "#691B31",
       });
-  
+
       setShowEditModal(false);
       fetchRecords(token); // Vuelve a cargar los registros actualizados
     } catch (error) {
@@ -159,15 +165,16 @@ const Dashboard = () => {
       });
     }
   };
-  
 
   const handleChange = (e) => {
+    console.log('Campo cambiado:', e.target.name, 'Nuevo valor:', e.target.value);
     const { name, value } = e.target;
-    setEditData((prev) => ({
-      ...prev,
-      [name]: value, // Actualiza el valor seleccionado
+    setSelectedRecord((prevState) => ({
+      ...prevState,
+      [name]: value,
     }));
   };
+  
 
   const handleView = (record) => {
     setSelectedRecord(record);
