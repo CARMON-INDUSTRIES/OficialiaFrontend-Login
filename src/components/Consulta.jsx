@@ -167,14 +167,12 @@ const Dashboard = () => {
   };
 
   const handleChange = (e) => {
-    console.log('Campo cambiado:', e.target.name, 'Nuevo valor:', e.target.value);
     const { name, value } = e.target;
-    setSelectedRecord((prevState) => ({
+    setEditData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  
 
   const handleView = (record) => {
     setSelectedRecord(record);

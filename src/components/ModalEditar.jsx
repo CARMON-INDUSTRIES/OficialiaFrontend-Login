@@ -32,7 +32,8 @@ const ModalEditar = ({
           </div>
 
           {/* Formulario */}
-          <form onSubmit={handleEditSubmit}>
+          <form onSubmit={(e) => handleEditSubmit(e, editData)}>
+
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
                 <label className="block text-gray-700 font-bold">Folio</label>
@@ -47,8 +48,9 @@ const ModalEditar = ({
                 <label className="block text-gray-700 font-bold">Fecha</label>
                 <input
                   type="date"
+                  name="fecha"
                   className="input-field"
-                  value={selectedRecord.fecha}
+                  value={editData.fecha}
                   onChange={handleChange}
                 />
               </div>
@@ -58,8 +60,9 @@ const ModalEditar = ({
                 </label>
                 <input
                   type="text"
+                  name="dependencia"
                   className="input-field"
-                  value={selectedRecord.dependencia}
+                  value={editData.dependencia}
                   onChange={handleChange}
                 />
               </div>
@@ -92,8 +95,9 @@ const ModalEditar = ({
                 </label>
                 <input
                   type="text"
+                  name="remitente"
                   className="input-field"
-                  value={selectedRecord.remitente}
+                  value={editData.remitente}
                   onChange={handleChange}
                 />
               </div>
@@ -103,8 +107,9 @@ const ModalEditar = ({
                 </label>
                 <input
                   type="text"
+                  name="cargoRemitente"
                   className="input-field"
-                  value={selectedRecord.cargoRemitente}
+                  value={editData.cargoRemitente}
                   onChange={handleChange}
                 />
               </div>
@@ -112,8 +117,9 @@ const ModalEditar = ({
                 <label className="block text-gray-700 font-bold">Asunto</label>
                 <input
                   type="text"
+                  name="asunto"
                   className="input-field"
-                  value={selectedRecord.asunto}
+                  value={editData.asunto}
                   onChange={handleChange}
                 />
               </div>
@@ -124,8 +130,9 @@ const ModalEditar = ({
                 </label>
                 <input
                   type="text"
+                  name="destinatario"
                   className="input-field"
-                  value={selectedRecord.destinatario}
+                  value={editData.destinatario}
                   onChange={handleChange}
                 />
               </div>
@@ -136,8 +143,9 @@ const ModalEditar = ({
                 </label>
                 <input
                   type="text"
+                  name="cargoDestinatario"
                   className="input-field"
-                  value={selectedRecord.cargoDestinatario}
+                  value={editData.cargoDestinatario}
                   onChange={handleChange}
                 />
               </div>
@@ -146,8 +154,9 @@ const ModalEditar = ({
                 <label className="block text-gray-700 font-bold">Área</label>
                 <input
                   type="text"
+                  name="area"
                   className="input-field"
-                  defaultValue={selectedRecord.areaDescripcion}
+                  value={editData.areaDescripcion}
                 />
               </div>
               {/* Importancia - Dropdown */}
