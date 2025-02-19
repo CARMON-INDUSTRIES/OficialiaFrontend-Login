@@ -169,15 +169,14 @@ const ModalEditar = ({
                   name="importancia"
                   onChange={handleChange}
                   className="w-full p-2 border rounded border-[#691B31]"
-                  value={editData.importancia !== undefined ? editData.importancia : selectedRecord.idImportancia}
+                  value={editData.importancias || selectedRecord.idImportancia}
 
-// ✅ Ahora selecciona el valor correcto
+                  // ✅ Ahora selecciona el valor correcto
                 >
-                    <option value={selectedRecord.idImportancia} hidden>
-                    {selectedRecord.nivel}{" "}
-                    {/* Muestra la comunidad actual */}
+                  <option value={selectedRecord.idImportancia} hidden>
+                    {selectedRecord.nivel} {/* Muestra la comunidad actual */}
                   </option>
-                  
+
                   {importancias.map((com) => (
                     <option key={com.idImportancia} value={com.idImportancia}>
                       {com.nivel}
@@ -193,10 +192,17 @@ const ModalEditar = ({
                   name="status"
                   onChange={handleChange}
                   className="w-full p-2 border rounded border-[#691B31]"
-                  value={editData.status !== undefined ? editData.status : selectedRecord.idStatus}
- // ✅ Ahora selecciona el valor correcto
+                  value={
+                    editData.status !== undefined
+                      ? editData.status
+                      : selectedRecord.idStatus
+                  }
+                  // ✅ Ahora selecciona el valor correcto
                 >
-                  <option value="">Seleccionar Status</option>
+                  <option value={selectedRecord.idStatus} hidden>
+                    {selectedRecord.estado}{" "}
+                    {/* Muestra la comunidad actual */}
+                  </option>
                   {status.map((com) => (
                     <option key={com.idStatus} value={com.idStatus}>
                       {com.estado}

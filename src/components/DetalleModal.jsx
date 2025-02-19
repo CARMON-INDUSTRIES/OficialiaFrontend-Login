@@ -2,6 +2,8 @@
 
 import React from "react";
 
+
+
 const DetalleModal = ({ selectedRecord, closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
@@ -55,6 +57,21 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               <span className="font-bold text-[#621132]">Status:</span> {selectedRecord.statusDescripcion}
             </p>
           </div>
+          {/* VISUALIZADOR DE PDF */}
+          {selectedRecord?.documento && selectedRecord.documento.endsWith(".pdf") && (
+  <div className="mt-4">
+   
+    <button
+      onClick={() => window.open(selectedRecord.documento, "_blank")}
+      className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300"
+    >
+      Ver Documento
+    </button>
+  </div>
+)}
+
+
+
           <div className="flex justify-end mt-4">
             <button
               type="button"
