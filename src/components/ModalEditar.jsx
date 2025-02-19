@@ -184,7 +184,7 @@ const ModalEditar = ({
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> 
             </div>
 
             {/* Botones */}
