@@ -22,7 +22,8 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               <span className="font-bold">Folio:</span> {selectedRecord.folio}
             </p>
             <p className="text-lg mb-2">
-              <span className="font-bold">Fecha:</span> {selectedRecord.fecha}
+              <span className="font-bold">Fecha:</span> 
+              {new Date(selectedRecord.fecha).toLocaleDateString("es-MX")}
             </p>
             <p className="text-lg mb-2">
               <span className="font-bold">Dependencia:</span>{" "}

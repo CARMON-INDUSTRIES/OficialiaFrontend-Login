@@ -16,6 +16,15 @@ const ModalEditar = ({
   
   if (!showEditModal) return null;
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   return (
     showEditModal &&
     selectedRecord && (
@@ -50,7 +59,7 @@ const ModalEditar = ({
                   type="date"
                   name="fecha"
                   className="input-field"
-                  value={editData.fecha}
+                  value={formatDate(editData.fecha || selectedRecord.fecha).split('/').reverse().join('-')}
                   onChange={handleChange}
                 />
               </div>
@@ -156,7 +165,7 @@ const ModalEditar = ({
                   type="text"
                   name="area"
                   className="input-field"
-                  value={editData.areaDescripcion}
+                  value={selectedRecord.areaDescripcion}
                 />
               </div>
               {/* Importancia - Dropdown */}
