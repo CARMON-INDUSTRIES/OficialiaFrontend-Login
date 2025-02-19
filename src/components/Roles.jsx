@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
 import RegisterModal from "../components/RegisterModal";  // Asegúrate de que la ruta sea correcta
-
+import axios from "axios";
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
