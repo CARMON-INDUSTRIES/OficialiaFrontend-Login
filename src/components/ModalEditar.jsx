@@ -95,7 +95,7 @@ const ModalEditar = ({
                   </option>
                   {comunidades.map((com) => (
                     <option key={com.idComunidad} value={com.idComunidad}>
-                      {com.nivel}
+                      {com.nombreComunidad}
                     </option>
                   ))}
                 </select>
@@ -168,18 +168,16 @@ const ModalEditar = ({
                 <select
                   name="importancia"
                   onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31]"
-                  value={editData.importancias || selectedRecord.idImportancia}
-
-                  // ✅ Ahora selecciona el valor correcto
+                  className="w-full p-2 border rounded border-[#691B31] bg-white"
+                  value={editData.importancia || selectedRecord.idImportancia}
                 >
                   <option value={selectedRecord.idImportancia} hidden>
-                    {selectedRecord.nivel} {/* Muestra la comunidad actual */}
+                    {selectedRecord.importanciaDescripcion}{" "}
+                    {/* Muestra la comunidad actual */}
                   </option>
-
                   {importancias.map((com) => (
                     <option key={com.idImportancia} value={com.idImportancia}>
-                      {com.nombreComunidad}
+                      {com.nivel}
                     </option>
                   ))}
                 </select>
@@ -191,16 +189,11 @@ const ModalEditar = ({
                 <select
                   name="status"
                   onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31]"
-                  value={
-                    editData.status !== undefined
-                      ? editData.status
-                      : selectedRecord.idStatus
-                  }
-                  // ✅ Ahora selecciona el valor correcto
+                  className="w-full p-2 border rounded border-[#691B31] bg-white"
+                  value={editData.status || selectedRecord.idStatus}
                 >
-                  <option value={selectedRecord.idStatus} hidden>
-                    {selectedRecord.estado}{" "}
+                  <option value={selectedRecord.idImportancia} hidden>
+                    {selectedRecord.statusDescripcion}{" "}
                     {/* Muestra la comunidad actual */}
                   </option>
                   {status.map((com) => (
