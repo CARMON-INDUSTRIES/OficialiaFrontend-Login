@@ -4,10 +4,7 @@ import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añ
 import Image from "next/image";
 import RegisterModal from "../components/RegisterModal";  // Asegúrate de que la ruta sea correcta
 import axios from "axios";
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/main
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
@@ -26,7 +23,7 @@ const Roles = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false); // Estado para el mensaje de error
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el 
-  
+ const [roles, setRoles] = useState([]);
 
   useEffect(() => {
     setRotateOnLoad(true);
@@ -36,6 +33,20 @@ const Roles = () => {
   useEffect(() => {
     fetchUsuarios();
   }, []);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get("https://oficialialoginbackend.somee.com/api/Roles/GetRoles");
+        setRoles(response.data);  // Guarda los roles en el estado
+      } catch (error) {
+        console.error("Error al cargar los roles:", error);
+      }
+    };
+  
+    fetchRoles();
+  }, []);  // Esto se ejecutará solo una vez cuando el componente se monte
+  
 
   const fetchUsuarios = async () => {
     try {
@@ -50,7 +61,7 @@ const Roles = () => {
 
   const openModal = (user) => {
     setSelectedUser(user);
-    setNewRole(user.rol);
+    setNewRole(user.roles[0]);
     setModalOpen(true);
   };
 
@@ -75,6 +86,7 @@ const openAddUserModal = () => setAddUserModalOpen(true);
     if (!selectedUser) return;
     try {
       const response = await axios.post("https://oficialialoginbackend.somee.com/api/Roles/AsignarRol", {
+        id: selectedUser.id,
         Email: selectedUser.email,
         Role: newRole,
       });
@@ -143,7 +155,7 @@ const openAddUserModal = () => setAddUserModalOpen(true);
           <table className="w-full border-collapse bg-white">
             <thead>
               <tr className="text-gray-700">
-                <th className="py-3 px-6 text-left text-lg">Area</th>
+                <th className="py-3 px-6 text-left text-lg">Nombre de usuario (área)</th>
                 <th className="py-3 px-6 text-left text-lg">Correo</th>
                 <th className="py-3 px-6 text-left text-lg">Rol</th>
                 <th className="py-3 px-6 text-left text-lg">Acción</th>
@@ -157,7 +169,7 @@ const openAddUserModal = () => setAddUserModalOpen(true);
                   <td className="px-4 py-2 text-gray-700 text-lg">{user.roles[0]}</td>
                   <td className="px-4 py-2">
                     <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:bg-blue-600 transition"
+                      className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:bg-blue-600 transition duration-200 transform hover:scale-105 focus:ring-2"
                       onClick={() => openModal(user)}
                     >
                       <FaEdit /> Editar
@@ -197,23 +209,26 @@ const openAddUserModal = () => setAddUserModalOpen(true);
       <div className="p-6">
         <h2 className="text-2xl font-serif font-bold text-[#621132] text-center">EDITAR ROL</h2>
         <p className="text-gray-700 text-lg mt-2">
-          <strong>Area:</strong> {selectedUser?.area}
+          <strong>Area:</strong> {selectedUser?.userName}
         </p>
         <p className="text-gray-700 text-lg mt-1">
-          <strong>Correo:</strong> {selectedUser?.correo}
+          <strong>Correo:</strong> {selectedUser?.email}
         </p>
 
         <div className="mt-6">
-          <label className="block font-semibold text-lg mb-2">Selecciona un nuevo rol:</label>
-          <select
-            value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-            className="w-full p-2 border rounded-lg border-[#691B31] focus:outline-none focus:ring-2 focus:ring-[#691B31] transition-all"
-          >
-            <option value="Usuario">Usuario</option>
-            <option value="Administrador">Administrador</option>
-          </select>
-        </div>
+  <label className="block font-semibold text-lg mb-2">Selecciona un nuevo rol:</label>
+  <select
+    value={newRole}
+    onChange={(e) => setNewRole(e.target.value)}
+    className="w-full p-2 border rounded-lg border-[#691B31] focus:outline-none focus:ring-2 focus:ring-[#691B31] transition-all"
+  >
+    {roles.map((role) => (
+      <option key={role.id} value={role.name}>{role.name}</option>
+    ))}
+  </select>
+</div>
+
+
 
         <div className="flex justify-end gap-4 mt-6">
           <button
