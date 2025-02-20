@@ -4,7 +4,10 @@ import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añ
 import Image from "next/image";
 import RegisterModal from "../components/RegisterModal";  // Asegúrate de que la ruta sea correcta
 import axios from "axios";
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
