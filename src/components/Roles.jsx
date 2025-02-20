@@ -3,20 +3,17 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
 import RegisterModal from "../components/RegisterModal";  // Asegúrate de que la ruta sea correcta
+import axios from "axios";
 
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
 
-const usuariosIniciales = [
-  { id: 1, area: "Presidencia", correo: "Presidencia@example.com", rol: "Administrador" },
-  { id: 2, area: "PROFECO", correo: "PROFECO@example.com", rol: "Editor" },
-  { id: 3, area: "DIF", correo: "DIF@example.com", rol: "Usuario" },
-];
-
 const Roles = () => {
-  const [usuarios, setUsuarios] = useState(usuariosIniciales);
-  const [filteredUsuarios, setFilteredUsuarios] = useState(usuariosIniciales); // Estado para los usuarios filtrados
+  const [usuarios, setUsuarios] = useState([]);
+
+  const [filteredUsuarios, setFilteredUsuarios] = useState([]);
+ // Estado para los usuarios filtrados
   const [modalOpen, setModalOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -25,12 +22,28 @@ const Roles = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false); // Estado para el mensaje de error
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
-  const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el montaje
+  const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el 
+  
 
   useEffect(() => {
     setRotateOnLoad(true);
     setTimeout(() => setRotateOnLoad(false), 1000);
   }, []);
+
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  const fetchUsuarios = async () => {
+    try {
+      const response = await axios.get("https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles");
+      setUsuarios(response.data);
+      setFilteredUsuarios(response.data);
+    } catch (error) {
+      console.error("Error al cargar los usuarios:", error);
+      
+    }
+  };
 
   const openModal = (user) => {
     setSelectedUser(user);
@@ -41,7 +54,7 @@ const Roles = () => {
 const openAddUserModal = () => setAddUserModalOpen(true);
   const closeAddUserModal = () => {
     setAddUserModalOpen(false);
-    setNewUser({ area: "", correo: "", rol: "Usuario", password: "" });
+    setNewUser({ userName: "", email: "", rol: "Usuario", password: "" });
   };
 
   const saveNewUser = () => {
@@ -55,36 +68,43 @@ const openAddUserModal = () => setAddUserModalOpen(true);
     setSelectedUser(null);
   };
 
-  const saveChanges = () => {
-    const isSuccess = Math.random() > 0.5; // Aleatorio, puedes simularlo con tu lógica
+  const saveChanges = async () => {
+    if (!selectedUser) return;
+    try {
+      const response = await axios.post("https://oficialialoginbackend.somee.com/api/Roles/AsignarRol", {
+        Email: selectedUser.email,
+        Role: newRole,
+      });
 
-    if (isSuccess) {
-      setUsuarios((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === selectedUser.id ? { ...user, rol: newRole } : user
-        )
-      );
-      setModalOpen(false);
-      setShowConfirmation(true);
-      setShowErrorMessage(false);
-      setTimeout(() => setShowConfirmation(false), 2000);
-    } else {
+      if (response.status === 200) {
+        setUsuarios((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === selectedUser.id ? { ...user, roles: newRole } : user
+          )
+        );
+        setFilteredUsuarios((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === selectedUser.id ? { ...user, roles: newRole } : user
+          )
+        );
+        setShowConfirmation(true);
+        setTimeout(() => setShowConfirmation(false), 2000);
+      }
+    } catch (error) {
+      console.error("Error al actualizar el rol:", error);
       setShowErrorMessage(true);
-      setModalOpen(false);
       setTimeout(() => setShowErrorMessage(false), 2000);
     }
+    closeModal();
   };
-
   // Función de filtro
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    const filtered = usuarios.filter((user) => {
-      return (
-        user.area.toLowerCase().includes(value.toLowerCase()) ||
-        user.rol.toLowerCase().includes(value.toLowerCase())
-      );
-    });
+    const filtered = usuarios.filter((user) =>
+      user.userName.toLowerCase().includes(value.toLowerCase()) ||
+      (user.roles[0] && user.roles[0].toLowerCase().includes(value.toLowerCase()))
+    );
     setFilteredUsuarios(filtered);
   };
 
@@ -129,9 +149,9 @@ const openAddUserModal = () => setAddUserModalOpen(true);
             <tbody>
               {filteredUsuarios.map((user) => (
                 <tr key={user.id} className="border-b border-gray-300">
-                  <td className="px-4 py-2 text-gray-700 text-lg">{user.area}</td>
-                  <td className="px-4 py-2 text-gray-700 text-lg">{user.correo}</td>
-                  <td className="px-4 py-2 text-gray-700 text-lg">{user.rol}</td>
+                  <td className="px-4 py-2 text-gray-700 text-lg">{user.userName}</td>
+                  <td className="px-4 py-2 text-gray-700 text-lg">{user.email}</td>
+                  <td className="px-4 py-2 text-gray-700 text-lg">{user.roles[0]}</td>
                   <td className="px-4 py-2">
                     <button
                       className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:bg-blue-600 transition"
