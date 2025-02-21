@@ -126,10 +126,11 @@ export const SignIn = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 text-[#691B31]"
-                >
+  type="button"
+  onClick={() => setShowPassword(!showPassword)}
+  className="absolute right-3 text-[#691B31] px-2 py-1 rounded-lg transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
+>
+
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
@@ -139,12 +140,12 @@ export const SignIn = () => {
 
             
 
-            <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2">
+            <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#BC995B]">
               Iniciar Sesión
             </button>
 
             <Link href="/">
-              <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer">
+              <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]">
                 <FaArrowLeft />
               </div>
             </Link>

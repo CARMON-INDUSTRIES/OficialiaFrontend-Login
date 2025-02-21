@@ -229,12 +229,12 @@ const ModalEditar = ({
             <div className="flex justify-end mt-6">
               <button
                 type="button"
-                className="btn-red mr-2"
+                className="bg-red-500 mr-2 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-600"
                 onClick={() => setShowEditModal(false)}
               >
                 Cancelar
               </button>
-              <button type="submit" className="btn-gold">
+              <button type="submit" className="btn-gold transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]">
                 Guardar Cambios
               </button>
             </div>

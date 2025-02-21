@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FaSignOutAlt, FaHome, FaUsers, FaBars, FaTimes, FaInbox, FaCog } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 
+
 const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,29 +40,30 @@ const Layout = ({ children }) => {
             </div>
           </div>
           <nav className="flex flex-col gap-4 px-4 mt-4">
-            <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
-              <FaHome /> Inicio
-            </Link>
-            <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
-              <FiFilePlus /> Nuevo Registro
-            </Link>
-            <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
-              <FaUsers /> Roles y usuarios
-            </Link>
-            <Link href="/buzon" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors">
-              <FaInbox /> Buzón
-            </Link>
-          </nav>
+  <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
+    <FaHome className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Inicio
+  </Link>
+  <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
+    <FiFilePlus className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Nuevo Registro
+  </Link>
+  <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
+    <FaUsers className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Roles y usuarios
+  </Link>
+  <Link href="/buzon" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
+    <FaInbox className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Buzón
+  </Link>
+</nav>
+
         </div>
 
         {/* Sección de Configuración y Cerrar Sesión */}
         <div className="mt-auto px-4 ">
-          <Link href="/configuracion" className="flex items-center gap-3 py-2  hover:text-[#BC995B] transition-colors">
+          <Link href="/configuracion" className="flex items-center gap-3 py-2  hover:text-[#BC995B] transition-colors group-hover:rotate-12 group-hover:scale-110">
             <FaCog /> Configuración
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full py-2 mt-2 text-left hover:text-[#BC995B] transition-colors"
+            className="flex items-center gap-3 w-full py-2 mt-2 text-left hover:text-[#BC995B] transition-colors group-hover:rotate-12 group-hover:scale-110"
           >
             <FaSignOutAlt /> Cerrar Sesión
           </button>

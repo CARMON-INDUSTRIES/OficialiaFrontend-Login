@@ -349,7 +349,7 @@ const Formulario = () => {
               <button
                 type="button"
                 onClick={handleUpload}
-                className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50] focus:outline-none focus:ring-4 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm"
+                className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50] focus:outline-none focus:ring-4  transition duration-300 ease-in-out text-sm transform hover:scale-105 focus:ring-[#BC995B]"
               >
                 Subir
               </button>
@@ -382,7 +382,7 @@ const Formulario = () => {
           </div>
 
           <div className="col-span-3 flex justify-end items-end">
-            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A87F50]">
+            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A02142] transform hover:scale-105 focus:ring-2 focus:ring-[#A02142]">
               Registrar
             </button>
           </div>

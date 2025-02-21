@@ -22,7 +22,8 @@ const LandingPage = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
           <Link href="/login">
-            <button className="bg-[#691B31] text-white px-6 sm:px-7 py-2 sm:py-3 rounded-lg shadow-md hover:bg-[#8A233E] transition-all">
+            <button className="bg-[#691B31] text-white px-6 sm:px-7 py-2 sm:py-3 rounded-lg shadow-md hover:bg-[#8A233E] transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
+            >
               Iniciar Sesión
             </button>
           </Link>

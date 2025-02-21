@@ -86,7 +86,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
                   onClick={() =>
                     window.open(selectedRecord.documento, "_blank")
                   }
-                  className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300"
+                  className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31] "
                 >
                   Ver Documento
                 </button>
@@ -97,7 +97,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
             <button
               type="button"
               onClick={closeModal}
-              className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50]"
+              className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50] transform hover:scale-105 focus:ring-2 focus:ring-[#A87F50]"
             >
               Cerrar
             </button>
