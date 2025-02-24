@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export const Register = () => {
   const [userName, setName] = useState("");
@@ -12,7 +13,28 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [areas, setAreas] = useState([]);
+  const [selectedArea, setSelectedArea] = useState("");
+  const [userId, setUserId] = useState(null); // Para almacenar el ID del usuario registrado
+  const [isAreaModalOpen, setIsAreaModalOpen] = useState(false); // Controla el modal de área
+
   const router = useRouter();
+
+  // Obtener las áreas disponibles
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const response = await axios.get(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas"
+        );
+        setAreas(response.data);
+      } catch (error) {
+        console.error("Error al obtener las áreas:", error);
+      }
+    };
+
+    fetchAreas();
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -30,6 +52,12 @@ export const Register = () => {
       if (!response.ok) throw new Error("Error al registrar usuario");
 
       const data = await response.json();
+      console.log("Respuesta completa del servidor:", data);
+      console.log("userId registrado:", data.userId);
+
+      setUserId(data.userId); // Guarda el userId en el estado
+      console.log("userId registrado:", data.userId); // Verifica que el userId esté guardado
+
       setError("");
 
       // SweetAlert de éxito
@@ -39,6 +67,8 @@ export const Register = () => {
         icon: "success",
         confirmButtonColor: "#691B31",
         confirmButtonText: "Aceptar",
+      }).then(() => {
+        setIsAreaModalOpen(true); // Abre el modal para asignar área
       });
     } catch (err) {
       setError(err.message);
@@ -50,6 +80,42 @@ export const Register = () => {
         icon: "error",
         confirmButtonColor: "#691B31",
         confirmButtonText: "Intentar de nuevo",
+      });
+    }
+  };
+
+  const handleAssignArea = async () => {
+    console.log("Botón presionado, asignando área...");
+    console.log("UserID:", userId, "Área seleccionada:", selectedArea);
+
+    if (!selectedArea || !userId) return;
+
+    try {
+      await axios.post(
+        "https://oficialialoginbackend.somee.com/api/UsuarioArea/AsignarArea",
+        {
+          userId, // Ahora ya estás usando 'userId' directamente
+          areaId: selectedArea,
+        }
+      );
+
+      Swal.fire({
+        title: "Área Asignada",
+        text: "El usuario fue asignado correctamente al área",
+        icon: "success",
+        confirmButtonColor: "#691B31",
+        confirmButtonText: "Aceptar",
+      });
+
+      setIsAreaModalOpen(false); // Cierra el modal
+    } catch (error) {
+      console.error("Error al asignar el área:", error);
+      Swal.fire({
+        title: "¡Error!",
+        text: "No se pudo asignar el área. Intente nuevamente.",
+        icon: "error",
+        confirmButtonColor: "#691B31",
+        confirmButtonText: "Cerrar",
       });
     }
   };
@@ -120,8 +186,6 @@ export const Register = () => {
             </div>
           </div>
 
-          
-
           {error && <p className="text-red-500">{error}</p>}
 
           <button
@@ -132,6 +196,42 @@ export const Register = () => {
           </button>
         </form>
       </motion.div>
+
+      {/* Modal para asignar área */}
+      {isAreaModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+          >
+            <h2 className="text-xl font-bold text-center text-[#621132] mb-4">
+              ¿A qué área pertenece este usuario?
+            </h2>
+
+            <select
+              value={selectedArea}
+              onChange={(e) => setSelectedArea(e.target.value)}
+              className="w-full px-4 py-2 mb-4 rounded-lg border outline-none bg-[#F5F5F5]"
+            >
+              <option value="">Seleccione un área</option>
+              {areas.map((area) => (
+                <option key={area.idArea} value={area.idArea}>
+                  {area.nombreArea}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={handleAssignArea}
+              className="bg-[#BC995B] text-white w-full py-2 rounded-lg"
+            >
+              Asignar Área
+            </button>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
