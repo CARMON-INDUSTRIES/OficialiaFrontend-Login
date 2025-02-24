@@ -58,9 +58,7 @@ const Layout = ({ children }) => {
 
         {/* Sección de Configuración y Cerrar Sesión */}
         <div className="mt-auto px-4 ">
-          <Link href="/configuracion" className="flex items-center gap-3 py-2  hover:text-[#BC995B] transition-colors group-hover:rotate-12 group-hover:scale-110">
-            <FaCog /> Configuración
-          </Link>
+          
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full py-2 mt-2 text-left hover:text-[#BC995B] transition-colors group-hover:rotate-12 group-hover:scale-110"
