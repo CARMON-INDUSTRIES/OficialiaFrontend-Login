@@ -204,7 +204,7 @@ const Dashboard = () => {
         (record.dependencia &&
           record.dependencia.toLowerCase().includes(searchLower)) ||
         (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-        record.status?.toString().toLowerCase().includes(searchLower) ||
+        record.statusDescripcion.toString().toLowerCase().includes(searchLower) ||
         (record.area &&
           typeof record.area === "string" &&
           record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
