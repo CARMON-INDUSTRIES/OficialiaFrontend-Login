@@ -213,7 +213,7 @@ const Formulario = () => {
             />
           </div>
           <div>
-            <label className="block font-bold">Dependencias</label>
+            <label className="block font-bold">Dependencia</label>
             <input
               type="text"
               name="dependencia"
