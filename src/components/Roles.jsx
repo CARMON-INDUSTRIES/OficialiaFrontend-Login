@@ -36,13 +36,11 @@ const Roles = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el
   const [roles, setRoles] = useState([]);
-
+    
    useEffect(() => {
       const token = localStorage.getItem("token");
       if (!token) {
         router.push("/login");
-      } else if (records.length === 0) {
-        fetchRecords(token);
       }
     }, []);
 
