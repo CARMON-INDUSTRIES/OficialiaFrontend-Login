@@ -105,9 +105,12 @@ export const Register = () => {
         icon: "success",
         confirmButtonColor: "#691B31",
         confirmButtonText: "Aceptar",
-      });
-
-      setIsAreaModalOpen(false); // Cierra el modal
+      }).then(() => {
+        // Cierra todos los modales después de aceptar la notificación
+        setIsAreaModalOpen(false); // Cierra el modal de asignación de área
+        setIsRegisterOpen(false); // Cierra el modal de registro
+        setModalOpen(false); // Cierra el modal de asignación de rol
+      }); // Cierra el modal
     } catch (error) {
       console.error("Error al asignar el área:", error);
       Swal.fire({

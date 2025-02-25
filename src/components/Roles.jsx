@@ -1,9 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaCheckCircle, FaSearch, FaPlus } from "react-icons/fa"; // Añadimos FaSearch
+import {
+  FaEdit,
+  FaCheckCircle,
+  FaSearch,
+  FaPlus,
+  FaTrash,
+} from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
 import RegisterModal from "../components/RegisterModal"; // Asegúrate de que la ruta sea correcta
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
@@ -57,10 +64,85 @@ const Roles = () => {
       const response = await axios.get(
         "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles"
       );
-      setUsuarios(response.data);
-      setFilteredUsuarios(response.data);
+      const usuariosConArea = await Promise.all(
+        response.data.map(async (user) => {
+          try {
+            console.log(`Consultando área para usuario: ${user.id}`);
+            const areaResponse = await axios.get(
+              `https://oficialialoginbackend.somee.com/api/UsuarioArea/GetAreaByUser/${user.id}`
+            );
+
+            console.log(
+              `Respuesta de API de área para ${user.id}:`,
+              areaResponse.data
+            );
+
+            return {
+              ...user,
+              nombreArea: areaResponse.data?.area || "No asignada",
+            };
+          } catch (error) {
+            console.error(
+              `Error al obtener área para usuario ${user.id}:`,
+              error
+            );
+            return { ...user, nombreArea: "No asignada" };
+          }
+        })
+      );
+      setUsuarios(usuariosConArea);
+      setFilteredUsuarios(usuariosConArea);
     } catch (error) {
-      console.error("Error al cargar los usuarios:", error);
+      console.error("Error al obtener usuarios:", error);
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    try {
+      // Mostrar SweetAlert de confirmación antes de eliminar
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Este usuario será eliminado permanentemente!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminarlo",
+      });
+
+      // Si el usuario confirma la eliminación
+      if (result.isConfirmed) {
+        // Realizar la solicitud de eliminación
+        await axios.delete(
+          `https://oficialialoginbackend.somee.com/api/Cuentas/EliminarUsuario/${userId}`
+        );
+
+        // Eliminar el usuario de los estados
+        setUsuarios(usuarios.filter((user) => user.id !== userId));
+        setFilteredUsuarios(
+          filteredUsuarios.filter((user) => user.id !== userId)
+        );
+
+        // Mostrar SweetAlert de éxito
+        Swal.fire({
+          title: "¡Usuario Eliminado!",
+          text: "El usuario ha sido eliminado correctamente.",
+          icon: "success",
+          confirmButtonColor: "#691B31",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+
+      // Mostrar SweetAlert de error si ocurre un problema
+      Swal.fire({
+        title: "¡Error!",
+        text: "Ha ocurrido un error al eliminar el usuario. Intenta nuevamente.",
+        icon: "error",
+        confirmButtonColor: "#691B31",
+        confirmButtonText: "Cerrar",
+      });
     }
   };
 
@@ -127,6 +209,7 @@ const Roles = () => {
     const filtered = usuarios.filter(
       (user) =>
         user.userName.toLowerCase().includes(value.toLowerCase()) ||
+        user.nombreArea.toLowerCase().includes(value.toLowerCase()) ||
         (user.roles[0] &&
           user.roles[0].toLowerCase().includes(value.toLowerCase()))
     );
@@ -162,13 +245,14 @@ const Roles = () => {
           </div>
         </div>
 
-        <div className="overflow-auto max-h-[500px] mt-6">
+        <div className="overflow-y-auto max-h-[500px] mt-6 border rounded-lg">
           <table className="w-full border-collapse bg-white">
-            <thead>
+            <thead className="bg-white sticky top-0 z-10">
               <tr className="text-gray-700">
                 <th className="py-3 px-6 text-left text-lg">
-                  Nombre de usuario (área)
+                  Nombre de usuario
                 </th>
+                <th className="py-3 px-6 text-left text-lg">Area</th>
                 <th className="py-3 px-6 text-left text-lg">Correo</th>
                 <th className="py-3 px-6 text-left text-lg">Rol</th>
                 <th className="py-3 px-6 text-left text-lg">Acción</th>
@@ -181,18 +265,30 @@ const Roles = () => {
                     {user.userName}
                   </td>
                   <td className="px-4 py-2 text-gray-700 text-lg">
+                    {user.nombreArea}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 text-lg">
                     {user.email}
                   </td>
                   <td className="px-4 py-2 text-gray-700 text-lg">
                     {user.roles[0]}
                   </td>
                   <td className="px-4 py-2">
-                    <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:bg-blue-600 transition duration-200 transform hover:scale-105 focus:ring-2"
-                      onClick={() => openModal(user)}
-                    >
-                      <FaEdit /> Editar
-                    </button>
+                    <div className="flex space-x-2">
+                      <button
+                        className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:underline transition duration-200 transform hover:scale-105 focus:ring-2"
+                        onClick={() => openModal(user)}
+                      >
+                        <FaEdit />
+                      </button>
+
+                      <button
+                        className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:underline transition duration-200 transform hover:scale-105 focus:ring-2"
+                        onClick={() => deleteUser(user.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -217,8 +313,8 @@ const Roles = () => {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 transition-opacity duration-300">
-          <div className="bg-white rounded-2xl shadow-2xl w-[500px] transform transition-all scale-105">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 transition-opacity duration-300 z-[50]">
+          <div className="bg-white rounded-2xl shadow-2xl w-[500px] transform transition-all scale-105 z-[50]">
             <Image
               src={fondoModal}
               alt="Fondo Modal"
