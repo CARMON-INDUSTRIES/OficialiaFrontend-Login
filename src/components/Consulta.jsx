@@ -204,7 +204,10 @@ const Dashboard = () => {
         (record.dependencia &&
           record.dependencia.toLowerCase().includes(searchLower)) ||
         (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-        record.statusDescripcion.toString().toLowerCase().includes(searchLower) ||
+        record.statusDescripcion
+          .toString()
+          .toLowerCase()
+          .includes(searchLower) ||
         (record.area &&
           typeof record.area === "string" &&
           record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
@@ -230,6 +233,23 @@ const Dashboard = () => {
       month: "2-digit",
       year: "numeric",
     });
+  };
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "registrado":
+        return "text-gray-700"; // Gris
+      case "entregado":
+        return "text-blue-700"; // Azul
+      case "leido":
+        return "text-orange-700"; // Naranja
+      case "en proceso":
+        return "text-red-700"; // Rojo
+      case "finalizado":
+        return "text-green-700"; // Verde
+      default:
+        return "text-black"; // Color por defecto
+    }
   };
 
   return (
@@ -270,7 +290,14 @@ const Dashboard = () => {
                     </td>
                     <td className="py-3 px-6">{record.dependencia}</td>
                     <td className="py-3 px-6">{record.asunto}</td>
-                    <td className="py-3 px-6">{record.statusDescripcion}</td>
+                    <td
+                      className={`py-3 px-6 font-bold ${getStatusColor(
+                        record.statusDescripcion
+                      )}`}
+                    >
+                      {record.statusDescripcion}
+                    </td>
+
                     <td className="py-3 px-6 flex justify-center gap-4">
                       <button
                         className="text-blue-500 hover:underline"
