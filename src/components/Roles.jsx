@@ -8,6 +8,7 @@ import {
   FaTrash,
 } from "react-icons/fa"; // Añadimos FaSearch
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import RegisterModal from "../components/RegisterModal"; // Asegúrate de que la ruta sea correcta
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -16,6 +17,7 @@ const fondoModal = "/images/fondoModal.jpg";
 const fondoRoles = "/images/roles.jpg";
 
 const Roles = () => {
+  const router = useRouter();
   const [usuarios, setUsuarios] = useState([]);
 
   const [filteredUsuarios, setFilteredUsuarios] = useState([]);
@@ -34,6 +36,15 @@ const Roles = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el
   const [roles, setRoles] = useState([]);
+
+   useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+      } else if (records.length === 0) {
+        fetchRecords(token);
+      }
+    }, []);
 
   useEffect(() => {
     setRotateOnLoad(true);
