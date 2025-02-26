@@ -6,28 +6,83 @@ import { useState, useEffect } from "react";
 
 export default function Buzon() {
   const [notificaciones, setNotificaciones] = useState([]);
+  const [nuevaNotificacion, setNuevaNotificacion] = useState(false);
+  const API_URL = "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener";
 
   useEffect(() => {
-    // Simulando datos de registros (esto vendría de tu API)
-    setTimeout(() => {
-      setNotificaciones([
-        { id: 1, nombre: "Juan Pérez", asunto: "Solicitud de trámite", fecha: "2025-02-05", estado: "Pendiente" },
-        { id: 2, nombre: "María López", asunto: "Documento recibido", fecha: "2025-02-04", estado: "Completado" },
-        { id: 3, nombre: "Carlos Ramírez", asunto: "Revisión en proceso", fecha: "2025-02-03", estado: "En proceso" },
-      ]);
-    }, 1000);
-  }, []);
+    const fetchNotificaciones = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Error al obtener los registros");
 
-  // Función para eliminar notificación al marcarla como leída
+        const data = await response.json();
+        const ultimosRegistros = data
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+          .slice(0, 4)
+          .map((item) => ({
+            id: item.id,
+            nombre: item.remitente,
+            asunto: item.asunto,
+            fecha: new Date(item.fecha).toLocaleDateString("es-MX"),
+            estado: item.statusDescripcion,
+          }));
+
+        // Si hay nuevos registros, activar la notificación
+        if (ultimosRegistros.length > 0 && ultimosRegistros[0].id !== notificaciones[0]?.id) {
+          setNuevaNotificacion(true);
+          setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
+        }
+
+        setNotificaciones(ultimosRegistros);
+      } catch (error) {
+        console.error("Error al obtener las notificaciones:", error);
+      }
+    };
+
+    fetchNotificaciones();
+    const interval = setInterval(fetchNotificaciones, 10000); // Consultar cada 10s
+
+    return () => clearInterval(interval);
+  }, [notificaciones]);
+
   const marcarComoLeido = (id) => {
     setNotificaciones((prev) => prev.filter((notif) => notif.id !== id));
   };
 
+  const obtenerColorEstado = (estado) => {
+    switch (estado.toLowerCase()) {
+      case "registrado":
+        return "bg-gray-200";
+      case "entregado":
+        return "bg-blue-200";
+      case "leído":
+        return "bg-orange-200";
+      case "en proceso":
+        return "bg-red-200";
+      case "finalizado":
+        return "bg-green-200";
+      default:
+        return "bg-gray-100";
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row h-screen items-center justify-center bg-gray-100 p-6">
+      {/* Notificación emergente */}
+      {nuevaNotificacion && (
+        <motion.div
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -50, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="fixed top-5 right-5 bg-[#691B31] text-white px-6 py-3 rounded-lg shadow-lg"
+        >
+          📩 ¡Nuevo registro recibido!
+        </motion.div>
+      )}
+
       {/* Sección Izquierda */}
       <div className="w-full md:w-1/2 flex flex-col justify-center">
-        {/* Animación del título */}
         <motion.h1
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -49,13 +104,9 @@ export default function Buzon() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className={`p-4 rounded-lg shadow-md flex justify-between items-center ${
-                  notif.estado === "Pendiente"
-                    ? "bg-red-100"
-                    : notif.estado === "Completado"
-                    ? "bg-green-100"
-                    : "bg-yellow-100"
-                }`}
+                className={`p-4 rounded-lg shadow-md flex justify-between items-center ${obtenerColorEstado(
+                  notif.estado
+                )}`}
               >
                 <div>
                   <p className="text-lg font-semibold">{notif.nombre}</p>
@@ -68,7 +119,7 @@ export default function Buzon() {
                   onClick={() => marcarComoLeido(notif.id)}
                   className="bg-[#691B31] text-white px-3 py-1 rounded-md hover:bg-[#A87F50] transition"
                 >
-                  Marcar como leído 
+                  Marcar como leído
                 </button>
               </motion.div>
             ))
@@ -94,5 +145,4 @@ export default function Buzon() {
     </div>
   );
 }
-
 

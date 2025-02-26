@@ -1,9 +1,14 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
-import AddUserClickContextProvider from '@/contexts/AddUserClickContext'
-import AddUserContextProvider from '@/contexts/AddUserContext'
+import { Inter } from 'next/font/google';
+import './globals.css';
+import AddUserClickContextProvider from '@/contexts/AddUserClickContext';
+import AddUserContextProvider from '@/contexts/AddUserContext';
+import { NotificacionesProvider } from '@/contexts/NotificacionesContext';
 
-const inter = Inter({ subsets: ['latin'] })
+import NotificacionGlobal from '@/components/NotificacionGlobal';
+
+
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
   return (
@@ -14,12 +19,15 @@ export default function RootLayout({ children }) {
         <title>Oficialia</title>
       </head>
       <body className={inter.className}>
-      <AddUserClickContextProvider>
-          <AddUserContextProvider>
-            {children}
-          </AddUserContextProvider>
-        </AddUserClickContextProvider>
+        <NotificacionesProvider>
+          <NotificacionGlobal /> {/* Notificación visible en todas las vistas */}
+          <AddUserClickContextProvider>
+            <AddUserContextProvider>
+              {children}
+            </AddUserContextProvider>
+          </AddUserClickContextProvider>
+        </NotificacionesProvider>
       </body>
     </html>
-  )
+  );
 }
