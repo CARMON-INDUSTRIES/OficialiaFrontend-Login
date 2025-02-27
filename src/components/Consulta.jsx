@@ -246,7 +246,7 @@ const Dashboard = () => {
       case "entregado":
         return "text-blue-700"; // Azul
       case "leido":
-        return "text-orange-700"; // Naranja
+        return "text-orange-500"; // Naranja
       case "en proceso":
         return "text-red-700"; // Rojo
       case "finalizado":

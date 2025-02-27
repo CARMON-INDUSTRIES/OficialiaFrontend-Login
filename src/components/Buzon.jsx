@@ -55,7 +55,7 @@ export default function Buzon() {
         return "bg-gray-200";
       case "entregado":
         return "bg-blue-200";
-      case "leído":
+      case "leido":
         return "bg-orange-200";
       case "en proceso":
         return "bg-red-200";
@@ -145,4 +145,3 @@ export default function Buzon() {
     </div>
   );
 }
-
