@@ -194,16 +194,29 @@ const Dashboard = () => {
     setEditData({});
   };
 
+   // Formateo de la fecha
+   const formatDate = (dateString) => {
+    const date = new Date(dateString); // Convierte la cadena en un objeto Date
+    return date.toLocaleDateString("es-ES", {
+      // Formatea la fecha
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+  
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
   const filteredRecords = records
     .filter((record) => {
       const searchLower = search.toLowerCase();
+      const formattedDate = record.fecha ? formatDate(record.fecha) : ""; // Formateamos la fecha antes de filtrar
       return (
         String(record.folio).includes(search) ||
-        (record.fecha && record.fecha.toLowerCase().includes(searchLower)) ||
+        formattedDate.includes(search) ||
         (record.dependencia &&
           record.dependencia.toLowerCase().includes(searchLower)) ||
         (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
+        (record.areaDescripcion && record.areaDescripcion.toLowerCase().includes(searchLower)) ||
         record.statusDescripcion
           .toString()
           .toLowerCase()
@@ -224,16 +237,7 @@ const Dashboard = () => {
       return acc;
     }, []);
 
-  // Dentro del componente
-  const formatDate = (dateString) => {
-    const date = new Date(dateString); // Convierte la cadena en un objeto Date
-    return date.toLocaleDateString("es-ES", {
-      // Formatea la fecha
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+ 
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -272,6 +276,7 @@ const Dashboard = () => {
                   <th className="py-3 px-6 text-left">Fecha</th>
                   <th className="py-3 px-6 text-left">Dependencia</th>
                   <th className="py-3 px-6 text-left">Asunto</th>
+                  <th className="py-3 px-6 text-left">Area turnada</th>
                   <th className="py-3 px-6 text-left">Status</th>
                   <th className="py-3 px-6 text-center">Acciones</th>
                 </tr>
@@ -290,6 +295,7 @@ const Dashboard = () => {
                     </td>
                     <td className="py-3 px-6">{record.dependencia}</td>
                     <td className="py-3 px-6">{record.asunto}</td>
+                    <td className="py-3 px-6">{record.areaDescripcion}</td>
                     <td
                       className={`py-3 px-6 font-bold ${getStatusColor(
                         record.statusDescripcion
