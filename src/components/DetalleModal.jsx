@@ -109,3 +109,4 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
 };
 
 export default DetalleModal;
+  

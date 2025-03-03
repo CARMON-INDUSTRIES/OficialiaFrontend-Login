@@ -14,41 +14,74 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
     const fetchDetails = async () => {
       if (!selectedRecord) return;
 
-      const token = localStorage.getItem("token");
-      try {
-        const [comResp, areaResp, impResp, statusResp] = await Promise.all([
-          axios.get(
+      // Usar las descripciones si están disponibles en la respuesta de selectedRecord
+      if (selectedRecord.comunidadDescripcion) {
+        setComunidad(selectedRecord.comunidadDescripcion);
+      } else {
+        // Si no están, hacer la solicitud para obtenerlas
+        const token = localStorage.getItem("token");
+        try {
+          const comResp = await axios.get(
             "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
             { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
+          );
+          setComunidad(
+            comResp.data.find((c) => c.id === selectedRecord.comunidad)?.nombre || "N/A"
+          );
+        } catch (error) {
+          console.error("Error al obtener comunidad:", error);
+        }
+      }
+
+      if (selectedRecord.areaDescripcion) {
+        setArea(selectedRecord.areaDescripcion);
+      } else {
+        const token = localStorage.getItem("token");
+        try {
+          const areaResp = await axios.get(
             "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
             { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
+          );
+          setArea(
+            areaResp.data.find((a) => a.id === selectedRecord.area[0])?.nombre || "N/A"
+          );
+        } catch (error) {
+          console.error("Error al obtener área:", error);
+        }
+      }
+
+      if (selectedRecord.importanciaDescripcion) {
+        setImportancia(selectedRecord.importanciaDescripcion);
+      } else {
+        const token = localStorage.getItem("token");
+        try {
+          const impResp = await axios.get(
             "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
             { headers: { Authorization: `Bearer ${token}` } }
-          ),
-          axios.get(
+          );
+          setImportancia(
+            impResp.data.find((i) => i.id === selectedRecord.importancia)?.descripcion || "N/A"
+          );
+        } catch (error) {
+          console.error("Error al obtener importancia:", error);
+        }
+      }
+
+      if (selectedRecord.statusDescripcion) {
+        setStatus(selectedRecord.statusDescripcion);
+      } else {
+        const token = localStorage.getItem("token");
+        try {
+          const statusResp = await axios.get(
             "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
             { headers: { Authorization: `Bearer ${token}` } }
-          ),
-        ]);
-
-        setComunidad(
-          comResp.data.find((c) => c.id === selectedRecord.comunidadId)?.nombre || "N/A"
-        );
-        setArea(
-          areaResp.data.find((a) => a.id === selectedRecord.areaId)?.nombre || "N/A"
-        );
-        setImportancia(
-          impResp.data.find((i) => i.id === selectedRecord.importanciaId)?.descripcion || "N/A"
-        );
-        setStatus(
-          statusResp.data.find((s) => s.id === selectedRecord.statusId)?.descripcion || "N/A"
-        );
-      } catch (error) {
-        console.error("Error al obtener detalles adicionales:", error);
+          );
+          setStatus(
+            statusResp.data.find((s) => s.id === selectedRecord.status)?.descripcion || "N/A"
+          );
+        } catch (error) {
+          console.error("Error al obtener status:", error);
+        }
       }
     };
 
@@ -68,7 +101,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
       >
         <div className="w-full md:w-1/3">
           <img
-            src="/images/notificacionImagen.jpeg"
+            src="/images/notificacionImagen.png"
             alt="Notificación"
             className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
           />
@@ -78,7 +111,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
           <div>
             <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles de la Notificación</h2>
             <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
-            <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {new Date(selectedRecord.fecha).toLocaleDateString("es-MX")}</p>
+            <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.fecha}</p>
             <p className="text-lg mb-2"><span className="font-bold">Dependencia:</span> {selectedRecord.dependencia}</p>
             <p className="text-lg mb-2"><span className="font-bold">Comunidad:</span> {comunidad}</p>
             <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
