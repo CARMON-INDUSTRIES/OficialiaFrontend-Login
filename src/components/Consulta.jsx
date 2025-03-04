@@ -74,7 +74,7 @@ const Dashboard = () => {
       setImportancias(impResp.data);
       setStatus(statusResp.data);
     } catch (error) {
-      console.error("Error al obtener datos:", error);
+      console.error("Error al obtener datoss:", error);
     }
   };
   const fetchRecords = async (token) => {
