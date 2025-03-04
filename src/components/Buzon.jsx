@@ -22,7 +22,7 @@ export default function Buzon() {
       const fetchNotificaciones = async () => {
         try {
           console.log("🔄 Obteniendo notificaciones...");
-          const { default: jwtDecode } = await import("jwt-decode");
+          
   
           // Obtener token del localStorage
           const token = localStorage.getItem("token");
