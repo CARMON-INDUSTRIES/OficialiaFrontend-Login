@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
           return;
         }
 
-        console.log("Nombre de usuario:", userName);
+        console.log("Usuario:", userName);
 
         // Obtener los usuarios con sus roles desde la API
         const response = await fetch("https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles", {
