@@ -106,7 +106,7 @@ export default function Buzon() {
         setNotificaciones(ultimosRegistros);
 
       } catch (error) {
-        console.error("Error al obtener las notificaciones:", error);
+        console.error("Error:", error);
       }
     };
 
