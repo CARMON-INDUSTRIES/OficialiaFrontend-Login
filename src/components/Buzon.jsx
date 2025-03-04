@@ -4,16 +4,17 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import DetalleNotificacion from "./DetalleNotificacion";
-import Respuesta from "./Respuesta";
+import Respuesta from "./Respuesta"; // Importar el nuevo componente
+
 import { jwtDecode } from "jwt-decode";
 
 export default function Buzon() {
   const [notificaciones, setNotificaciones] = useState([]);
   const [nuevaNotificacion, setNuevaNotificacion] = useState(false);
-  const [modalDetalle, setModalDetalle] = useState(null);
-  const [modalRespuesta, setModalRespuesta] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
+  const [modalRespuesta, setModalRespuesta] = useState(null);
+  const [modalDetalle, setModalDetalle] = useState(null);
+ 
   const API_URL =
     "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener";
 
@@ -21,7 +22,7 @@ export default function Buzon() {
     const fetchNotificaciones = async () => {
       try {
         console.log("🔄 Obteniendo notificaciones...");
-        
+
         // Obtener token del localStorage
         const token = localStorage.getItem("token");
         if (!token) {
@@ -111,10 +112,11 @@ export default function Buzon() {
     };
 
     fetchNotificaciones();
-    const interval = setInterval(fetchNotificaciones, 20000); // Recargar cada 10s
+    const interval = setInterval(fetchNotificaciones, 20000); // Recargar cada 20s
 
     return () => clearInterval(interval);
-  }, [notificaciones]); // Se ejecuta cuando notificaciones cambia
+}, []);// Se ejecuta cuando notificaciones cambia
+
 
   const obtenerColorEstado = (estado) => {
     switch (estado.toLowerCase()) {
@@ -188,17 +190,12 @@ export default function Buzon() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSelectedRecord(notif)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+                    className="bg-blue-500 text-white px-3 py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
                   >
                     Detalles
                   </button>
-
-                  <button
-                    onClick={() => setModalRespuesta(notif.id)}
-                    className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700 transition"
-                  >
-                    Responder
-                  </button>
+                  <button onClick={() => setModalRespuesta(notif)} className="bg-green-500 text-white px-3 py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-green-700">Responder</button>
+                 
                 </div>
               </motion.div>
             ))
@@ -230,12 +227,7 @@ export default function Buzon() {
         />
       )}
 
-      {modalRespuesta && (
-        <Respuesta
-          id={modalRespuesta}
-          onClose={() => setModalRespuesta(null)}
-        />
-      )}
+{modalRespuesta && <Respuesta selectedRecord={modalRespuesta} closeModal={() => setModalRespuesta(null)} />}
     </div>
   );
 }
