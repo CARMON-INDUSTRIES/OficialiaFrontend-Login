@@ -6,6 +6,7 @@ import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import DetalleModal from "@/components/DetalleModal";
 import ModalEditar from "@/components/ModalEditar"; // Ajusta la ruta si es necesario
+import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -74,27 +75,69 @@ const Dashboard = () => {
       console.error("Error al obtener datos:", error);
     }
   };
-
   const fetchRecords = async (token) => {
     try {
-      const response = await axios.get(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener",
+      const decodedToken = jwtDecode(token);
+      console.log("Token decodificado:", decodedToken);
+  
+      const userName =
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+  
+      if (!userName) {
+        console.error("Error: userName es undefined");
+        return;
+      }
+  
+      console.log("Nombre de usuario obtenido:", userName);
+  
+      // Obtener userId
+      const userIdResponse = await axios.get(
+        `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Datos obtenidos:", response.data);
-
-      const sortedRecords = response.data.sort(
+  
+      const userId = userIdResponse.data.userId;
+      console.log("UserId obtenido del backend:", userId);
+  
+      if (!userId) {
+        console.error("Error: No se obtuvo userId del backend");
+        return;
+      }
+  
+      // Obtener registros con userId
+      const response = await axios.get(
+        `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener?userId=${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      if (!Array.isArray(response.data)) {
+        console.error("Error: La API no devolvió un array de registros", response.data);
+        return;
+      }
+  
+      // Filtrar registros por área del usuario
+      const userRecords = response.data;
+  
+      // Ordenar los registros por fecha descendente
+      const sortedRecords = userRecords.sort(
         (a, b) => new Date(b.fecha) - new Date(a.fecha)
       );
-
-      setRecords(response.data);
+  
+      setRecords(sortedRecords);
     } catch (error) {
-      console.error("Error al obtener registros:", error);
+      console.error(
+        "Error en fetchRecords:",
+        error.response?.data || error.message
+      );
     }
   };
-
+  
   const handleDeleteConfirmation = (id) => {
     Swal.fire({
       title: "¿Estás seguro de querer eliminar este registro?",
@@ -194,8 +237,8 @@ const Dashboard = () => {
     setEditData({});
   };
 
-   // Formateo de la fecha
-   const formatDate = (dateString) => {
+  // Formateo de la fecha
+  const formatDate = (dateString) => {
     const date = new Date(dateString); // Convierte la cadena en un objeto Date
     return date.toLocaleDateString("es-ES", {
       // Formatea la fecha
@@ -204,7 +247,7 @@ const Dashboard = () => {
       year: "numeric",
     });
   };
-  
+
   // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
   const filteredRecords = records
     .filter((record) => {
@@ -216,7 +259,8 @@ const Dashboard = () => {
         (record.dependencia &&
           record.dependencia.toLowerCase().includes(searchLower)) ||
         (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-        (record.areaDescripcion && record.areaDescripcion.toLowerCase().includes(searchLower)) ||
+        (record.areaDescripcion &&
+          record.areaDescripcion.toLowerCase().includes(searchLower)) ||
         record.statusDescripcion
           .toString()
           .toLowerCase()
@@ -236,8 +280,6 @@ const Dashboard = () => {
       }
       return acc;
     }, []);
-
- 
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {

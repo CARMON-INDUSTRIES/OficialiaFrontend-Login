@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import DetalleNotificacion from "./DetalleNotificacion";
 import Respuesta from "./Respuesta";
+import { jwtDecode } from "jwt-decode";
+
 
 export default function Buzon() {
   const [notificaciones, setNotificaciones] = useState([]);
@@ -16,14 +18,58 @@ export default function Buzon() {
   const API_URL =
     "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener";
 
-  useEffect(() => {
-    const fetchNotificaciones = async () => {
-      try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener los registros");
-
-        const data = await response.json();
-        const ultimosRegistros = data
+    useEffect(() => {
+      const fetchNotificaciones = async () => {
+        try {
+          console.log("🔄 Obteniendo notificaciones...");
+          const { default: jwtDecode } = await import("jwt-decode");
+  
+          // Obtener token del localStorage
+          const token = localStorage.getItem("token");
+          if (!token) {
+            console.error("❌ No hay token disponible.");
+            return;
+          }
+  
+          // Decodificar token para obtener userName
+          const decodedToken = jwtDecode(token);
+          const userName =
+            decodedToken[
+              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            ];
+  
+          if (!userName) {
+            console.error("❌ No se pudo obtener el nombre de usuario.");
+            return;
+          }
+  
+          console.log("✅ Usuario autenticado:", userName);
+  
+          // Obtener userId del backend
+          const userIdResponse = await fetch(
+            `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`
+          );
+  
+          const userIdData = await userIdResponse.json();
+          const userId = userIdData.userId;
+  
+          if (!userId) {
+            console.error("❌ No se obtuvo userId.");
+            return;
+          }
+  
+          console.log("✅ UserId obtenido:", userId);
+  
+          // Obtener registros filtrados por userId
+          const response = await fetch(`${API_URL}?userId=${userId}`);
+  
+          if (!response.ok) throw new Error("❌ Error al obtener los registros");
+  
+          const data = await response.json();
+          console.log("📩 Datos obtenidos:", data);
+  
+          // Procesar datos
+          const ultimosRegistros = data
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
           .slice(0, 4)
           .map((item) => ({
@@ -45,6 +91,7 @@ export default function Buzon() {
             areaDescripcion: item.areaDescripcion,
             importanciaDescripcion: item.importanciaDescripcion,
             statusDescripcion: item.statusDescripcion,
+            documento: item.documento,
           }));
 
         // Si hay nuevos registros, activar la notificación
@@ -61,13 +108,14 @@ export default function Buzon() {
         console.error("Error al obtener las notificaciones:", error);
       }
     };
-
-    fetchNotificaciones();
-    const interval = setInterval(fetchNotificaciones, 10000); // Consultar cada 10s
-
-    return () => clearInterval(interval);
-  }, [notificaciones]);
-
+  
+      fetchNotificaciones();
+      const interval = setInterval(fetchNotificaciones, 10000);
+  
+      return () => clearInterval(interval);
+    }, []);
+  
+  
   const obtenerColorEstado = (estado) => {
     switch (estado.toLowerCase()) {
       case "registrado":
