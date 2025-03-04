@@ -7,7 +7,6 @@ import DetalleNotificacion from "./DetalleNotificacion";
 import Respuesta from "./Respuesta";
 import { jwtDecode } from "jwt-decode";
 
-
 export default function Buzon() {
   const [notificaciones, setNotificaciones] = useState([]);
   const [nuevaNotificacion, setNuevaNotificacion] = useState(false);
@@ -18,58 +17,57 @@ export default function Buzon() {
   const API_URL =
     "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener";
 
-    useEffect(() => {
-      const fetchNotificaciones = async () => {
-        try {
-          console.log("🔄 Obteniendo notificaciones...");
-          
-  
-          // Obtener token del localStorage
-          const token = localStorage.getItem("token");
-          if (!token) {
-            console.error("❌ No hay token disponible.");
-            return;
-          }
-  
-          // Decodificar token para obtener userName
-          const decodedToken = jwtDecode(token);
-          const userName =
-            decodedToken[
-              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-            ];
-  
-          if (!userName) {
-            console.error("❌ No se pudo obtener el nombre de usuario.");
-            return;
-          }
-  
-          console.log("✅ Usuario autenticado:", userName);
-  
-          // Obtener userId del backend
-          const userIdResponse = await fetch(
-            `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`
-          );
-  
-          const userIdData = await userIdResponse.json();
-          const userId = userIdData.userId;
-  
-          if (!userId) {
-            console.error("❌ No se obtuvo userId.");
-            return;
-          }
-  
-          console.log("✅ UserId obtenido:", userId);
-  
-          // Obtener registros filtrados por userId
-          const response = await fetch(`${API_URL}?userId=${userId}`);
-  
-          if (!response.ok) throw new Error("❌ Error al obtener los registros");
-  
-          const data = await response.json();
-          console.log("📩 Datos obtenidos:", data);
-  
-          // Procesar datos
-          const ultimosRegistros = data
+  useEffect(() => {
+    const fetchNotificaciones = async () => {
+      try {
+        console.log("🔄 Obteniendo notificaciones...");
+        
+        // Obtener token del localStorage
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("❌ No hay token disponible.");
+          return;
+        }
+
+        // Decodificar token para obtener userName
+        const decodedToken = jwtDecode(token);
+        const userName =
+          decodedToken[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
+
+        if (!userName) {
+          console.error("❌ No se pudo obtener el nombre de usuario.");
+          return;
+        }
+
+        console.log("✅ Usuario autenticado:", userName);
+
+        // Obtener userId del backend
+        const userIdResponse = await fetch(
+          `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`
+        );
+
+        const userIdData = await userIdResponse.json();
+        const userId = userIdData.userId;
+
+        if (!userId) {
+          console.error("❌ No se obtuvo userId.");
+          return;
+        }
+
+        console.log("✅ UserId obtenido:", userId);
+
+        // Obtener registros filtrados por userId
+        const response = await fetch(`${API_URL}?userId=${userId}`);
+
+        if (!response.ok) throw new Error("❌ Error al obtener los registros");
+
+        const data = await response.json();
+        console.log("📩 Datos obtenidos:", data);
+
+        // Procesar datos
+        const ultimosRegistros = data
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
           .slice(0, 4)
           .map((item) => ({
@@ -94,28 +92,30 @@ export default function Buzon() {
             documento: item.documento,
           }));
 
-        // Si hay nuevos registros, activar la notificación
-        if (
-          ultimosRegistros.length > 0 &&
-          ultimosRegistros[0].id !== notificaciones[0]?.id
-        ) {
-          setNuevaNotificacion(true);
-          setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
+        // Verificar si hay nuevos registros
+        if (ultimosRegistros.length > 0 && notificaciones.length > 0) {
+          // Si el primer registro nuevo no está en el anterior, hay nuevos
+          const isNewRecord = ultimosRegistros[0].id !== notificaciones[0]?.id;
+          if (isNewRecord) {
+            setNuevaNotificacion(true);
+            setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
+          }
         }
 
+        // Actualizar las notificaciones
         setNotificaciones(ultimosRegistros);
+
       } catch (error) {
         console.error("Error al obtener las notificaciones:", error);
       }
     };
-  
-      fetchNotificaciones();
-      const interval = setInterval(fetchNotificaciones, 10000);
-  
-      return () => clearInterval(interval);
-    }, []);
-  
-  
+
+    fetchNotificaciones();
+    const interval = setInterval(fetchNotificaciones, 20000); // Recargar cada 10s
+
+    return () => clearInterval(interval);
+  }, [notificaciones]); // Se ejecuta cuando notificaciones cambia
+
   const obtenerColorEstado = (estado) => {
     switch (estado.toLowerCase()) {
       case "registrado":
