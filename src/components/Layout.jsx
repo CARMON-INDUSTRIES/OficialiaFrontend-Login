@@ -2,10 +2,18 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { FaSignOutAlt, FaHome, FaUsers, FaBars, FaTimes, FaInbox, FaCog } from "react-icons/fa";
+import {
+  FaSignOutAlt,
+  FaHome,
+  FaUsers,
+  FaBars,
+  FaTimes,
+  FaInbox,
+  FaCog,
+  FaUser,
+} from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
-
 
 const decodeToken = (token) => {
   try {
@@ -19,10 +27,11 @@ const decodeToken = (token) => {
 const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [roles, setRoles] = useState(null); // Estado para guardar los roles del usuario
+  const [roles, setRoles] = useState(null);
+  const [userName, setUserName] = useState(""); // Estado para almacenar el nombre del usuario
 
   useEffect(() => {
-    const fetchRoles = async () => {
+    const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) return;
@@ -30,19 +39,27 @@ const Layout = ({ children }) => {
         const decoded = decodeToken(token);
         console.log("Token decodificado:", decoded);
 
-        // Asegurar que el userName se extrae correctamente
-        const userName = decoded?.userName || decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-        if (!userName) {
+        // Extraer el nombre del usuario
+        const extractedUserName =
+          decoded?.userName ||
+          decoded?.[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
+
+        if (!extractedUserName) {
           console.error("No se pudo obtener el nombre de usuario del token.");
           return;
         }
 
-        console.log("Usuario:", userName);
+        setUserName(extractedUserName); // Guardar en el estado
 
         // Obtener los usuarios con sus roles desde la API
-        const response = await fetch("https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (!response.ok) throw new Error("Error al obtener los roles");
 
@@ -50,7 +67,7 @@ const Layout = ({ children }) => {
         console.log("Usuarios obtenidos de la API:", data);
 
         // Buscar el usuario por su nombre de usuario
-        const user = data.find(user => user.userName === userName);
+        const user = data.find((user) => user.userName === extractedUserName);
         console.log("Usuario encontrado:", user);
 
         if (user) {
@@ -61,12 +78,12 @@ const Layout = ({ children }) => {
           setRoles([]);
         }
       } catch (error) {
-        console.error("Error al obtener los roles:", error);
+        console.error("Error al obtener los datos del usuario:", error);
         setRoles([]);
       }
     };
 
-    fetchRoles();
+    fetchUserData();
   }, []);
 
   const handleLogout = () => {
@@ -76,9 +93,7 @@ const Layout = ({ children }) => {
     router.push("/");
   };
 
- // Validar si el usuario es admin
- const isAdmin = roles?.includes("Admin") ?? false;
-
+  const isAdmin = roles?.includes("Admin") ?? false;
 
   return (
     <div className="flex h-screen bg-[#F5F5F5]">
@@ -100,35 +115,58 @@ const Layout = ({ children }) => {
             <h1 className="text-2xl font-bold">Unidad Central</h1>
             <h2 className="text-sm font-semibold">de Correspondencia</h2>
             <div className="flex justify-center items-center w-16 h-16 mx-auto">
-              <FaUsers className="text-6xl text-slate-50" />
+              <FaUsers className="text-7xl text-slate-50" />
             </div>
           </div>
-          <nav className="flex flex-col gap-4 px-4 mt-4">
-  <Link href="/consulta" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
-    <FaHome className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Inicio
-  </Link>
 
-  {/* Mostrar solo si el usuario es Admin */}
-  {isAdmin && (
+          {/* Sección de usuario */}
+          <div className="text-center p-6 border-b border-[#BC995B]">
+            <div className="flex justify-left items-center gap-2 w-full">
+              <FaUser className=" text-slate-50" />
+              <span className="text-lg font-semibold">{userName || "Usuario"}</span>
+            </div>
+          </div>
+
+          <nav className="flex flex-col gap-4 px-4 mt-4">
+            <Link
+              href="/consulta"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group"
+            >
+              <FaHome className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
+              Inicio
+            </Link>
+
+            {/* Mostrar solo si el usuario es Admin */}
+            {isAdmin && (
               <>
-                <Link href="/formulario" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
-                  <FiFilePlus className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Nuevo Registro
+                <Link
+                  href="/formulario"
+                  className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group"
+                >
+                  <FiFilePlus className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
+                  Nuevo Registro
                 </Link>
-                <Link href="/roles" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
-                  <FaUsers className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Roles y usuarios
+                <Link
+                  href="/roles"
+                  className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group"
+                >
+                  <FaUsers className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
+                  Roles y usuarios
                 </Link>
               </>
             )}
-  <Link href="/buzon" className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group">
-    <FaInbox className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" /> Buzón
-  </Link>
-</nav>
-
+            <Link
+              href="/buzon"
+              className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group"
+            >
+              <FaInbox className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
+              Buzón
+            </Link>
+          </nav>
         </div>
 
         {/* Sección de Configuración y Cerrar Sesión */}
         <div className="mt-auto px-4 ">
-          
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full py-2 mt-2 text-left hover:text-[#BC995B] transition-colors group-hover:rotate-12 group-hover:scale-110"
@@ -139,7 +177,11 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Contenido principal */}
-      <main className={`flex-1 overflow-y-auto p-4 transition-all duration-300 ${isOpen ? "pl-64" : ""}`}>
+      <main
+        className={`flex-1 overflow-y-auto p-4 transition-all duration-300 ${
+          isOpen ? "pl-64" : ""
+        }`}
+      >
         {children}
       </main>
     </div>
@@ -147,5 +189,3 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
-
-
