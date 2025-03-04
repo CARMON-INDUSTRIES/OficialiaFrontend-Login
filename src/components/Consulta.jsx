@@ -8,8 +8,10 @@ import DetalleModal from "@/components/DetalleModal";
 import ModalEditar from "@/components/ModalEditar"; // Ajusta la ruta si es necesario
 import { jwtDecode } from "jwt-decode";
 
+
 import axios from "axios";
 import Swal from "sweetalert2";
+
 
 const Dashboard = () => {
   const router = useRouter();
