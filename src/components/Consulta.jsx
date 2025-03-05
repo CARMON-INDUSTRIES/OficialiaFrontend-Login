@@ -7,11 +7,8 @@ import Layout from "@/components/Layout";
 import DetalleModal from "@/components/DetalleModal";
 import ModalEditar from "@/components/ModalEditar"; // Ajusta la ruta si es necesario
 import { jwtDecode } from "jwt-decode";
-
-
 import axios from "axios";
 import Swal from "sweetalert2";
-
 
 const Dashboard = () => {
   const router = useRouter();
@@ -25,12 +22,14 @@ const Dashboard = () => {
   const [areas, setAreas] = useState([]);
   const [importancias, setImportancias] = useState([]);
   const [status, setStatus] = useState([]);
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
-    } else if (records.length === 0) {
+    } else {
+      fetchUserRole(token);
       fetchRecords(token);
     }
   }, []);
@@ -77,22 +76,47 @@ const Dashboard = () => {
       console.error("Error al obtener datoss:", error);
     }
   };
+
+  const fetchUserRole = async (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      const userName =
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      if (!userName) {
+        console.error("Error: userName es undefined");
+        return;
+      }
+
+      const response = await axios.get(
+        "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const user = response.data.find((u) => u.userName === userName);
+      if (user) {
+        setUserRole(user.roles);
+      } else {
+        console.error("No se encontró el usuario en la lista de roles");
+      }
+    } catch (error) {
+      console.error("Error al obtener el rol del usuario:", error);
+    }
+  };
+
   const fetchRecords = async (token) => {
     try {
       const decodedToken = jwtDecode(token);
-      console.log("Token decodificado:", decodedToken);
-  
       const userName =
         decodedToken[
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
   
-      if (!userName) {
-        console.error("Error: userName es undefined");
-        return;
-      }
-  
-      console.log("Nombre de usuario obtenido:", userName);
+        if (!userName) return;
   
       // Obtener userId
       const userIdResponse = await axios.get(
@@ -119,7 +143,6 @@ const Dashboard = () => {
       );
   
       if (!Array.isArray(response.data)) {
-        console.error("Error: La API no devolvió un array de registros", response.data);
         return;
       }
   
@@ -139,7 +162,7 @@ const Dashboard = () => {
       );
     }
   };
-  
+
   const handleDeleteConfirmation = (id) => {
     Swal.fire({
       title: "¿Estás seguro de querer eliminar este registro?",
@@ -355,7 +378,9 @@ const Dashboard = () => {
                       >
                         <FaEye />
                       </button>
-                      <button
+                      {userRole.includes ("Admin") && (
+                        <>
+                        <button
                         className="text-green-500 hover:underline"
                         onClick={() => handleEdit(record)}
                       >
@@ -367,6 +392,9 @@ const Dashboard = () => {
                       >
                         <FaTrashAlt />
                       </button>
+                      </>
+                      )}
+                      
                     </td>
                   </tr>
                 ))}
