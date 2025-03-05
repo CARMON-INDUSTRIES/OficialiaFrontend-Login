@@ -185,7 +185,7 @@ const Roles = () => {
         "https://oficialialoginbackend.somee.com/api/Roles/AsignarRol",
         {
           id: selectedUser.id,
-          Email: selectedUser.email,
+          userName: selectedUser.userName,
           Role: newRole,
         }
       );
@@ -212,12 +212,12 @@ const Roles = () => {
     closeModal();
   };
 
-  const quitarRol = async (usuarioEmail, rolAEliminar) => {
+  const quitarRol = async (usuarioNombre, rolAEliminar) => {
     try {
       const response = await axios.post(
         "https://oficialialoginbackend.somee.com/api/Roles/QuitarRol",
         {
-          email: usuarioEmail,
+          userName: usuarioNombre,
           role: rolAEliminar,
         }
       );
@@ -394,7 +394,7 @@ const Roles = () => {
                 {selectedUser?.roles.includes("Admin") && (
                   <button
                     className="bg-yellow-500 text-white px-2 py-2 rounded-lg hover:bg-yellow-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-yellow-600"
-                    onClick={() => quitarRol(selectedUser.email, "Admin")}
+                    onClick={() => quitarRol(selectedUser.userName, "Admin")}
                   >
                     Quitar Admin
                   </button>
@@ -403,7 +403,7 @@ const Roles = () => {
                 {selectedUser?.roles.includes("SuperAdmin") && (
                   <button
                     className="bg-orange-500 text-white px-2 py-2 rounded-lg hover:bg-orange-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-orange-600"
-                    onClick={() => quitarRol(selectedUser.email, "SuperAdmin")}
+                    onClick={() => quitarRol(selectedUser.userName, "SuperAdmin")}
                   >
                     Quitar SuperAdmin
                   </button>
