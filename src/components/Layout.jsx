@@ -93,7 +93,9 @@ const Layout = ({ children }) => {
     router.push("/");
   };
 
+  const isUser = roles?.includes("User") ?? false;
   const isAdmin = roles?.includes("Admin") ?? false;
+  const isSuperAdmin = roles?.includes("SuperAdmin") ?? false;
 
   return (
     <div className="flex h-screen bg-[#F5F5F5]">
@@ -136,8 +138,8 @@ const Layout = ({ children }) => {
               Inicio
             </Link>
 
-            {/* Mostrar solo si el usuario es Admin */}
-            {isAdmin && (
+            {/* Mostrar solo si el usuario es Admin o SuperAdmin */}
+            {(isAdmin || isSuperAdmin) && (
               <>
                 <Link
                   href="/formulario"
@@ -146,6 +148,10 @@ const Layout = ({ children }) => {
                   <FiFilePlus className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
                   Nuevo Registro
                 </Link>
+                </>
+            )}
+            {(isSuperAdmin) && (
+              <>
                 <Link
                   href="/roles"
                   className="flex items-center gap-3 py-2 hover:text-[#BC995B] transition-colors group"

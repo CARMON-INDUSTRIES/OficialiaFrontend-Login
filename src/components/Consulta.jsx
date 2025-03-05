@@ -115,9 +115,9 @@ const Dashboard = () => {
         decodedToken[
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
-  
-        if (!userName) return;
-  
+
+      if (!userName) return;
+
       // Obtener userId
       const userIdResponse = await axios.get(
         `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`,
@@ -125,15 +125,15 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       const userId = userIdResponse.data.userId;
       console.log("UserId obtenido del backend:", userId);
-  
+
       if (!userId) {
         console.error("Error: No se obtuvo userId del backend");
         return;
       }
-  
+
       // Obtener registros con userId
       const response = await axios.get(
         `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener?userId=${userId}`,
@@ -141,19 +141,19 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       if (!Array.isArray(response.data)) {
         return;
       }
-  
+
       // Filtrar registros por área del usuario
       const userRecords = response.data;
-  
+
       // Ordenar los registros por fecha descendente
       const sortedRecords = userRecords.sort(
         (a, b) => new Date(b.fecha) - new Date(a.fecha)
       );
-  
+
       setRecords(sortedRecords);
     } catch (error) {
       console.error(
@@ -378,23 +378,23 @@ const Dashboard = () => {
                       >
                         <FaEye />
                       </button>
-                      {userRole.includes ("Admin") && (
+                      {(userRole.includes("Admin") ||
+                        userRole.includes("SuperAdmin")) && (
                         <>
-                        <button
-                        className="text-green-500 hover:underline"
-                        onClick={() => handleEdit(record)}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="text-red-500 hover:underline"
-                        onClick={() => handleDeleteConfirmation(record.id)}
-                      >
-                        <FaTrashAlt />
-                      </button>
-                      </>
+                          <button
+                            className="text-green-500 hover:underline"
+                            onClick={() => handleEdit(record)}
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="text-red-500 hover:underline"
+                            onClick={() => handleDeleteConfirmation(record.id)}
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        </>
                       )}
-                      
                     </td>
                   </tr>
                 ))}

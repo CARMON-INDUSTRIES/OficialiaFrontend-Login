@@ -36,13 +36,13 @@ const Roles = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el
   const [roles, setRoles] = useState([]);
-    
-   useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/login");
-      }
-    }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+  }, []);
 
   useEffect(() => {
     setRotateOnLoad(true);
@@ -211,6 +211,26 @@ const Roles = () => {
     }
     closeModal();
   };
+
+  const quitarRol = async (usuarioEmail, rolAEliminar) => {
+    try {
+      const response = await axios.post(
+        "https://oficialialoginbackend.somee.com/api/Roles/QuitarRol",
+        {
+          email: usuarioEmail,
+          role: rolAEliminar,
+        }
+      );
+      console.log("Rol eliminado correctamente:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error al eliminar rol:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   // Función de filtro
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -337,7 +357,7 @@ const Roles = () => {
                 EDITAR ROL
               </h2>
               <p className="text-gray-700 text-lg mt-2">
-                <strong>Area:</strong> {selectedUser?.userName}
+                <strong>Nombre de usuario:</strong> {selectedUser?.userName}
               </p>
               <p className="text-gray-700 text-lg mt-1">
                 <strong>Correo:</strong> {selectedUser?.email}
@@ -345,7 +365,7 @@ const Roles = () => {
 
               <div className="mt-6">
                 <label className="block font-semibold text-lg mb-2">
-                  Selecciona un nuevo rol:
+                  Cambiar rol:
                 </label>
                 <select
                   value={newRole}
@@ -361,17 +381,37 @@ const Roles = () => {
               </div>
 
               <div className="flex justify-end gap-4 mt-6">
-                <button
-                  className="bg-red-400 text-white px-5 py-2 rounded-lg hover:bg-red-500 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-500"
-                  onClick={closeModal}
-                >
-                  Cancelar
-                </button>
+                {/* Mostrar el botón para quitar rol solo si el usuario tiene el rol Admin o SuperAdmin */}
+                {selectedUser?.roles.includes("Admin") && (
+                  <button
+                    className="bg-yellow-500 text-white px-2 py-2 rounded-lg hover:bg-yellow-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-yellow-600"
+                    onClick={() => quitarRol(selectedUser.email, "Admin")}
+                  >
+                    Quitar Admin
+                  </button>
+                )}
+
+                {selectedUser?.roles.includes("SuperAdmin") && (
+                  <button
+                    className="bg-orange-500 text-white px-2 py-2 rounded-lg hover:bg-orange-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-orange-600"
+                    onClick={() => quitarRol(selectedUser.email, "SuperAdmin")}
+                  >
+                    Quitar SuperAdmin
+                  </button>
+                )}
+
+               
                 <button
                   className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-green-500"
                   onClick={saveChanges}
                 >
                   Guardar Cambios
+                </button>
+                <button
+                  className="bg-red-400 text-white px-5 py-2 rounded-lg hover:bg-red-500 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-500"
+                  onClick={closeModal}
+                >
+                  Cancelar
                 </button>
               </div>
             </div>
