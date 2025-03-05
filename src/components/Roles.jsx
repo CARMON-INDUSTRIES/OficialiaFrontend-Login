@@ -221,13 +221,22 @@ const Roles = () => {
           role: rolAEliminar,
         }
       );
-      console.log("Rol eliminado correctamente:", response.data);
+  
+      // Mostrar mensaje de éxito con SweetAlert
+      Swal.fire({
+        icon: 'success',
+        title: 'Rol eliminado correctamente',
+        text: response.data.message || 'El rol se ha eliminado con éxito.',
+      });
+  
       return response.data;
     } catch (error) {
-      console.error(
-        "Error al eliminar rol:",
-        error.response?.data || error.message
-      );
+      // Mostrar mensaje de error con SweetAlert
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al eliminar rol',
+        text: error.response?.data || error.message,
+      });
     }
   };
 
