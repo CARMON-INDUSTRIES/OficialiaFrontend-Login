@@ -94,7 +94,7 @@ export const SignIn = () => {
             <h1 className="text-3xl text-center font-bold">Inicio de sesión</h1>
             <br />
             <img
-              src="/images/presidencia.jpeg"
+              src="/images/presidencia.png"
               alt="Presidencia"
               className="w-36 h-auto object-cover mb-4 mx-auto"
             />
