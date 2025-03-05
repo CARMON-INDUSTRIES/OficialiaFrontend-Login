@@ -10,7 +10,7 @@ import {
   FaTimes,
   FaInbox,
   FaCog,
-  FaUser,
+  FaUserCircle,
 } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
@@ -113,19 +113,28 @@ const Layout = ({ children }) => {
           ${isOpen ? "left-0" : "-left-64"} sm:left-0 h-full z-40`}
       >
         <div>
-          <div className="text-center p-6 border-b border-[#BC995B]">
-            <h1 className="text-2xl font-bold">Unidad Central</h1>
-            <h2 className="text-sm font-semibold">de Correspondencia</h2>
-            <div className="flex justify-center items-center w-16 h-16 mx-auto">
-              <FaUsers className="text-7xl text-slate-50" />
+          <div>
+            <div className="text-center p-6 border-b border-[#BC995B]">
+              <h1 className="text-2xl font-bold">Unidad Central</h1>
+              <h2 className="text-sm font-semibold">de Correspondencia</h2>
+              
+              <img
+  src="/images/presidencia.png"
+  alt="Logo Presidencia"
+  className="w-32 h-32 object-contain rounded-lg mx-auto"
+/>
+
+              
             </div>
           </div>
 
           {/* Sección de usuario */}
           <div className="text-center p-6 border-b border-[#BC995B]">
             <div className="flex justify-left items-center gap-2 w-full">
-              <FaUser className=" text-slate-50" />
-              <span className="text-lg font-semibold">{userName || "Usuario"}</span>
+              <FaUserCircle className=" text-slate-50" />
+              <span className="text-lg font-semibold">
+                {userName || "Usuario"}
+              </span>
             </div>
           </div>
 
@@ -148,9 +157,9 @@ const Layout = ({ children }) => {
                   <FiFilePlus className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />{" "}
                   Nuevo Registro
                 </Link>
-                </>
+              </>
             )}
-            {(isSuperAdmin) && (
+            {isSuperAdmin && (
               <>
                 <Link
                   href="/roles"

@@ -21,8 +21,6 @@ export default function Buzon() {
   useEffect(() => {
     const fetchNotificaciones = async () => {
       try {
-        console.log("🔄 Obteniendo notificaciones...");
-
         // Obtener token del localStorage
         const token = localStorage.getItem("token");
         if (!token) {
@@ -93,29 +91,26 @@ export default function Buzon() {
             documento: item.documento,
           }));
 
-        // Verificar si hay nuevos registros
-        if (ultimosRegistros.length > 0 && notificaciones.length > 0) {
-          // Si el primer registro nuevo no está en el anterior, hay nuevos
-          const isNewRecord = ultimosRegistros[0].id !== notificaciones[0]?.id;
-          if (isNewRecord) {
+          const nuevosRegistros = ultimosRegistros.filter(
+            (nuevo) => !notificaciones.some((anterior) => anterior.id === nuevo.id)
+          );
+    
+          if (nuevosRegistros.length > 0) {
             setNuevaNotificacion(true);
             setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
           }
+    
+          setNotificaciones(ultimosRegistros);
+        } catch (error) {
+          console.error("Error:", error);
         }
-
-        // Actualizar las notificaciones
-        setNotificaciones(ultimosRegistros);
-
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchNotificaciones();
-    const interval = setInterval(fetchNotificaciones, 20000); // Recargar cada 20s
-
-    return () => clearInterval(interval);
-}, []);// Se ejecuta cuando notificaciones cambia
+      };
+    
+      fetchNotificaciones();
+      const interval = setInterval(fetchNotificaciones, 20000);
+    
+      return () => clearInterval(interval);
+    }, [notificaciones]); // 🔥 Agregamos `notificaciones` como dependencia
 
 
   const obtenerColorEstado = (estado) => {
