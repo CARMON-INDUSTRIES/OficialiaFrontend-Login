@@ -53,7 +53,7 @@ export default function Buzon() {
         const userId = userIdData.userId;
 
         if (!userId) {
-          console.error("No se obtuvo userId xd.");
+          console.error("No se obtuvo userId.");
           return;
         }
 
