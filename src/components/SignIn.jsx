@@ -83,7 +83,7 @@ export const SignIn = () => {
          
         </motion.h1>
 
-        {/* Animación del formulario */}
+        
         <motion.div
           initial={{ opacity: 0, y: 50 }} // Aparece desde abajo
           animate={{ opacity: 1, y: 0 }}
