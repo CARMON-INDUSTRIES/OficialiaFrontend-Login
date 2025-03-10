@@ -74,6 +74,10 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               {selectedRecord.importanciaDescripcion}
             </p>
             <p className="text-lg mb-2">
+              <span className="font-bold">Fecha Terminación: </span>{""}
+              {new Date(selectedRecord.fechaTerminacion).toLocaleDateString("es-MX")}
+            </p>
+            <p className="text-lg mb-2">
               <span className="font-bold text-[#621132]">Status:</span>{" "}
               {selectedRecord.statusDescripcion}
             </p>

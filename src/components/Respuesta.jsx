@@ -13,7 +13,8 @@ export default function Respuesta({ selectedRecord, closeModal }) {
         <p ><strong>Remitente:</strong> {selectedRecord.remitente}</p>
         <p><strong>Asunto:</strong> {selectedRecord.asunto}</p>
         <p><strong>Fecha:</strong> {selectedRecord.fecha}</p>
-        <p><strong>Status:</strong> {selectedRecord.estado}</p>
+        <p><strong>Status:</strong> {selectedRecord.statusDescripcion}</p>
+       
         <textarea className="w-full p-2 border rounded mt-4" placeholder="Escribe tu respuesta..." value={mensaje} onChange={(e) => setMensaje(e.target.value)}></textarea>
         <input type="file" className="w-full mt-2" onChange={(e) => setArchivo(e.target.files[0])} />
         <div className="flex gap-2 mt-4 justify-center">

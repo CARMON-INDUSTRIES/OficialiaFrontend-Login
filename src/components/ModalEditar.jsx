@@ -202,6 +202,16 @@ const ModalEditar = ({
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="block text-gray-700 font-bold">Fecha de Terminación: </label>
+                <input
+                  type="date"
+                  name="fechaTerminacion"
+                  className="input-field"
+                  value={formatDate(editData.fechaTerminacion || selectedRecord.fechaTerminacion).split('/').reverse().join('-')}
+                  onChange={handleChange}
+                />
+              </div>
 
               {/* Status - Dropdown */}
               <div>

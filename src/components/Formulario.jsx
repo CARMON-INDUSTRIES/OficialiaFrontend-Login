@@ -32,6 +32,7 @@ const Formulario = () => {
     importancia: "",
     status: "",
     documento: "",
+    fechaTerminacion: "",
   });
 
   useEffect(() => {
@@ -315,6 +316,15 @@ const Formulario = () => {
             </select>
           </div>
           <div>
+            <label className="block font-bold">Fecha Terminación</label>
+            <input
+              type="date"
+              name="fechaTerminacion"
+              onChange={handleChange}
+              className="w-full p-2 border rounded border-[#691B31]"
+            />
+          </div>
+          <div>
             <label className="block font-bold">Status</label>
             <select
               onChange={handleChange}
@@ -381,8 +391,8 @@ const Formulario = () => {
             )}
           </div>
 
-          <div className="col-span-3 flex justify-end items-end">
-            <button className="bg-[#691B31] text-white px-6 py-2 rounded-lg hover:bg-[#A02142] transform hover:scale-105 focus:ring-2 focus:ring-[#A02142]">
+          <div className="col-span-3 flex justify-center items-center">
+            <button className="bg-[#691B31] text-white px-10 py-2 rounded-lg hover:bg-[#A02142] transform hover:scale-105 focus:ring-2 focus:ring-[#A02142]">
               Registrar
             </button>
           </div>
