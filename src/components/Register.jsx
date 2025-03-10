@@ -17,7 +17,10 @@ export const Register = () => {
   const [selectedArea, setSelectedArea] = useState("");
   const [userId, setUserId] = useState(null); // Para almacenar el ID del usuario registrado
   const [isAreaModalOpen, setIsAreaModalOpen] = useState(false); // Controla el modal de área
-
+  const closeAreaModal = () => {
+    setIsAreaModalOpen(false); // Asegura que esta variable de estado exista en tu componente
+  };
+  
   const router = useRouter();
 
   // Obtener las áreas disponibles
@@ -120,6 +123,20 @@ export const Register = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("https://oficialialoginbackend.somee.com/api/Usuarios");
+      // Actualiza el estado de la lista de usuarios con la respuesta
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error al obtener usuarios:", error);
+    }
+  };
+  
+  // Llamar a fetchUsers después de registrar el usuario
+  fetchUsers();
+   
+
   return (
     <div className="right flex flex-col justify-center items-center relative">
       <motion.div
@@ -198,40 +215,49 @@ export const Register = () => {
       </motion.div>
 
       {/* Modal para asignar área */}
-      {isAreaModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
-          >
-            <h2 className="text-xl font-bold text-center text-[#621132] mb-4">
-              ¿A qué área pertenece este usuario?
-            </h2>
+{isAreaModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative"
+    >
+      {/* Botón de cierre (tache) */}
+      <button
+        onClick={closeAreaModal}
+        className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
 
-            <select
-              value={selectedArea}
-              onChange={(e) => setSelectedArea(e.target.value)}
-              className="w-full px-4 py-2 mb-4 rounded-lg border outline-none bg-[#F5F5F5]"
-            >
-              <option value="">Seleccione un área</option>
-              {areas.map((area) => (
-                <option key={area.idArea} value={area.idArea}>
-                  {area.nombreArea}
-                </option>
-              ))}
-            </select>
+      <h2 className="text-xl font-bold text-center text-[#621132] mb-4">
+        ¿A qué área pertenece este usuario?
+      </h2>
 
-            <button
-              onClick={handleAssignArea}
-              className="bg-[#BC995B] text-white w-full py-2 rounded-lg"
-            >
-              Asignar Área
-            </button>
-          </motion.div>
-        </div>
-      )}
+      <select
+        value={selectedArea}
+        onChange={(e) => setSelectedArea(e.target.value)}
+        className="w-full px-4 py-2 mb-4 rounded-lg border outline-none bg-[#F5F5F5]"
+      >
+        <option value="">Seleccione un área</option>
+        {areas.map((area) => (
+          <option key={area.idArea} value={area.idArea}>
+            {area.nombreArea}
+          </option>
+        ))}
+      </select>
+
+      <button
+        onClick={handleAssignArea}
+        className="bg-[#BC995B] text-white w-full py-2 rounded-lg"
+      >
+        Asignar Área
+      </button>
+    </motion.div>
+  </div>
+)}
+
     </div>
   );
 };

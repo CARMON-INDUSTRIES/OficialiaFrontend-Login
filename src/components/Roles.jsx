@@ -19,7 +19,6 @@ const fondoRoles = "/images/roles.jpg";
 const Roles = () => {
   const router = useRouter();
   const [usuarios, setUsuarios] = useState([]);
-
   const [filteredUsuarios, setFilteredUsuarios] = useState([]);
   // Estado para los usuarios filtrados
   const [modalOpen, setModalOpen] = useState(false);
@@ -106,6 +105,18 @@ const Roles = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUsuarios(); // Llamar la primera vez cuando el componente se monta
+
+    // Configurar el intervalo para ejecutar cada 60 segundos
+    const interval = setInterval(() => {
+      fetchUsuarios();
+    }, 60000); // 60,000 ms = 60 segundos
+
+    // Limpiar el intervalo cuando el componente se desmonte
+    return () => clearInterval(interval);
+  }, []); // Se ejecuta solo una vez cuando el componente se monta
+
   const deleteUser = async (userId) => {
     try {
       // Mostrar SweetAlert de confirmación antes de eliminar
@@ -119,7 +130,7 @@ const Roles = () => {
         confirmButtonText: "Sí, eliminarlo",
       });
 
-      // Si el usuario confirma la eliminación
+      
       if (result.isConfirmed) {
         // Realizar la solicitud de eliminación
         await axios.delete(
@@ -140,6 +151,7 @@ const Roles = () => {
           confirmButtonColor: "#691B31",
           confirmButtonText: "Aceptar",
         });
+       
       }
     } catch (error) {
       console.error("Error al eliminar usuario:", error);
@@ -162,16 +174,45 @@ const Roles = () => {
   };
 
   const openAddUserModal = () => setAddUserModalOpen(true);
+
   const closeAddUserModal = () => {
     setAddUserModalOpen(false);
     setNewUser({ userName: "", email: "", rol: "Usuario", password: "" });
   };
 
-  const saveNewUser = () => {
-    setUsuarios([...usuarios, { ...newUser, id: usuarios.length + 1 }]);
-    setFilteredUsuarios([...usuarios, { ...newUser, id: usuarios.length + 1 }]);
-    closeAddUserModal();
+  const saveNewUser = async () => {
+    try {
+      // Llamar a la API para registrar el nuevo usuario
+      const response = await axios.post(
+        "https://oficialialoginbackend.somee.com/api/Cuentas/RegistrarUsuario",
+        newUser
+      );
+  
+      if (response.status === 200) {
+        // Una vez registrado el usuario, actualizamos la lista de usuarios
+        fetchUsuarios();
+        // Cerrar el modal de registro
+        closeAddUserModal();
+        Swal.fire({
+          title: "¡Usuario Registrado!",
+          text: "El usuario ha sido registrado exitosamente.",
+          icon: "success",
+          confirmButtonColor: "#691B31",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      Swal.fire({
+        title: "¡Error!",
+        text: "Ha ocurrido un error al registrar el usuario. Intenta nuevamente.",
+        icon: "error",
+        confirmButtonColor: "#691B31",
+        confirmButtonText: "Cerrar",
+      });
+    }
   };
+  
 
   const closeModal = () => {
     setModalOpen(false);
@@ -191,6 +232,7 @@ const Roles = () => {
       );
 
       if (response.status === 200) {
+        
         setUsuarios((prevUsers) =>
           prevUsers.map((user) =>
             user.id === selectedUser.id ? { ...user, roles: newRole } : user
@@ -201,6 +243,7 @@ const Roles = () => {
             user.id === selectedUser.id ? { ...user, roles: newRole } : user
           )
         );
+        
         setShowConfirmation(true);
         setTimeout(() => setShowConfirmation(false), 2000);
       }
@@ -288,7 +331,7 @@ const Roles = () => {
             <thead className="bg-white sticky top-0 z-10">
               <tr className="text-gray-700">
                 <th className="py-3 px-6 text-left text-lg">
-                  Nombre de usuario
+                  Nombre
                 </th>
                 <th className="py-3 px-6 text-left text-lg">Area</th>
                 <th className="py-3 px-6 text-left text-lg">Correo</th>
@@ -347,6 +390,7 @@ const Roles = () => {
       <RegisterModal
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
+        
       />
 
       {/* Modal */}
