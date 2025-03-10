@@ -51,7 +51,7 @@ export const SignIn = () => {
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
       {/* Sección Izquierda */}
       <motion.div
-        initial={{ opacity: 0, x: -100 }} // Aparece desde la izquierda
+        initial={{ opacity: 0, x: -100 }} 
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
         className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col"
