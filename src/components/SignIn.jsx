@@ -72,7 +72,7 @@ export const SignIn = () => {
         </div>
       </motion.div>
 
-      {/* Sección Derecha */}
+      
       <div className="right flex flex-col justify-center items-center relative">
         <motion.h1
           initial={{ opacity: 0, y: -20 }} // Aparece desde arriba
