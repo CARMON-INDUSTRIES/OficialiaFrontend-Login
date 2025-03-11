@@ -147,7 +147,6 @@ const Formulario = () => {
         }
       );
 
-      console.log("Registro exitoso:", response.data);
       Swal.fire({
         title: "¡Éxito!",
         text: "Documento registrado correctamente",

@@ -40,7 +40,6 @@ export default function Buzon() {
           return;
         }
 
-        console.log("✅ Usuario autenticado:", userName);
 
         // Obtener userId del backend
         const userIdResponse = await fetch(
@@ -55,7 +54,6 @@ export default function Buzon() {
           return;
         }
 
-        console.log("✅ UserId obtenido:", userId);
 
         // Obtener registros filtrados por userId
         const response = await fetch(`${API_URL}?userId=${userId}`);
@@ -63,7 +61,7 @@ export default function Buzon() {
         if (!response.ok) throw new Error("❌ Error al obtener los registros");
 
         const data = await response.json();
-        console.log("📩 Datos obtenidos:", data);
+
 
         // Procesar datos
         const ultimosRegistros = data
@@ -112,7 +110,7 @@ export default function Buzon() {
       const interval = setInterval(fetchNotificaciones, 20000);
     
       return () => clearInterval(interval);
-    }, [notificaciones]); // 🔥 Agregamos `notificaciones` como dependencia
+    }, [notificaciones]); 
 
 
   const obtenerColorEstado = (estado) => {

@@ -29,7 +29,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
       );
 
       const responseData = response.data;
-      console.log("Respuesta de la API:", responseData);
+     
       // Verificamos si encontramos la respuesta
       if (responseData && responseData.idRespuesta) {
         setResponseDetails(responseData); // Asumimos que la respuesta está en el primer elemento

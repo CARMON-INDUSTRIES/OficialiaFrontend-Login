@@ -130,7 +130,6 @@ const Roles = () => {
         confirmButtonText: "Sí, eliminarlo",
       });
 
-      
       if (result.isConfirmed) {
         // Realizar la solicitud de eliminación
         await axios.delete(
@@ -151,7 +150,6 @@ const Roles = () => {
           confirmButtonColor: "#691B31",
           confirmButtonText: "Aceptar",
         });
-       
       }
     } catch (error) {
       console.error("Error al eliminar usuario:", error);
@@ -187,7 +185,7 @@ const Roles = () => {
         "https://oficialialoginbackend.somee.com/api/Cuentas/RegistrarUsuario",
         newUser
       );
-  
+
       if (response.status === 200) {
         // Una vez registrado el usuario, actualizamos la lista de usuarios
         fetchUsuarios();
@@ -212,7 +210,6 @@ const Roles = () => {
       });
     }
   };
-  
 
   const closeModal = () => {
     setModalOpen(false);
@@ -232,7 +229,6 @@ const Roles = () => {
       );
 
       if (response.status === 200) {
-        
         setUsuarios((prevUsers) =>
           prevUsers.map((user) =>
             user.id === selectedUser.id ? { ...user, roles: newRole } : user
@@ -243,7 +239,7 @@ const Roles = () => {
             user.id === selectedUser.id ? { ...user, roles: newRole } : user
           )
         );
-        
+
         setShowConfirmation(true);
         setTimeout(() => setShowConfirmation(false), 2000);
       }
@@ -264,20 +260,20 @@ const Roles = () => {
           role: rolAEliminar,
         }
       );
-  
+
       // Mostrar mensaje de éxito con SweetAlert
       Swal.fire({
-        icon: 'success',
-        title: 'Rol eliminado correctamente',
-        text: response.data.message || 'El rol se ha eliminado con éxito.',
+        icon: "success",
+        title: "Rol eliminado correctamente",
+        text: response.data.message || "El rol se ha eliminado con éxito.",
       });
-  
+
       return response.data;
     } catch (error) {
       // Mostrar mensaje de error con SweetAlert
       Swal.fire({
-        icon: 'error',
-        title: 'Error al eliminar rol',
+        icon: "error",
+        title: "Error al eliminar rol",
         text: error.response?.data || error.message,
       });
     }
@@ -330,9 +326,7 @@ const Roles = () => {
           <table className="w-full border-collapse bg-white">
             <thead className="bg-white sticky top-0 z-10">
               <tr className="text-gray-700">
-                <th className="py-3 px-6 text-left text-lg">
-                  Nombre
-                </th>
+                <th className="py-3 px-6 text-left text-lg">Nombre</th>
                 <th className="py-3 px-6 text-left text-lg">Area</th>
                 <th className="py-3 px-6 text-left text-lg">Correo</th>
                 <th className="py-3 px-6 text-left text-lg">Rol</th>
@@ -390,7 +384,6 @@ const Roles = () => {
       <RegisterModal
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
-        
       />
 
       {/* Modal */}
@@ -447,13 +440,14 @@ const Roles = () => {
                 {selectedUser?.roles.includes("SuperAdmin") && (
                   <button
                     className="bg-orange-500 text-white px-2 py-2 rounded-lg hover:bg-orange-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-orange-600"
-                    onClick={() => quitarRol(selectedUser.userName, "SuperAdmin")}
+                    onClick={() =>
+                      quitarRol(selectedUser.userName, "SuperAdmin")
+                    }
                   >
                     Quitar SuperAdmin
                   </button>
                 )}
 
-               
                 <button
                   className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-green-500"
                   onClick={saveChanges}

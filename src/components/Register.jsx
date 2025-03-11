@@ -55,11 +55,10 @@ export const Register = () => {
       if (!response.ok) throw new Error("Error al registrar usuario");
 
       const data = await response.json();
-      console.log("Respuesta completa del servidor:", data);
-      console.log("userId registrado:", data.userId);
+      
 
       setUserId(data.userId); // Guarda el userId en el estado
-      console.log("userId registrado:", data.userId); // Verifica que el userId esté guardado
+  
 
       setError("");
 
@@ -88,8 +87,7 @@ export const Register = () => {
   };
 
   const handleAssignArea = async () => {
-    console.log("Botón presionado, asignando área...");
-    console.log("UserID:", userId, "Área seleccionada:", selectedArea);
+   
 
     if (!selectedArea || !userId) return;
 

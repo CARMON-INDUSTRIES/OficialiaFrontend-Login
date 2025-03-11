@@ -127,7 +127,6 @@ const Dashboard = () => {
       );
 
       const userId = userIdResponse.data.userId;
-      console.log("UserId obtenido del backend:", userId);
 
       if (!userId) {
         console.error("Error: No se obtuvo userId del backend");
@@ -205,7 +204,6 @@ const Dashboard = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log("Editando registro:", editData);
     try {
       await axios.put(
         `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editData.id}`,

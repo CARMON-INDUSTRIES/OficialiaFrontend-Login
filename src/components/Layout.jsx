@@ -37,7 +37,6 @@ const Layout = ({ children }) => {
         if (!token) return;
 
         const decoded = decodeToken(token);
-        console.log("Token decodificado:", decoded);
 
         // Extraer el nombre del usuario
         const extractedUserName =
@@ -64,15 +63,12 @@ const Layout = ({ children }) => {
         if (!response.ok) throw new Error("Error al obtener los roles");
 
         const data = await response.json();
-        console.log("Usuarios obtenidos de la API:", data);
 
         // Buscar el usuario por su nombre de usuario
         const user = data.find((user) => user.userName === extractedUserName);
-        console.log("Usuario encontrado:", user);
 
         if (user) {
           setRoles(user.roles || []);
-          console.log("Roles del usuario:", user.roles);
         } else {
           console.warn("No se encontró al usuario en la lista de la API.");
           setRoles([]);
@@ -117,14 +113,12 @@ const Layout = ({ children }) => {
             <div className="text-center p-6 border-b border-[#BC995B]">
               <h1 className="text-2xl font-bold">Unidad Central</h1>
               <h2 className="text-sm font-semibold">de Correspondencia</h2>
-              
-              <img
-  src="/images/presidencia.png"
-  alt="Logo Presidencia"
-  className="w-32 h-32 object-contain rounded-lg mx-auto"
-/>
 
-              
+              <img
+                src="/images/presidencia.png"
+                alt="Logo Presidencia"
+                className="w-32 h-32 object-contain rounded-lg mx-auto"
+              />
             </div>
           </div>
 
