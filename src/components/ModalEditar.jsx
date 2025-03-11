@@ -13,6 +13,8 @@ const ModalEditar = ({
   handleChange,
   handleEditSubmit,
   editData,
+  userRoles, // Añadimos currentUserRoles
+ 
 }) => {
   
   if (!showEditModal) return null;
@@ -25,6 +27,9 @@ const ModalEditar = ({
       year: "numeric",
     });
   };
+  
+// Verifica si el usuario tiene el rol de Admin o SuperAdmin
+const isAdminOrSuperAdmin = userRoles.some(role => role === "Admin" || role === "SuperAdmin");
 
   return (
     showEditModal &&
@@ -56,6 +61,9 @@ const ModalEditar = ({
           {/* Formulario */}
           <form onSubmit={(e) => handleEditSubmit(e, editData)}>
             <div className="grid grid-cols-2 gap-4 mt-4">
+              {/* Mostrar solo para Admin o SuperAdmin */}
+              {isAdminOrSuperAdmin && (
+                <>
               <div>
                 <label className="block text-gray-700 font-bold">Folio</label>
                 <input
@@ -73,6 +81,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={formatDate(editData.fecha || selectedRecord.fecha).split('/').reverse().join('-')}
                   onChange={handleChange}
+                  
                 />
               </div>
               <div>
@@ -85,6 +94,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.dependencia}
                   onChange={handleChange}
+                  
                 />
               </div>
               {/* Comunidad - Dropdown Compacto */}
@@ -97,6 +107,7 @@ const ModalEditar = ({
                   onChange={handleChange}
                   className="w-full p-2 border rounded border-[#BC995B] bg-white"
                   value={editData.comunidad || selectedRecord.idComunidad}
+                  
                 >
                   <option value={selectedRecord.idComunidad} hidden>
                     {selectedRecord.comunidadDescripcion}{" "}
@@ -120,6 +131,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.remitente}
                   onChange={handleChange}
+                  
                 />
               </div>
               <div>
@@ -132,6 +144,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.cargoRemitente}
                   onChange={handleChange}
+                 
                 />
               </div>
               <div>
@@ -142,6 +155,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.asunto}
                   onChange={handleChange}
+                  
                 />
               </div>
 
@@ -155,6 +169,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.destinatario}
                   onChange={handleChange}
+                  
                 />
               </div>
 
@@ -168,6 +183,7 @@ const ModalEditar = ({
                   className="input-field"
                   value={editData.cargoDestinatario}
                   onChange={handleChange}
+                  
                 />
               </div>
               {/* Área - Dropdown */}
@@ -178,6 +194,7 @@ const ModalEditar = ({
                   name="area"
                   className="input-field"
                   value={selectedRecord.areaDescripcion}
+                  
                 />
               </div>
               {/* Importancia - Dropdown */}
@@ -190,6 +207,7 @@ const ModalEditar = ({
                   onChange={handleChange}
                   className="w-full p-2 border rounded border-[#BC995B] bg-white"
                   value={editData.importancia || selectedRecord.idImportancia}
+                  
                 >
                   <option value={selectedRecord.idImportancia} hidden>
                     {selectedRecord.importanciaDescripcion}{" "}
@@ -210,8 +228,11 @@ const ModalEditar = ({
                   className="input-field"
                   value={formatDate(editData.fechaTerminacion || selectedRecord.fechaTerminacion).split('/').reverse().join('-')}
                   onChange={handleChange}
+                  
                 />
               </div>
+              </>
+            )}
 
               {/* Status - Dropdown */}
               <div>
@@ -221,6 +242,7 @@ const ModalEditar = ({
                   onChange={handleChange}
                   className="w-full p-2 border rounded border-[#691B31] bg-white"
                   value={editData.status || selectedRecord.idStatus}
+                  
                 >
                   <option value={selectedRecord.idImportancia} hidden>
                     {selectedRecord.statusDescripcion}{" "}
