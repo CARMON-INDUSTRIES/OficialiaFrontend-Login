@@ -134,7 +134,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
                 {selectedRecord.statusDescripcion}
               </p>
             </div>
-            {/* Botón Ver RESPUESTA */}
+            
             {selectedRecord?.respuestaCorrecta && (
               <div className="mt-4">
                 <button
