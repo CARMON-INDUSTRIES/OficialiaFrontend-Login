@@ -213,6 +213,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
               <div className="mt-4">
                 <button
                   onClick={() =>
+                    
                     window.open(responseDetails.documentoRespuesta, "_blank")
                   }
                   className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"

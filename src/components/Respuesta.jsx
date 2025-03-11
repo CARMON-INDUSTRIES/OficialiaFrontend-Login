@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -5,19 +6,60 @@ import Swal from "sweetalert2";
 export default function Respuesta({ selectedRecord, closeModal }) {
   const [mensaje, setMensaje] = useState("");
   const [archivo, setArchivo] = useState(null);
-  const [loading, setLoading] = useState(false); // Para indicar que está enviando
+  const [loading, setLoading] = useState(false);
+  const [downloadURL, setDownloadURL] = useState("");
 
-  // Función para convertir el archivo a Base64
-  const convertirArchivoBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(",")[1]); // Extraer solo el Base64
-      reader.onerror = (error) => reject(error);
-    });
+  // Manejar la selección del archivo
+  const handleFileChange = (event) => {
+    setArchivo(event.target.files[0]);
   };
 
-  // Función para enviar la respuesta
+  // Subir archivo a Cloudinary
+  const handleUpload = async () => {
+    if (!archivo) {
+      Swal.fire({
+        icon: "warning",
+        title: "Archivo no seleccionado",
+        text: "Por favor selecciona un archivo antes de subirlo.",
+      });
+      return;
+    }
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", archivo);
+    formDataUpload.append("upload_preset", "oficialia");
+    formDataUpload.append("resource_type", "raw");
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dwb98hqdy/upload`,
+        {
+          method: "POST",
+          body: formDataUpload,
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        setDownloadURL(data.secure_url);
+        Swal.fire({
+          icon: "success",
+          title: "Archivo subido",
+          text: "El archivo se ha subido correctamente.",
+        });
+      }
+    } catch (error) {
+      console.error("Error al subir el archivo:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema al subir el archivo.",
+      });
+    }
+  };
+
+  // Enviar respuesta con mensaje y URL del documento
   const enviarRespuesta = async () => {
     if (!mensaje.trim()) {
       Swal.fire({
@@ -28,27 +70,12 @@ export default function Respuesta({ selectedRecord, closeModal }) {
       return;
     }
 
-    setLoading(true); // Activar loading mientras se envía
-
-    let documentoBase64 = "";
-    if (archivo) {
-      try {
-        documentoBase64 = await convertirArchivoBase64(archivo);
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Error al procesar el archivo.",
-        });
-        setLoading(false);
-        return;
-      }
-    }
+    setLoading(true);
 
     const respuestaData = {
       mensaje,
-      documentoRespuesta: documentoBase64 || "", // Si no hay archivo, enviamos string vacío
-      respuestaCorrecta: selectedRecord.id, // Aquí pasamos el ID del registro
+      documentoRespuesta: downloadURL || "", // URL del documento si existe
+      respuestaCorrecta: selectedRecord.id,
     };
 
     try {
@@ -74,7 +101,7 @@ export default function Respuesta({ selectedRecord, closeModal }) {
         timer: 2000,
         showConfirmButton: false,
       });
-      closeModal(); // Cerrar el modal después de enviar
+      closeModal();
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -82,18 +109,13 @@ export default function Respuesta({ selectedRecord, closeModal }) {
         text: "Hubo un error al enviar la respuesta.",
       });
     } finally {
-      setLoading(false); // Desactivar loading
+      setLoading(false);
     }
   };
 
   return (
     <motion.div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <motion.div
-        className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        {/* Imagen decorativa en la parte superior */}
+      <motion.div className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative">
         <div className="flex justify-center mb-4">
           <img src="/images/Respuesta.png" alt="Respuesta" className="w-24 h-24 object-contain" />
         </div>
@@ -115,25 +137,32 @@ export default function Respuesta({ selectedRecord, closeModal }) {
         ></textarea>
 
         <label className="block text-black font-semibold mt-4">📂 Adjuntar documento:</label>
-        <input
-          type="file"
-          className="w-full mt-2 border p-2 rounded cursor-pointer bg-gray-100 hover:bg-gray-200"
-          onChange={(e) => setArchivo(e.target.files[0])}
-        />
+        <div className="flex items-center gap-4">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="w-full px-3 py-2 border rounded cursor-pointer bg-gray-100 hover:bg-gray-200"
+          />
+          <button
+            type="button"
+            onClick={handleUpload}
+            className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50]"
+          >
+            Subir
+          </button>
+        </div>
+
+        {downloadURL && (
+          <p className="text-sm font-semibold text-gray-700 mt-2">
+            Archivo subido: <a href={downloadURL} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-bold">Ver documento</a>
+          </p>
+        )}
 
         <div className="flex gap-4 mt-6 justify-center">
-          <button
-            className="bg-red-500 text-white px-5 py-2 rounded transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-red-700"
-            onClick={closeModal}
-            disabled={loading}
-          >
+          <button className="bg-red-500 text-white px-5 py-2 rounded" onClick={closeModal} disabled={loading}>
             Cancelar
           </button>
-          <button
-            className="bg-green-500 text-white px-5 py-2 rounded transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-green-700"
-            onClick={enviarRespuesta}
-            disabled={loading}
-          >
+          <button className="bg-green-500 text-white px-5 py-2 rounded" onClick={enviarRespuesta} disabled={loading}>
             {loading ? "Enviando..." : "Enviar"}
           </button>
         </div>

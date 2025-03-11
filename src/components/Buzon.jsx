@@ -67,8 +67,9 @@ export default function Buzon() {
 
         // Procesar datos
         const ultimosRegistros = data
+        .filter(item => !item.respuestaCorrecta) // 🔥 Filtra los que NO tienen respuesta
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-          .slice(0, 4)
+          .slice(0, 5)
           .map((item) => ({
             id: item.id,
             folio: item.folio,
@@ -89,6 +90,7 @@ export default function Buzon() {
             importanciaDescripcion: item.importanciaDescripcion,
             statusDescripcion: item.statusDescripcion,
             documento: item.documento,
+            respuesta: item.respuestaCorrecta,
           }));
 
           const nuevosRegistros = ultimosRegistros.filter(
