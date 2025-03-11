@@ -376,15 +376,16 @@ const Dashboard = () => {
                       >
                         <FaEye />
                       </button>
-                      {(userRole.includes("Admin") ||
-                        userRole.includes("SuperAdmin")) && (
-                        <>
+                      
                           <button
                             className="text-green-500 hover:underline"
                             onClick={() => handleEdit(record)}
                           >
                             <FaEdit />
                           </button>
+                          {(userRole.includes("Admin") ||
+                        userRole.includes("SuperAdmin")) && (
+                        <>
                           <button
                             className="text-red-500 hover:underline"
                             onClick={() => handleDeleteConfirmation(record.id)}
@@ -419,6 +420,7 @@ const Dashboard = () => {
             }
             handleEditSubmit={handleEditSubmit} // Ahora sí está definida
             editData={editData}
+            userRoles={userRole}  // Pasa los roles al modal
           />
         </div>
       </div>
