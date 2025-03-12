@@ -202,57 +202,41 @@ const handleChangeStatus = async () => {
           <img
             src="/images/Respuesta.png"
             alt="Respuesta"
-            className="w-24 h-24 object-contain"
+            className="mx-auto w-24 h-24 object-contain"
           />
         </div>
 
-        <h2 className="text-2xl text-center text-[#691B31] font-bold mb-4">
+        <h2 className="text-2xl text-center text-[#691B31] font-bold">
           RESPUESTA
         </h2>
-        <div className="bg-gray-100 p-4 rounded-md mb-4">
-          <p>
-            <strong>📩 Remitente:</strong> {selectedRecord.remitente}
-          </p>
-          <p>
-            <strong>📌 Asunto:</strong> {selectedRecord.asunto}
-          </p>
-          <p>
-            <strong>📅 Fecha:</strong> {selectedRecord.fecha}
-          </p>
-          <p>
-            <strong>📜 Estatus Actual:</strong> {selectedRecord.statusDescripcion}
-          </p>
+        <div className="bg-gray-100 p-4 rounded-md">
+          <p><strong> Remitente:</strong> {selectedRecord.remitente}</p>
+          <p><strong> Asunto:</strong> {selectedRecord.asunto}</p>
+          <p><strong> Fecha:</strong> {selectedRecord.fecha}</p>
+          <p><strong> Estatus Actual:</strong> {selectedRecord.statusDescripcion}</p>
         </div>
 
     {/* Status - Dropdown */}
-<div>
-  <label className="block text-gray-700 font-bold mb-1">Cambiar estatus</label>
-  <div className="flex items-center gap-4">
-    <select
-      name="status"
-      onChange={(e) => setSelectedStatus(Number(e.target.value))}
-      className="w-1/2 p-2 border rounded border-[#691B31] bg-white"
-      value={selectedStatus || ""}
-    >
-      <option value="" disabled>Selecciona un estado</option>
-      {statusOptions.map((status) => (
-        <option key={status.idStatus} value={status.idStatus}>
-          {status.estado}
-        </option>
-      ))}
-    </select>
-
-    <button
-      className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
-      onClick={handleChangeStatus}
-    >
-      Guardar estatus
-    </button>
-  </div>
-</div>
-
-
-
+    <div className="space-y-2">
+          <label className="block text-gray-700 font-bold ">Cambiar estatus</label>
+          <div className="flex gap-2">
+            <select
+              className="flex-grow p-2 border rounded border-[#691B31] bg-white"
+              value={selectedStatus || ""}
+              onChange={(e) => setSelectedStatus(Number(e.target.value))}
+            >
+              <option value="" disabled>Selecciona un estado</option>
+              {statusOptions.map((status) => (
+                <option key={status.idStatus} value={status.idStatus}>{status.estado}</option>
+              ))}
+            </select>
+            <button
+              className="px-3 bg-blue-500 text-white text-sm font-semibold rounded-lg transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
+              onClick={handleChangeStatus}
+            >Guardar</button>
+          </div>
+        </div>
+<br></br>
         <label className="text-black font-semibold mt-4">✍️ Mensaje:</label>
         <textarea
           className="w-full p-2 border rounded mt-2 focus:ring-2 focus:ring-[#691B31]"
