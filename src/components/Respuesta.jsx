@@ -12,7 +12,6 @@ export default function Respuesta({ selectedRecord, closeModal }) {
   const [statusOptions, setStatusOptions] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(null); // Estado para almacenar el estado seleccionado
 
-// Inicializar el estado seleccionado con el estado actual del registro
 useEffect(() => {
   if (selectedRecord && selectedRecord.idStatus) {
     setSelectedStatus(selectedRecord.idStatus);
