@@ -163,7 +163,7 @@ const handleChangeStatus = async () => {
 
   try {
     const response = await axios.put(
-      `https://oficialialoginbackend.somee.com/api/Correspondencia/actualizar-estado/${selectedRecord.id}`,
+      `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${selectedRecord.id}`,
       { idStatus: selectedStatus },
       {
         headers: {
