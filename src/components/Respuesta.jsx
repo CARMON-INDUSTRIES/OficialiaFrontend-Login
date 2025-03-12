@@ -32,7 +32,6 @@ useEffect(() => {
           },
         }
       );
-      console.log("Opciones de status obtenidas:", response.data);
       setStatusOptions(response.data); // Asumiendo que la respuesta contiene los estados
     } catch (error) {
       console.error("Error al obtener las opciones de status:", error.response || error.message);
