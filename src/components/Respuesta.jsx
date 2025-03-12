@@ -195,7 +195,6 @@ const handleChangeStatus = async () => {
     }
   };
 
-<<<<<<< HEAD
 
 /// Actualizar el estado
 const handleChangeStatus = async () => {
@@ -213,7 +212,7 @@ const handleChangeStatus = async () => {
   try {
     const response = await axios.put(
       `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${selectedRecord.id}`,
-      { idStatus: selectedStatus },
+      { Status: selectedStatus },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -239,8 +238,6 @@ const handleChangeStatus = async () => {
   }
 };
 
-=======
->>>>>>> origin/main
   return (
     <motion.div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <motion.div className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative">
