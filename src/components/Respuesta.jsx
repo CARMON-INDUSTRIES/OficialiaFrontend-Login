@@ -12,11 +12,18 @@ export default function Respuesta({ selectedRecord, closeModal }) {
   const [statusOptions, setStatusOptions] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(null); // Estado para almacenar el estado seleccionado
 
- // Obtener las opciones de status
- useEffect(() => {
+// Inicializar el estado seleccionado con el estado actual del registro
+useEffect(() => {
+  if (selectedRecord && selectedRecord.idStatus) {
+    setSelectedStatus(selectedRecord.idStatus);
+  }
+}, [selectedRecord]);
+
+// Obtener las opciones de status
+useEffect(() => {
   const fetchStatusOptions = async () => {
     const token = localStorage.getItem("token"); // Asegúrate de que el token esté disponible
-  
+
     try {
       const response = await axios.get(
         "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
@@ -37,11 +44,52 @@ export default function Respuesta({ selectedRecord, closeModal }) {
       });
     }
   };
-  
+
   fetchStatusOptions();
 }, []);
-  
 
+/// Actualizar el estado
+const handleChangeStatus = async () => {
+  if (!selectedStatus) {
+    Swal.fire({
+      icon: "warning",
+      title: "Selección de status vacía",
+      text: "Por favor, seleccione un status antes de cambiarlo.",
+    });
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.put(
+      `https://oficialialoginbackend.somee.com/api/Correspondencia/actualizar-estado/${selectedRecord.id}`,
+      { Status: selectedStatus },  // Asegúrate de enviar idStatus en el body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    Swal.fire({
+      icon: "success",
+      title: "Estado actualizado",
+      text: "El estado se ha actualizado correctamente.",
+      confirmButtonColor: "#691B31",
+    });
+
+    closeModal(); // Cerrar el modal después de guardar los cambios
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "¡Error!",
+      text: "Hubo un problema al actualizar el estado.",
+      confirmButtonColor: "#691B31",
+    });
+  }
+};
+  
   // Manejar la selección del archivo
   const handleFileChange = (event) => {
     setArchivo(event.target.files[0]);
@@ -147,49 +195,6 @@ export default function Respuesta({ selectedRecord, closeModal }) {
     }
   };
 
-
-/// Actualizar el estado
-const handleChangeStatus = async () => {
-  if (!selectedStatus) {
-    Swal.fire({
-      icon: "warning",
-      title: "Selección de status vacía",
-      text: "Por favor, seleccione un status antes de cambiarlo.",
-    });
-    return;
-  }
-
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await axios.put(
-      `https://oficialialoginbackend.somee.com/api/Correspondencia/actualizar-estado/${selectedRecord.id}`,
-      { idStatus: selectedStatus },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    Swal.fire({
-      icon: "success",
-      title: "Estado actualizado",
-      text: "El estado se ha actualizado correctamente.",
-      confirmButtonColor: "#691B31",
-    });
-
-    closeModal(); // Cerrar el modal después de guardar los cambios
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "¡Error!",
-      text: "Hubo un problema al actualizar el estado.",
-      confirmButtonColor: "#691B31",
-    });
-  }
-};
-
   return (
     <motion.div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <motion.div className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative">
@@ -215,32 +220,37 @@ const handleChangeStatus = async () => {
             <strong>📅 Fecha:</strong> {selectedRecord.fecha}
           </p>
           <p>
-            <strong>📜 Status:</strong> {selectedRecord.statusDescripcion}
+            <strong>📜 Estatus Actual:</strong> {selectedRecord.statusDescripcion}
           </p>
         </div>
 
-        {/* Status - Dropdown */}
-        <div>
-          <label className="block text-gray-700 font-bold">Status</label>
-          <select
-            name="status"
-            onChange={(e) => setSelectedStatus(e.target.value)} // Actualiza el valor seleccionado
-            className="w-full p-2 border rounded border-[#691B31] bg-white"
-            value={selectedStatus}
-          >
-            {statusOptions.map((status) => (
-              <option key={status.idStatus} value={status.idStatus}>
-                {status.estado}
-              </option>
-            ))}
-          </select>
-          <button
-            className="mt-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded"
-            onClick={handleChangeStatus}
-          >
-            Cambiar Status
-          </button>
-        </div>
+    {/* Status - Dropdown */}
+<div>
+  <label className="block text-gray-700 font-bold mb-1">Cambiar estatus</label>
+  <div className="flex items-center gap-4">
+    <select
+      name="status"
+      onChange={(e) => setSelectedStatus(Number(e.target.value))}
+      className="w-1/2 p-2 border rounded border-[#691B31] bg-white"
+      value={selectedStatus || ""}
+    >
+      <option value="" disabled>Selecciona un estado</option>
+      {statusOptions.map((status) => (
+        <option key={status.idStatus} value={status.idStatus}>
+          {status.estado}
+        </option>
+      ))}
+    </select>
+
+    <button
+      className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
+      onClick={handleChangeStatus}
+    >
+      Guardar estatus
+    </button>
+  </div>
+</div>
+
 
 
         <label className="text-black font-semibold mt-4">✍️ Mensaje:</label>
@@ -261,7 +271,7 @@ const handleChangeStatus = async () => {
           <button
             type="button"
             onClick={handleUpload}
-            className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50]"
+            className="px-4 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#A87F50]"
           >
             Subir
           </button>
@@ -283,14 +293,14 @@ const handleChangeStatus = async () => {
 
         <div className="flex gap-4 mt-6 justify-center">
           <button
-            className="bg-red-500 text-white px-5 py-2 rounded"
+            className="bg-red-500 text-white px-5 py-2 rounded transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-700"
             onClick={closeModal}
             disabled={loading}
           >
             Cancelar
           </button>
           <button
-            className="bg-green-500 text-white px-5 py-2 rounded"
+            className="bg-green-500 text-white px-5 py-2 rounded transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-green-700"
             onClick={enviarRespuesta}
             disabled={loading}
           >
