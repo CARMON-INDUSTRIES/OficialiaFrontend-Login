@@ -195,49 +195,6 @@ const handleChangeStatus = async () => {
     }
   };
 
-
-/// Actualizar el estado
-const handleChangeStatus = async () => {
-  if (!selectedStatus) {
-    Swal.fire({
-      icon: "warning",
-      title: "Selección de status vacía",
-      text: "Por favor, seleccione un status antes de cambiarlo.",
-    });
-    return;
-  }
-
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await axios.put(
-      `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${selectedRecord.id}`,
-      { Status: selectedStatus },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    Swal.fire({
-      icon: "success",
-      title: "Estado actualizado",
-      text: "El estado se ha actualizado correctamente.",
-      confirmButtonColor: "#691B31",
-    });
-
-    closeModal(); // Cerrar el modal después de guardar los cambios
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "¡Error!",
-      text: "Hubo un problema al actualizar el estado.",
-      confirmButtonColor: "#691B31",
-    });
-  }
-};
-
   return (
     <motion.div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <motion.div className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative">
