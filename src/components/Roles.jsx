@@ -75,15 +75,11 @@ const Roles = () => {
       const usuariosConArea = await Promise.all(
         response.data.map(async (user) => {
           try {
-            console.log(`Consultando área para usuario: ${user.id}`);
+            
             const areaResponse = await axios.get(
               `https://oficialialoginbackend.somee.com/api/UsuarioArea/GetAreaByUser/${user.id}`
             );
 
-            console.log(
-              `Respuesta de API de área para ${user.id}:`,
-              areaResponse.data
-            );
 
             return {
               ...user,
