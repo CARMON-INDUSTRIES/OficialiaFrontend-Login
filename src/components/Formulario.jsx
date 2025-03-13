@@ -200,6 +200,7 @@ const Formulario = () => {
               name="folio"
               onChange={handleChange}
               placeholder="Folio"
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
@@ -209,6 +210,7 @@ const Formulario = () => {
               type="date"
               name="fecha"
               onChange={handleChange}
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
@@ -227,6 +229,7 @@ const Formulario = () => {
             <select
               name="comunidad"
               onChange={handleChange}
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             >
               <option>Seleccionar Comunidad</option>
@@ -244,6 +247,7 @@ const Formulario = () => {
               name="remitente"
               onChange={handleChange}
               placeholder="Remitente"
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
@@ -264,6 +268,7 @@ const Formulario = () => {
               name="destinatario"
               onChange={handleChange}
               placeholder="Nombre del destinatario"
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
@@ -284,6 +289,7 @@ const Formulario = () => {
               name="asunto"
               onChange={handleChange}
               placeholder="Asunto o descripción"
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             />
           </div>
@@ -296,6 +302,7 @@ const Formulario = () => {
                 formData.area.includes(option.value)
               )}
               onChange={(selected) => handleSelectChange(selected, "area")} // Aquí usamos "area" para coincidir con la base de datos
+              required
               className="w-full border border-[#691B31] rounded-lg"
             />
           </div>
@@ -304,6 +311,7 @@ const Formulario = () => {
             <select
               onChange={handleChange}
               name="importancia"
+              rquired
               className="w-full p-2 border rounded border-[#691B31]"
             >
               <option>Seleccionar Importancia</option>
@@ -328,6 +336,7 @@ const Formulario = () => {
             <select
               onChange={handleChange}
               name="status"
+              required
               className="w-full p-2 border rounded border-[#691B31]"
             >
               <option>Seleccionar Status</option>
