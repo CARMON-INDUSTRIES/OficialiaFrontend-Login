@@ -46,7 +46,7 @@ useEffect(() => {
   fetchStatusOptions();
 }, []);
 
-/// Actualizar el estado
+
 const handleChangeStatus = async () => {
   if (!selectedStatus) {
     Swal.fire({
