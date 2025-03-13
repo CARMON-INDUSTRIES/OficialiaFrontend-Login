@@ -88,7 +88,7 @@ const handleChangeStatus = async () => {
   }
 };
   
-  // Manejar la selección del archivo
+
   const handleFileChange = (event) => {
     setArchivo(event.target.files[0]);
   };
