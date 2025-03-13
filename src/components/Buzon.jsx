@@ -131,7 +131,7 @@ export default function Buzon() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen items-center justify-center bg-gray-100 p-6">
+    <div className="flex flex-col md:flex-row h-screen items-center justify-center bg-gray-100 p-4 md:p-6 space-y-4 md:space-y-0">
       {/* Notificación emergente */}
       {nuevaNotificacion && (
         <motion.div
@@ -139,27 +139,27 @@ export default function Buzon() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -50, opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed top-5 right-5 bg-[#691B31] text-white px-6 py-3 rounded-lg shadow-lg"
+          className="fixed top-5 right-5 bg-[#691B31] text-white px-4 py-2 rounded-lg shadow-lg text-sm md:text-base"
         >
           📩 ¡Nuevo registro recibido!
         </motion.div>
       )}
-
-      {/* Sección Izquierda */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center">
+  
+  {/* Sección de Notificaciones */}
+  <div className="w-full md:w-1/2 flex flex-col justify-center">
         <motion.h1
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-5xl font-bold text-gray-800 mb-6"
+          className="text-2xl md:text-5xl font-bold text-gray-800 mb-4 md:mb-6 text-center md:text-left"
         >
           Buzón de entrada
         </motion.h1>
-
+  
         {/* Lista de notificaciones */}
         <div className="space-y-4">
           {notificaciones.length === 0 ? (
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-lg text-center">
               No tienes notificaciones pendientes 🎉
             </p>
           ) : (
@@ -170,11 +170,11 @@ export default function Buzon() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className={`p-4 rounded-lg shadow-md flex justify-between items-center ${obtenerColorEstado(
+                className={`p-4 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 ${obtenerColorEstado(
                   notif.estado
                 )}`}
               >
-                <div>
+                <div className="text-center md:text-left">
                   <p className="text-lg font-semibold">{notif.remitente}</p>
                   <p className="text-gray-700">{notif.asunto}</p>
                   <p className="text-sm text-gray-500">
@@ -185,44 +185,56 @@ export default function Buzon() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSelectedRecord(notif)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
+                    className="bg-blue-500 text-white text-sm px-2 py-1 md:px-3 md:py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-blue-700"
                   >
                     Detalles
                   </button>
-                  <button onClick={() => setModalRespuesta(notif)} className="bg-green-500 text-white px-3 py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-green-700">Responder</button>
-                 
+                  <button
+                    onClick={() => setModalRespuesta(notif)}
+                    className="bg-green-500 text-white text-sm px-2 py-1 md:px-3 md:py-1 rounded-md transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-green-700"
+                  >
+                    Responder
+                  </button>
                 </div>
               </motion.div>
             ))
           )}
         </div>
       </div>
+      {/* Sección de Imagen (móvil arriba, escritorio derecha) */}
+      {/* Sección Derecha con Imagen (visible solo en pantallas medianas o grandes) */}
+<motion.div
+  initial={{ x: 200, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="hidden md:flex w-1/2 justify-center"
+>
+  <Image
+    src="/images/buzon.png"
+    alt="Buzón"
+    width={400}
+    height={400}
+    className="max-w-full"
+  />
+</motion.div>
 
-      {/* Sección Derecha con Imagen */}
-      <motion.div
-        initial={{ x: 200, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full md:w-1/2 flex justify-center"
-      >
-        <Image
-          src="/images/buzon.png"
-          alt="Buzón"
-          width={400}
-          height={400}
-          className="max-w-full"
-        />
-      </motion.div>
-
-      {/* Mostrar Detalles de la notificación */}
+  
+      
+  
+      {/* Modales */}
       {selectedRecord && (
         <DetalleNotificacion
           selectedRecord={selectedRecord}
           closeModal={() => setSelectedRecord(null)}
         />
       )}
-
-{modalRespuesta && <Respuesta selectedRecord={modalRespuesta} closeModal={() => setModalRespuesta(null)} />}
+      {modalRespuesta && (
+        <Respuesta
+          selectedRecord={modalRespuesta}
+          closeModal={() => setModalRespuesta(null)}
+        />
+      )}
     </div>
   );
+  
 }
