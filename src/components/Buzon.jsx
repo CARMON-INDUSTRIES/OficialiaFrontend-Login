@@ -98,6 +98,9 @@ export default function Buzon() {
           if (nuevosRegistros.length > 0) {
             setNuevaNotificacion(true);
             setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
+            // Reproducir sonido de notificación
+          const audio = new Audio("/sounds/notificacionAudio.mp3");
+          audio.play();
           }
     
           setNotificaciones(ultimosRegistros);
