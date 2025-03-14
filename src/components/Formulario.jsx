@@ -354,7 +354,6 @@ const Formulario = () => {
 
             {/* Contenedor para el input de archivo y el botón */}
             <div className="flex items-center gap-4">
-              {/* Input de archivo con un id y oculto */}
               <input
                 type="file"
                 id="file-upload"
