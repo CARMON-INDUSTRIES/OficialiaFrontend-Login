@@ -35,6 +35,23 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Llamada inicial
+      fetchRecords(token);
+      
+      // Establece el intervalo para polling
+      const interval = setInterval(() => {
+        fetchRecords(token);
+      }, 5000); // Cada 5 segundos
+  
+      // Limpia el intervalo cuando el componente se desmonte
+      return () => clearInterval(interval);
+    }
+  }, []);
+  
+
+  useEffect(() => {
     if (showEditModal) {
       fetchData();
     }
