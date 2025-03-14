@@ -24,6 +24,9 @@ const Dashboard = () => {
   const [status, setStatus] = useState([]);
   const [userRole, setUserRole] = useState("");
 
+// Agregamos un estado para almacenar el último estado
+const [lastStatus, setLastStatus] = useState([]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -62,6 +65,20 @@ const Dashboard = () => {
       setEditData(selectedRecord); // Carga los datos del registro seleccionado
     }
   }, [selectedRecord]);
+
+  // Detectamos cambios en el status
+  useEffect(() => {
+    const hasStatusChanged = records.some(
+      (record, index) =>
+        lastStatus[index] !== record.statusDescripcion // Compara el nuevo status con el anterior
+    );
+    
+    if (hasStatusChanged) {
+      const audio = new Audio("/sounds/status.mp3"); // Reproduce el sonido
+      audio.play();
+      setLastStatus(records.map((record) => record.statusDescripcion)); // Actualiza el último estado
+    }
+  }, [records, lastStatus]);
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
