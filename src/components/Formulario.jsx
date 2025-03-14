@@ -372,7 +372,6 @@ const Formulario = () => {
               </button>
             </div>
 
-            {/* Mostrar progreso de subida */}
             {progress > 0 && (
               <p className="text-sm font-semibold text-gray-700">
                 Progreso: {progress}%
