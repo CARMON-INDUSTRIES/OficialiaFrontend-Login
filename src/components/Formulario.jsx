@@ -363,7 +363,6 @@ const Formulario = () => {
                 className="w-full px-3 py-2 border border-[#691B31] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm cursor-pointer text-center" // Ocultamos el input
               />
 
-              {/* Botón de subir PDF estilizado junto al input */}
               <button
                 type="button"
                 onClick={handleUpload}
