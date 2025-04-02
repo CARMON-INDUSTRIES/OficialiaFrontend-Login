@@ -33,10 +33,14 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Carrusel */}
-        <div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
-          <Carousel />
-        </div>
+        
+        {/* Carrusel Responsivo */}
+<div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
+  <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl h-auto">
+    <Carousel />
+  </div>
+</div>
+
       </div>
 
       {/* Beneficios */}
