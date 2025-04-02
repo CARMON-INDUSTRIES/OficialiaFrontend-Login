@@ -60,7 +60,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
           animate={{ opacity: 1, y: 0 }} // Mueve hacia la posición original
           exit={{ opacity: 0, y: 50 }} // Cuando se cierre, mueve hacia abajo
           transition={{
-            type: "spring", // Para el efecto de rebote
+            type: "spring", 
             stiffness: 100, // Qué tan fuerte será el rebote
             damping: 15, // Cuánto se desacelera
             duration: 0.5, // Duración total
