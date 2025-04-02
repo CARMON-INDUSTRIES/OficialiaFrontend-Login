@@ -11,7 +11,6 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [error, setError] = useState(null);
 
-  // Función para abrir el modal de respuesta y cargar la respuesta desde la API
   const openResponseModal = async () => {
     // Verificamos si existe el id de respuesta
     if (!selectedRecord.respuestaCorrecta) {
