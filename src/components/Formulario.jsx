@@ -73,7 +73,6 @@ const Formulario = () => {
 
     fetchData();
 
-    // Detener la animación después de 1 segundo
     const timeout = setTimeout(() => {
       setIsRotating(false);
     }, 1500);
