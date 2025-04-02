@@ -357,7 +357,7 @@ const [lastStatus, setLastStatus] = useState([]);
 
   return (
     <Layout>
-      <div className="h-full w-full flex flex-col items-center bg-gradient-to-br from-[#ffffff] to-[#BC995B] p-6">
+      <div className="h-full w-full flex flex-col items-center bg-gradient-to-br bg-white p-6">
         <div className="bg-white shadow-lg rounded-lg w-full max-w-8xl p-6 overflow-hidden">
           <h1 className="text-3xl font-bold mb-4">Inicio</h1>
           <input
