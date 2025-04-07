@@ -12,7 +12,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
   const [error, setError] = useState(null);
 
   const openResponseModal = async () => {
-    // Verificamos si existe el id de respuesta
+
     if (!selectedRecord.respuestaCorrecta) {
       setError("No hay respuesta asociada a este registro.");
       return;
