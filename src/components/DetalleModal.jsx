@@ -29,7 +29,6 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
 
       const responseData = response.data;
      
-      // Verificamos si encontramos la respuesta
       if (responseData && responseData.idRespuesta) {
         setResponseDetails(responseData); // Asumimos que la respuesta está en el primer elemento
       } else {
