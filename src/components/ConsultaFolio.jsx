@@ -88,18 +88,7 @@ const ConsultaFolio = () => {
               {new Date(resultado.fecha).toLocaleDateString()}
             </p>
             <p>
-              <strong>Status:</strong>{" "}
-              <span
-                className={`font-bold ${
-                  resultado.statusNombre === "Finalizado"
-                    ? "text-green-600"
-                    : resultado.statusNombre === "En Proceso"
-                    ? "text-yellow-600"
-                    : "text-gray-600"
-                }`}
-              >
-                {resultado.statusNombre}
-              </span>
+              <strong>Estatus:</strong> {resultado.statusDescripcion}
             </p>
           </div>
         )}
