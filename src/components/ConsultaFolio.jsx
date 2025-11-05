@@ -47,7 +47,7 @@ const ConsultaFolio = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center"
     style={{ backgroundImage: "url('/images/ciudadania.jpg')" }}>
-      <div className="absolute inset-y-0  flex justify-center ">
+      <div className="absolute inset-y-0  flex justify-center pointer-events-none">
           <h1 className="text-6xl font-serif text-[#691B31] text-center mt-4">
           ㅤㅤ<br/>
           ㅤㅤ<br/>
