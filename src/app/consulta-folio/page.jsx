@@ -3,9 +3,8 @@ import ConsultaFolio from "@/components/ConsultaFolio";
 
 const FormPage = () => {
   return (
-    <Layout>
-      <ConsultaFolio />
-    </Layout>
+    <ConsultaFolio />
+
   );
 };
 

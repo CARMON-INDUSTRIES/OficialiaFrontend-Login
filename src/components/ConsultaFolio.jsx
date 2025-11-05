@@ -45,7 +45,15 @@ const ConsultaFolio = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center"
+    style={{ backgroundImage: "url('/images/ciudadania.jpg')" }}>
+      <div className="absolute inset-y-0  flex justify-center ">
+          <h1 className="text-6xl font-serif text-[#691B31] text-center mt-4">
+          ㅤㅤ<br/>
+          ㅤㅤ<br/>
+            ATENCIÓN CIUDADANA 
+          </h1>
+          </div>
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-[#691B31] mb-6">
           Consulta tu Folio
