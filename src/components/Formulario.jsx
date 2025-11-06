@@ -33,6 +33,7 @@ const Formulario = () => {
     status: "",
     documento: "",
     fechaTerminacion: "",
+    observaciones: "",
   });
 
   useEffect(() => {
@@ -297,7 +298,7 @@ const Formulario = () => {
             className="w-full p-2 border rounded border-[#691B31]"
           />
         </div>
-        <div className="col-span-2">
+        <div>
           <label className="block font-bold">Área de Destino</label>
           <Select
             options={areaOptions}
@@ -305,11 +306,12 @@ const Formulario = () => {
             value={areaOptions.filter((option) =>
               formData.area.includes(option.value)
             )}
-            onChange={(selected) => handleSelectChange(selected, "area")} // Aquí usamos "area" para coincidir con la base de datos
+            onChange={(selected) => handleSelectChange(selected, "area")}
             required
             className="w-full border border-[#691B31] rounded-lg"
           />
         </div>
+
         <div>
           <label className="block font-bold">Importancia</label>
           <select
@@ -396,6 +398,16 @@ const Formulario = () => {
               <input type="text" name="documento" readOnly />
             </>
           )}
+        </div>
+
+        <div className="col-span-1">
+          <label className="block font-bold">Observaciones</label>
+          <textarea
+            name="observaciones"
+            onChange={handleChange}
+            placeholder="Agrega observaciones o notas adicionales..."
+            className="w-full p-2 border rounded border-[#691B31] h-24 resize-none"
+          />
         </div>
 
         <div className="col-span-3 flex justify-center items-center">

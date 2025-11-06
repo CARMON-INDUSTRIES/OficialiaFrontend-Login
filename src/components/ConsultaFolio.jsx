@@ -35,7 +35,7 @@ const ConsultaFolio = () => {
       console.error("Error al consultar:", error);
       Swal.fire({
         title: "No encontrado",
-        text: "No se encontró información para el folio ingresado.",
+        text: "No se encontró información registrada, por favor corrobore su folio.",
         icon: "error",
         confirmButtonColor: "#691B31",
       });
@@ -97,6 +97,9 @@ const ConsultaFolio = () => {
             </p>
             <p>
               <strong>Estatus:</strong> {resultado.statusDescripcion}
+            </p>
+            <p>
+              <strong>Observaciones:</strong> {resultado.observaciones}
             </p>
           </div>
         )}
