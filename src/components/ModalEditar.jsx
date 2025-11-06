@@ -255,6 +255,19 @@ const isAdminOrSuperAdmin = userRoles.some(role => role === "Admin" || role === 
                   ))}
                 </select>
               </div> 
+              <div>
+                <label className="block text-gray-700 font-bold">
+                  Observaciones
+                </label>
+                <input
+                  type="text"
+                  name="observaciones"
+                  className="input-field"
+                  value={editData.observaciones}
+                  onChange={handleChange}
+                  
+                />
+              </div>
             </div>
 
             {/* Botones */}

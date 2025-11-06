@@ -131,6 +131,10 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
                 <span className="font-bold text-[#621132]">Status:</span>{" "}
                 {selectedRecord.statusDescripcion}
               </p>
+              <p className="text-lg mb-2">
+                <span className="font-bold text-[#621132]">Observaciones:</span>{" "}
+                {selectedRecord.observaciones}
+              </p>
             </div>
             
             {selectedRecord?.respuestaCorrecta && (
