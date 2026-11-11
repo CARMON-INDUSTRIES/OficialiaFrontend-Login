@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion"; // Importamos Framer Motion
+import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   FaRunning,
   FaHeartbeat,
@@ -16,10 +17,16 @@ export const SignIn = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const reduceMotion = useReducedMotion();
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setError("");
+    setIsSubmitting(true);
+
     try {
       const response = await fetch(
         "https://oficialialoginbackend.somee.com/api/Cuentas/UserLogin",
@@ -42,114 +49,100 @@ export const SignIn = () => {
       router.push("/consulta");
     } catch (err) {
       setError(err.message);
+      setIsSubmitting(false);
     }
   };
 
+  const inputClass = "min-h-11 w-full rounded-lg px-4 py-2 placeholder:text-[#626262] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#691B31]";
+
   return (
-    <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
-      {/* Sección Izquierda */}
-      <motion.div
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-        className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col"
-      >
-        <h1 className="text-white text-1xl font-bold">
-          Presidencia municipal Tula de Allende
-        </h1>
-        <h1 className="text-white text-5xl font-bold my-auto ml-20 lg:ml-32">
+    <main className="grid min-h-[100dvh] bg-stone-50 md:grid-cols-2">
+      <div className="login-left hidden flex-col bg-[#691B31] px-8 py-10 text-white md:flex lg:px-16">
+        <p className="font-semibold">Presidencia municipal Tula de Allende</p>
+        <p className="my-auto py-10 text-[clamp(1.85rem,3.5vw,3rem)] font-bold tracking-tight">
           BIENVENIDO
-        </h1>
-        <div className="socials ml-8 lg:ml-24">
-          <ul className="right list-none flex items-center gap-6">
-            <li><FaRunning className="text-[2rem] text-slate-50" /></li>
-            <li><FaHeartbeat className="text-[2rem] text-slate-50" /></li>
-            <li><FaLeaf className="text-[2rem] text-slate-50" /></li>
-            <li><FaPiggyBank className="text-[2rem] text-slate-50" /></li>
-          </ul>
-        </div>
-      </motion.div>
+        </p>
+        <ul aria-hidden="true" className="flex items-center gap-5 text-[2rem]">
+          <li><FaRunning /></li>
+          <li><FaHeartbeat /></li>
+          <li><FaLeaf /></li>
+          <li><FaPiggyBank /></li>
+        </ul>
+      </div>
 
-
-      <div className="right flex flex-col justify-center items-center relative">
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }} // Aparece desde arriba
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="top-8 left-8 absolute text-3xl font-bold sm:hidden"
-        >
-
-        </motion.h1>
-
-
+      <section className="flex items-center justify-center px-4 py-8" aria-labelledby="login-title">
         <motion.div
-          initial={{ opacity: 0, y: 50 }} // Aparece desde abajo
+          initial={reduceMotion ? false : { opacity: 0.8, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="w-full max-w-[26.5rem] px-4 flex flex-col gap-4"
+          transition={{ duration: reduceMotion ? 0 : 0.22 }}
+          className="w-full max-w-[26.5rem]"
         >
-          <div className="text-center sm:text-left">
-            <h1 className="text-3xl text-center font-bold">Inicio de sesión</h1>
-            <br />
-            <img
+          <div className="mb-5 grid justify-items-center gap-4 text-center">
+            <h1 id="login-title" className="text-3xl font-bold tracking-tight">
+              Inicio de sesión
+            </h1>
+            <Image
               src="/images/presidencia.png"
-              alt="Presidencia"
-              className="w-36 h-auto object-cover mb-4 mx-auto"
+              alt="Presidencia municipal"
+              width={144}
+              height={144}
+              className="h-auto w-36 object-contain"
+              priority
             />
           </div>
 
-          <form
-            onSubmit={handleLogin}
-            className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
-          >
-            <div className="email flex flex-col gap-3 items-start">
-              <label htmlFor="login-user" className="text-base">USUARIO</label>
+          <form onSubmit={handleLogin} className="grid gap-5 rounded-[20px] border border-[#dedede] bg-white p-5 sm:p-8">
+            <div className="grid gap-2">
+              <label htmlFor="login-user" className="font-semibold">Usuario</label>
               <input
                 id="login-user"
                 autoComplete="username"
                 type="text"
                 placeholder="Nombre de usuario"
-                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+                className={inputClass + " bg-[#F5F5F5]"}
                 value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                onChange={(event) => setUserName(event.target.value)}
+                required
               />
             </div>
 
-            <div className="password flex flex-col gap-3 items-start relative">
-              <label htmlFor="login-password" className="text-base">CONTRASEÑA</label>
-              <div className="flex items-center w-full relative">
+            <div className="grid gap-2">
+              <label htmlFor="login-password" className="font-semibold">Contraseña</label>
+              <div className="relative">
                 <input
                   id="login-password"
                   autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
-                  className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#EAEAEA]"
+                  className={inputClass + " bg-[#EAEAEA] pr-14"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
                 />
                 <button
-  type="button"
-  onClick={() => setShowPassword(!showPassword)}
-  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-  className="absolute right-3 text-lg text-[#691B31] px-2 py-1 rounded-lg transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
->
-
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  className="absolute inset-y-0 right-0 grid min-w-11 place-items-center rounded-lg text-lg text-[#691B31] hover:bg-black/5"
+                >
+                  {showPassword ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}
                 </button>
               </div>
             </div>
 
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
 
-
-
-            <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#BC995B]">
-              Iniciar Sesión
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="min-h-11 rounded-[10px] bg-[#BC995B] px-4 py-2 font-semibold text-[#262626] transition-colors hover:bg-[#b18e50] disabled:cursor-wait disabled:opacity-70"
+            >
+              {isSubmitting ? "Iniciando sesión…" : "Iniciar sesión"}
             </button>
           </form>
         </motion.div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
