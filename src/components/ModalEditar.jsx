@@ -50,7 +50,7 @@ const isAdminOrSuperAdmin = userRoles.some(role => role === "Admin" || role === 
         >
           {/* Encabezado con animación */}
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-[#000000]">
+            <h2 className="municipal-title ">
               Editar Registro
             </h2>
             <div className="text-[#000000] text-3xl animate-spin duration-2000 ease-in-out">

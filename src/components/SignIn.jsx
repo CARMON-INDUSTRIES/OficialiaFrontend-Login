@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion"; // Importamos Framer Motion
 import {
-  FaArrowLeft,
   FaRunning,
   FaHeartbeat,
   FaLeaf,
@@ -51,7 +49,7 @@ export const SignIn = () => {
     <div className="grid sm:grid-cols-2 grid-cols-1 auto-rows-[100vh] bg-stone-50">
       {/* Sección Izquierda */}
       <motion.div
-        initial={{ opacity: 0, x: -100 }} 
+        initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
         className="login-left hidden bg-[#691B31] py-10 px-8 lg:px-16 sm:flex flex-col"
@@ -64,15 +62,15 @@ export const SignIn = () => {
         </h1>
         <div className="socials ml-8 lg:ml-24">
           <ul className="right list-none flex items-center gap-6">
-            <li><FaRunning className="text-3xl text-slate-50" /></li>
-            <li><FaHeartbeat className="text-3xl text-slate-50" /></li>
-            <li><FaLeaf className="text-3xl text-slate-50" /></li>
-            <li><FaPiggyBank className="text-3xl text-slate-50" /></li>
+            <li><FaRunning className="text-[2rem] text-slate-50" /></li>
+            <li><FaHeartbeat className="text-[2rem] text-slate-50" /></li>
+            <li><FaLeaf className="text-[2rem] text-slate-50" /></li>
+            <li><FaPiggyBank className="text-[2rem] text-slate-50" /></li>
           </ul>
         </div>
       </motion.div>
 
-      
+
       <div className="right flex flex-col justify-center items-center relative">
         <motion.h1
           initial={{ opacity: 0, y: -20 }} // Aparece desde arriba
@@ -80,15 +78,15 @@ export const SignIn = () => {
           transition={{ duration: 1 }}
           className="top-8 left-8 absolute text-3xl font-bold sm:hidden"
         >
-         
+
         </motion.h1>
 
-        
+
         <motion.div
           initial={{ opacity: 0, y: 50 }} // Aparece desde abajo
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="lg:w-[26.5rem] w-80 flex flex-col gap-4"
+          className="w-full max-w-[26.5rem] px-4 flex flex-col gap-4"
         >
           <div className="text-center sm:text-left">
             <h1 className="text-3xl text-center font-bold">Inicio de sesión</h1>
@@ -105,8 +103,10 @@ export const SignIn = () => {
             className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
           >
             <div className="email flex flex-col gap-3 items-start">
-              <label htmlFor="Name" className="text-sm">USUARIO</label>
+              <label htmlFor="login-user" className="text-base">USUARIO</label>
               <input
+                id="login-user"
+                autoComplete="username"
                 type="text"
                 placeholder="Nombre de usuario"
                 className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
@@ -116,9 +116,11 @@ export const SignIn = () => {
             </div>
 
             <div className="password flex flex-col gap-3 items-start relative">
-              <label htmlFor="Password" className="text-sm">CONTRASEÑA</label>
+              <label htmlFor="login-password" className="text-base">CONTRASEÑA</label>
               <div className="flex items-center w-full relative">
                 <input
+                  id="login-password"
+                  autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
                   className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#EAEAEA]"
@@ -128,7 +130,8 @@ export const SignIn = () => {
                 <button
   type="button"
   onClick={() => setShowPassword(!showPassword)}
-  className="absolute right-3 text-[#691B31] px-2 py-1 rounded-lg transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
+  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+  className="absolute right-3 text-lg text-[#691B31] px-2 py-1 rounded-lg transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
 >
 
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -138,17 +141,11 @@ export const SignIn = () => {
 
             {error && <p className="text-red-500">{error}</p>}
 
-            
+
 
             <button type="submit" className="bg-[#BC995B] text-white rounded-[10px] py-2 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#BC995B]">
               Iniciar Sesión
             </button>
-
-            <Link href="/">
-              <div className="flex justify-center items-center w-10 h-10 bg-[#691B31] text-white rounded-full absolute bottom-8 right-14 cursor-pointer transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]">
-                <FaArrowLeft />
-              </div>
-            </Link>
           </form>
         </motion.div>
       </div>

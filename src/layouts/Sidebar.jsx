@@ -5,7 +5,7 @@ import {FiPieChart} from 'react-icons/fi'
 import {LuSettings} from 'react-icons/lu'
 import {BsTags} from 'react-icons/bs'
 import {TbCalendarCancel, TbLogout} from 'react-icons/tb'
-import { signOut, useSession } from 'next-auth/react'
+//import { signOut, useSession } from 'next-auth/react'
 
 const Sidebar = () => {
   const session = useSession()

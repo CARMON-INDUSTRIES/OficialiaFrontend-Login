@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  font-size: 106.25%;
 }
 
 * {
@@ -121,5 +122,153 @@ img {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  --municipal-ink: #262626;
+  --municipal-wine: #691b31;
+  --municipal-line: #dedede;
+  --municipal-paper: #ffffff;
+  --municipal-canvas: #f5f5f5;
+  --municipal-gold: #bc995b;
+}
+
+:focus-visible {
+  outline: 2px solid var(--municipal-wine);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #ead2d9;
+  color: var(--municipal-ink);
+}
+
+.municipal-workspace,
+.municipal-public {
+  min-height: 100dvh;
+  background: var(--municipal-canvas);
+  color: var(--municipal-ink);
+}
+
+.municipal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1rem;
+  background: var(--municipal-paper);
+  border-bottom: 1px solid var(--municipal-line);
+  color: var(--municipal-wine);
+  font-weight: 650;
+}
+
+.municipal-topbar button,
+.municipal-sidebar a,
+.municipal-account button,
+.municipal-account p {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 2.75rem;
+}
+
+.municipal-sidebar {
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: var(--municipal-wine);
+  color: white;
+  border-bottom: 1px solid var(--municipal-gold);
+}
+
+.municipal-sidebar[data-open="true"] { display: flex; }
+.municipal-brand { display: grid; gap: .25rem; padding: .5rem .75rem; }
+.municipal-brand span { font-size: .75rem; color: #f0ddbd; }
+.municipal-brand strong { color: white; }
+.municipal-sidebar nav { display: grid; gap: .25rem; }
+.municipal-sidebar a,
+.municipal-account button,
+.municipal-account p { padding: .5rem .75rem; border-radius: .375rem; font-size: .9375rem; }
+.municipal-sidebar a:hover,
+.municipal-account button:hover { background: #a02142; }
+.municipal-sidebar a[aria-current="page"] {
+  background: var(--municipal-gold);
+  color: var(--municipal-ink);
+  font-weight: 650;
+}
+
+.municipal-account { margin-top: auto; border-top: 1px solid var(--municipal-line); padding-top: .5rem; }
+.municipal-account p { overflow-wrap: anywhere; }
+.municipal-sidebar svg,
+.municipal-topbar button svg,
+.municipal-table button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.municipal-content { min-width: 0; padding: clamp(1rem, 3vw, 2.5rem); }
+.municipal-page { width: 100%; max-width: 76rem; margin-inline: auto; }
+.municipal-panel {
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--municipal-line);
+  border-radius: .75rem;
+  background: var(--municipal-paper);
+}
+
+.municipal-title {
+  margin-bottom: 1rem;
+  color: var(--municipal-wine);
+  font-size: clamp(1.375rem, 2vw, 1.875rem);
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.municipal-table {
+  max-height: 32rem;
+  overflow: auto;
+  margin-top: 1.25rem;
+  border: 1px solid var(--municipal-line);
+  border-radius: .5rem;
+}
+
+.municipal-table th {
+  background: var(--municipal-gold);
+  color: var(--municipal-ink);
+  white-space: nowrap;
+  font-size: .9375rem;
+}
+
+.municipal-table td { font-size: .9375rem; }
+.municipal-table tbody tr:hover { background: #f5f5f5; }
+.municipal-table td:first-child { font-variant-numeric: tabular-nums; }
+
+.municipal-primary,
+.municipal-secondary {
+  min-height: 2.75rem;
+  padding: .5rem .875rem;
+  border-radius: .375rem;
+  font-size: .9375rem;
+  font-weight: 650;
+}
+
+.municipal-primary { background: var(--municipal-wine); color: white; }
+.municipal-primary:hover { background: #a02142; }
+.municipal-secondary { border: 1px solid var(--municipal-line); background: var(--municipal-paper); color: var(--municipal-wine); }
+.municipal-secondary:hover { background: var(--municipal-gold); }
+
+.municipal-public { display: grid; place-items: center; padding: 1rem; }
+@media (min-width: 768px) {
+  .municipal-workspace { display: grid; grid-template-columns: 15rem minmax(0, 1fr); align-items: start; }
+  .municipal-topbar { display: none; }
+  .municipal-sidebar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow-y: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--municipal-line);
   }
 }

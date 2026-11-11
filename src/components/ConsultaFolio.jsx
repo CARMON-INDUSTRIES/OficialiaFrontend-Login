@@ -91,33 +91,25 @@ const ConsultaFolio = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/ciudadania.jpg')" }}
-    >
-      <div className="absolute inset-y-0 flex justify-center pointer-events-none">
-        <h1 className="text-6xl font-serif text-[#691B31] text-center mt-4">
-          ㅤㅤ<br />
-          
-          ATENCIÓN CIUDADANA
-        </h1>
-      </div>
-
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-[#691B31] mb-6">
-          Consulta tu Folio
+      className="municipal-public">
+      <div className="municipal-panel w-full max-w-lg">
+        <h1 className="municipal-title">
+          Consultar por folio
         </h1>
 
         <form onSubmit={buscarFolio} className="flex gap-2 mb-4">
           <input
             type="text"
-            placeholder="Ingresa tu número de folio"
+            aria-label="Número de folio"
+            placeholder="Número de folio"
             value={folio}
             onChange={(e) => setFolio(e.target.value)}
-            className="flex-1 p-2 border border-[#691B31] rounded-lg focus:ring-2 focus:ring-[#BC995B]"
+            className="min-w-0 flex-1 p-2 border border-[#691B31] rounded-lg focus:ring-2 focus:ring-[#BC995B]"
           />
           <button
             type="submit"
             disabled={loading}
+            aria-label="Buscar folio"
             className="bg-[#691B31] text-white px-4 py-2 rounded-lg hover:bg-[#A02142] flex items-center justify-center"
           >
             {loading ? (

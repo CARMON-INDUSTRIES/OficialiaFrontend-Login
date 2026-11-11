@@ -13,6 +13,9 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [filterDate, setFilterDate] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [busy, setBusy] = useState(false);
   const [records, setRecords] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -196,43 +199,60 @@ const [lastStatus, setLastStatus] = useState([]);
     }
   };
 
-  const handleDeleteConfirmation = (id) => {
-    Swal.fire({
-      title: "¿Estás seguro de querer eliminar este registro?",
-      text: "¡Esta acción no se puede deshacer!",
+  const canDelete = userRole.includes("Admin") || userRole.includes("SuperAdmin");
+
+  const handleDeleteConfirmation = async (ids) => {
+    if (!canDelete || busy || !ids.length) return;
+
+    const confirmation = await Swal.fire({
+      title: ids.length === 1 ? "¿Eliminar este oficio?" : "¿Eliminar " + ids.length + " oficios?",
+      text: "Esta acción es permanente.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "No, cancelar",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
       confirmButtonColor: "#691B31",
-      cancelButtonColor: "#d33",
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        try {
-          const token = localStorage.getItem("token");
-          await axios.delete(
-            `https://oficialialoginbackend.somee.com/api/Correspondencia/eliminar/${id}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          setRecords(records.filter((record) => record.id !== id));
-          Swal.fire({
-            icon: "success",
-            title: "Registro eliminado",
-            text: "El registro ha sido eliminado exitosamente.",
-            confirmButtonColor: "#691B31",
-          });
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "¡Error!",
-            text: "Ha ocurrido un error al eliminar el registro.",
-            confirmButtonColor: "#691B31",
-          });
-        }
-      },
     });
+    if (!confirmation.isConfirmed) return;
+
+    setBusy(true);
+    const token = localStorage.getItem("token");
+    const deleted = new Set();
+    for (const id of ids) {
+      try {
+        await axios.delete(
+          "https://oficialialoginbackend.somee.com/api/Correspondencia/eliminar/" + id,
+          { headers: { Authorization: "Bearer " + token } }
+        );
+        deleted.add(id);
+      } catch {
+        // Keep this record selected so the user can retry.
+      }
+    }
+    setRecords((previous) => previous.filter((record) => !deleted.has(record.id)));
+    setSelectedIds((previous) => previous.filter((id) => !deleted.has(id)));
+    setBusy(false);
+
+    const failed = ids.length - deleted.size;
+    await Swal.fire({
+      icon: failed ? "warning" : "success",
+      title: failed ? "Eliminación incompleta" : "Eliminación completada",
+      text: "Eliminados: " + deleted.size + ". Pendientes: " + failed + ".",
+      confirmButtonColor: "#691B31",
+    });
+  };
+
+  const downloadRecords = async (items) => {
+    if (busy || !items.length) return;
+    setBusy(true);
+    try {
+      const { downloadCorrespondencias } = await import("@/lib/correspondenciaPdf");
+      await downloadCorrespondencias(items);
+    } catch {
+      await Swal.fire({ icon: "error", title: "No se pudo generar la descarga", text: "Inténtalo de nuevo." });
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleEditSubmit = async (e) => {
@@ -305,41 +325,27 @@ const [lastStatus, setLastStatus] = useState([]);
     });
   };
 
-  // Lógica de filtrado mejorada para incluir 'fecha', 'dependencia', 'asunto', 'estatus', y 'folio'
-  const filteredRecords = records
-    .filter((record) => {
-      const searchLower = search.toLowerCase();
-      const formattedDate = record.fecha ? formatDate(record.fecha) : ""; // Formateamos la fecha antes de filtrar
-      return (
-        String(record.folio).includes(search) ||
-        formattedDate.includes(search) ||
-        (record.dependencia &&
-          record.dependencia.toLowerCase().includes(searchLower)) ||
-        (record.asunto && record.asunto.toLowerCase().includes(searchLower)) ||
-        (record.areaDescripcion &&
-          record.areaDescripcion.toLowerCase().includes(searchLower)) ||
-        record.statusDescripcion
-          .toString()
-          .toLowerCase()
-          .includes(searchLower) ||
-        (record.area &&
-          typeof record.area === "string" &&
-          record.area.toLowerCase().includes(searchLower)) // Verificación de tipo para 'area'
-      );
-    })
-    .reduce((acc, record) => {
-      // Aquí solo agregamos registros con el mismo folio si pertenecen a un área diferente
-      const existingRecord = acc.find(
-        (item) => item.folio === record.folio && item.area === record.area
-      );
-      if (!existingRecord) {
-        acc.push(record); // Si no existe el registro, lo agregamos
-      }
-      return acc;
-    }, []);
+  const searchText = search.trim().toLowerCase();
+  const filteredRecords = records.filter((record) => {
+    const date = record.fecha?.slice(0, 10) || "";
+    return (!filterDate || date === filterDate)
+      && [
+        record.folio, record.fecha && formatDate(record.fecha), record.dependencia,
+        record.asunto, record.areaDescripcion, record.statusDescripcion, record.comunidadDescripcion,
+      ].some((value) => String(value ?? "").toLowerCase().includes(searchText));
+  });
+
+  const selectedRecords = filteredRecords.filter(({ id }) => selectedIds.includes(id));
+  const allVisibleSelected = filteredRecords.length > 0 && selectedRecords.length === filteredRecords.length;
+
+  const toggleRecord = (id) => {
+    setSelectedIds((previous) => previous.includes(id)
+      ? previous.filter((selectedId) => selectedId !== id)
+      : [...previous, id]);
+  };
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "registrado":
         return "text-gray-700"; // Gris
       case "entregado":
@@ -357,35 +363,99 @@ const [lastStatus, setLastStatus] = useState([]);
 
   return (
     <Layout>
-      <div className="h-full w-full flex flex-col items-center bg-gradient-to-br bg-white p-6">
-        <div className="bg-white shadow-lg rounded-lg w-full max-w-8xl p-6 overflow-hidden">
-          <h1 className="text-3xl font-bold mb-4">Inicio</h1>
-          <input
-            type="text"
-            placeholder="Buscar registros..."
-            className="w-full max-w-md px-4 py-2 border border-[#691B31] rounded-lg focus:outline-none focus:border-[#BC995B]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="overflow-y-auto max-h-[500px] mt-6 border rounded-lg">
+      <div className="municipal-page">
+        <div className="municipal-panel">
+          <h1 className="municipal-title">Registro de oficios</h1>
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="grid w-full max-w-md gap-1 text-sm font-semibold">
+              Buscar oficios
+              <input
+                type="search"
+                placeholder="Folio, asunto, estado o comunidad"
+                className="min-h-11 rounded-md border bg-white px-3 font-normal"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setSelectedIds([]);
+                }}
+              />
+            </label>
+            <label className="grid gap-1 text-sm font-semibold">
+              Fecha de registro (opcional)
+              <input
+                type="date"
+                value={filterDate}
+                className="min-h-11 rounded-md border bg-white px-3 font-normal"
+                onChange={(event) => {
+                  setFilterDate(event.target.value);
+                  setSelectedIds([]);
+                }}
+              />
+            </label>
+            {(search || filterDate) && (
+              <button
+                type="button"
+                className="municipal-secondary"
+                onClick={() => {
+                  setSearch("");
+                  setFilterDate("");
+                  setSelectedIds([]);
+                }}
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-2" aria-busy={busy}>
+            <p className="mr-auto text-sm" role="status">
+              {filteredRecords.length} oficios · {selectedRecords.length} seleccionados
+            </p>
+            <button type="button" className="municipal-secondary disabled:opacity-50"
+              disabled={busy || !selectedRecords.length} onClick={() => downloadRecords(selectedRecords)}>
+              Descargar PDF{selectedRecords.length > 1 ? "s (ZIP)" : ""}
+            </button>
+            {canDelete && (
+              <button type="button" className="municipal-primary disabled:opacity-50"
+                disabled={busy || !selectedRecords.length}
+                onClick={() => handleDeleteConfirmation(selectedRecords.map(({ id }) => id))}>
+                Eliminar selección
+              </button>
+            )}
+          </div>
+          <div className="municipal-table" tabIndex={0} aria-label="Oficios registrados">
             <table className="min-w-full bg-white">
-              <thead className="bg-[#BC995B] text-white sticky top-0 z-10">
+              <thead className="sticky top-0 z-10">
                 <tr>
+                  <th className="px-3 py-3">
+                    <input type="checkbox" aria-label="Seleccionar todos los oficios visibles"
+                      checked={allVisibleSelected}
+                      ref={(input) => { if (input) input.indeterminate = selectedRecords.length > 0 && !allVisibleSelected; }}
+                      disabled={busy || !filteredRecords.length}
+                      onChange={() => setSelectedIds(allVisibleSelected ? [] : filteredRecords.map(({ id }) => id))} />
+                  </th>
                   <th className="py-3 px-6 text-left">Folio</th>
                   <th className="py-3 px-6 text-left">Fecha</th>
                   <th className="py-3 px-6 text-left">Dependencia</th>
                   <th className="py-3 px-6 text-left">Asunto</th>
-                  <th className="py-3 px-6 text-left">Area turnada</th>
-                  <th className="py-3 px-6 text-left">Status</th>
+                  <th className="py-3 px-6 text-left">Comunidad</th>
+                  <th className="py-3 px-6 text-left">Área de destino</th>
+                  <th className="py-3 px-6 text-left">Estado</th>
                   <th className="py-3 px-6 text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filteredRecords.map((record, index) => (
+                {!filteredRecords.length && (
+                  <tr><td colSpan={9} className="p-6 text-center">No se encontraron oficios.</td></tr>
+                )}
+                {filteredRecords.map((record) => (
                   <tr
-                    key={`${record.folio}-${record.area}-${index}`}
+                    key={record.id}
                     className="border-b"
                   >
+                    <td className="px-3 py-3 text-center">
+                      <input type="checkbox" aria-label={"Seleccionar oficio " + record.folio}
+                        checked={selectedIds.includes(record.id)} disabled={busy} onChange={() => toggleRecord(record.id)} />
+                    </td>
                     <td className="py-3 px-6">{record.folio}</td>
                     <td className="py-3 px-6">
                       {record.fecha
@@ -394,6 +464,7 @@ const [lastStatus, setLastStatus] = useState([]);
                     </td>
                     <td className="py-3 px-6">{record.dependencia}</td>
                     <td className="py-3 px-6">{record.asunto}</td>
+                    <td className="py-3 px-6">{record.comunidadDescripcion}</td>
                     <td className="py-3 px-6">{record.areaDescripcion}</td>
                     <td
                       className={`py-3 px-6 font-bold ${getStatusColor(
@@ -403,31 +474,40 @@ const [lastStatus, setLastStatus] = useState([]);
                       {record.statusDescripcion}
                     </td>
 
-                    <td className="py-3 px-6 flex justify-center gap-4">
+                    <td className="py-3 px-6">
+                      <div className="flex items-center justify-center gap-3">
+                      <button type="button" className="municipal-secondary whitespace-nowrap"
+                        disabled={busy} onClick={() => downloadRecords([record])}>
+                        PDF
+                      </button>
                       <button
                         className="text-blue-500 hover:underline"
+                        aria-label="Ver oficio"
                         onClick={() => handleView(record)}
                       >
-                        <FaEye />
+                        <FaEye aria-hidden="true" />
                       </button>
                       
                           <button
                             className="text-green-500 hover:underline"
+                            aria-label="Editar oficio"
                             onClick={() => handleEdit(record)}
                           >
                             <FaEdit />
                           </button>
-                          {(userRole.includes("Admin") ||
-                        userRole.includes("SuperAdmin")) && (
+                          {canDelete && (
                         <>
                           <button
                             className="text-red-500 hover:underline"
-                            onClick={() => handleDeleteConfirmation(record.id)}
+                            aria-label="Eliminar oficio"
+                            disabled={busy}
+                            onClick={() => handleDeleteConfirmation([record.id])}
                           >
                             <FaTrashAlt />
                           </button>
                         </>
                       )}
+                      </div>
                     </td>
                   </tr>
                 ))}

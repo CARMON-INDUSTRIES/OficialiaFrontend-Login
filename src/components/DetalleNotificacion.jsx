@@ -109,7 +109,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
 
         <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Detalles de la Notificación</h2>
+            <h2 className="municipal-title mb-4 ">Detalles de la Notificación</h2>
             <p className="text-lg mb-2"><span className="font-bold">Folio:</span> {selectedRecord.folio}</p>
             <p className="text-lg mb-2"><span className="font-bold">Fecha:</span> {selectedRecord.fecha}</p>
             <p className="text-lg mb-2"><span className="font-bold">Dependencia:</span> {selectedRecord.dependencia}</p>

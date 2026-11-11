@@ -1,14 +1,28 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaFileAlt } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+const fieldClass = "min-h-11 w-full rounded-md border border-[#b8b8b8] bg-white px-3 py-2.5 text-base text-[#262626] placeholder:text-[#716460] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#691B31]";
+const buttonClass = "min-h-11 rounded-md px-5 py-2.5 text-base font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#691B31]";
+
+const selectStyles = {
+  control: (base, { isFocused }) => ({
+    ...base,
+    minHeight: 44,
+    borderRadius: 6,
+    borderColor: "#b8b8b8",
+    boxShadow: "none",
+    outline: isFocused ? "2px solid #691B31" : undefined,
+    outlineOffset: 2,
+  }),
+  placeholder: (base) => ({ ...base, color: "#716460" }),
+};
+
 const Formulario = () => {
   const router = useRouter();
-  const [isRotating, setIsRotating] = useState(true);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
@@ -16,17 +30,13 @@ const Formulario = () => {
   const [status, setStatus] = useState([]);
   const [file, setFile] = useState(null);
   const [downloadURL, setDownloadURL] = useState("");
-  const [progress, setProgress] = useState(0);
 
   const [formData, setFormData] = useState({
     folio: "",
     fecha: "",
     dependencia: "",
     comunidad: "",
-    remitente: "",
-    cargoRemitente: "",
     destinatario: "",
-    cargoDestinatario: "",
     asunto: "",
     area: [],
     importancia: "",
@@ -41,12 +51,6 @@ const Formulario = () => {
     if (!token) {
       router.push("/login");
     }
-  
-    const randomFolio = Math.floor(10000 + Math.random() * 90000).toString();
-    setFormData((prevData) => ({
-      ...prevData,
-      folio: randomFolio,
-    }));
   
     const fetchData = async () => {
       try {
@@ -79,12 +83,6 @@ const Formulario = () => {
     };
   
     fetchData();
-  
-    const timeout = setTimeout(() => {
-      setIsRotating(false);
-    }, 1500);
-  
-    return () => clearTimeout(timeout);
   }, [router]); 
   
 
@@ -145,7 +143,14 @@ const Formulario = () => {
     try {
       const response = await axios.post(
         "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
-        formData,
+        {
+          ...formData,
+          folio: Number(formData.folio),
+          remitente: "",
+          cargoRemitente: "",
+          cargoDestinatario: "",
+          fechaTerminacion: formData.fechaTerminacion || null,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -172,250 +177,233 @@ const Formulario = () => {
     }
   };
 
+  const comunidadOptions = comunidades.map((comunidad) => ({
+    value: comunidad.idComunidad,
+    label: comunidad.nombreComunidad,
+  }));
+
   const areaOptions = area.map((com) => ({
     value: com.idArea,
     label: com.nombreArea,
   }));
 
   return (
-    <div className="bg-white shadow-lg items-center justify-center rounded-lg w-full max-w-8xl p-6 overflow-hidden">
-      <div
-        className="relative w-full h-32 bg-cover bg-center rounded-t-lg"
-        style={{ backgroundImage: "url('/images/fondo.jpg')" }}
-      >
-        <div className="absolute inset-y-0 right-4 flex justify-center items-center">
-          <h2 className="text-4xl font-bold text-[#691B31] text-center mt-4">
-            REGISTRAR DOCUMENTOS ㅤㅤ
-          </h2>
-
-          <div className="bg-white p-3 rounded-full shadow-lg">
-            <FaFileAlt
-              className={`text-6xl text-[#691B31] ${
-                isRotating ? "animate-spin" : ""
-              }`}
-            />
+    <div className="mx-auto w-full max-w-4xl rounded-xl border border-[#dedede] bg-[#ffffff] text-[#262626]">
+      <header className="rounded-t-xl border-b border-[#BC995B] bg-[#f5f5f5] px-5 py-6 sm:px-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#691B31] sm:text-3xl">Registrar oficio</h1>
+        <p className="mt-1 text-base text-[#594b44]">Recepción de oficios · Secretaría Municipal</p>
+      </header>
+      <form onSubmit={handleSubmit} className="px-5 sm:px-8">
+        <section className="border-b border-[#dedede] py-6">
+          <h2 className="mb-4 text-base font-semibold text-[#691B31]">Identificación del oficio</h2>
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            <div className="min-w-0">
+              <label htmlFor="folio" className="mb-1.5 block text-base font-semibold">Folio</label>
+              <input
+                type="number"
+                id="folio"
+                name="folio"
+                value={formData.folio}
+                onChange={handleChange}
+                min={1}
+                max={2147483647}
+                step={1}
+                required
+                className={fieldClass}
+              />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="dependencia" className="mb-1.5 block text-base font-semibold">Dependencia</label>
+              <input
+                type="text"
+                id="dependencia"
+                name="dependencia"
+                onChange={handleChange}
+                placeholder="Dependencia que emite el oficio"
+                className={fieldClass}
+              />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="destinatario" className="mb-1.5 block text-base font-semibold">Destinatario</label>
+              <input
+                type="text"
+                id="destinatario"
+                name="destinatario"
+                onChange={handleChange}
+                placeholder="Nombre del destinatario"
+                required
+                className={fieldClass}
+              />
+            </div>
+            <div className="min-w-0 sm:col-span-2">
+              <label htmlFor="asunto" className="mb-1.5 block text-base font-semibold">Asunto</label>
+              <input
+                type="text"
+                id="asunto"
+                name="asunto"
+                onChange={handleChange}
+                placeholder="Asunto o descripción"
+                required
+                className={fieldClass}
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-3 gap-4">
-        <div>
-          <label className="block font-bold">Folio</label>
-          <input
-            type="text"
-            name="folio"
-            value={formData.folio}
-            readOnly
-            className="w-full p-2 border rounded border-[#691B31] bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Fecha de Registro</label>
-          <input
-            type="date"
-            name="fecha"
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Dependencia</label>
-          <input
-            type="text"
-            name="dependencia"
-            onChange={handleChange}
-            placeholder="Dependencia remitente"
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Comunidades</label>
-          <select
-            name="comunidad"
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          >
-            <option>Seleccionar Comunidad</option>
-            {comunidades.map((com) => (
-              <option key={com.idComunidad} value={com.idComunidad}>
-                {com.nombreComunidad}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block font-bold">Remitente</label>
-          <input
-            type="text"
-            name="remitente"
-            onChange={handleChange}
-            placeholder="Remitente"
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Cargo del Remitente</label>
-          <input
-            type="text"
-            name="cargoRemitente"
-            onChange={handleChange}
-            placeholder="Cargo"
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Destinatario</label>
-          <input
-            type="text"
-            name="destinatario"
-            onChange={handleChange}
-            placeholder="Nombre del destinatario"
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Cargo del Destinatario</label>
-          <input
-            type="text"
-            name="cargoDestinatario"
-            onChange={handleChange}
-            placeholder="Cargo"
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Asunto</label>
-          <input
-            type="text"
-            name="asunto"
-            onChange={handleChange}
-            placeholder="Asunto o descripción"
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Área de Destino</label>
-          <Select
-            options={areaOptions}
-            isMulti
-            value={areaOptions.filter((option) =>
-              formData.area.includes(option.value)
-            )}
-            onChange={(selected) => handleSelectChange(selected, "area")}
-            required
-            className="w-full border border-[#691B31] rounded-lg"
-          />
-        </div>
-
-        <div>
-          <label className="block font-bold">Importancia</label>
-          <select
-            onChange={handleChange}
-            name="importancia"
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          >
-            <option>Seleccionar Importancia</option>
-            {importancia.map((com) => (
-              <option key={com.idImportancia} value={com.idImportancia}>
-                {com.nivel}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block font-bold">Fecha Terminación</label>
-          <input
-            type="date"
-            name="fechaTerminacion"
-            onChange={handleChange}
-            className="w-full p-2 border rounded border-[#691B31]"
-          />
-        </div>
-        <div>
-          <label className="block font-bold">Status</label>
-          <select
-            onChange={handleChange}
-            name="status"
-            required
-            className="w-full p-2 border rounded border-[#691B31]"
-          >
-            <option>Seleccionar Status</option>
-            {status.map((com) => (
-              <option key={com.idStatus} value={com.idStatus}>
-                {com.estado}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block font-bold text-[#691B31]">Subir PDF</label>
-
-          {/* Contenedor para el input de archivo y el botón */}
-          <div className="flex items-center gap-4">
-            <input
-              type="file"
-              id="file-upload"
-              onChange={handleFileChange}
-              accept="application/pdf"
-              className="w-full px-3 py-2 border border-[#691B31] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BC995B] transition duration-300 ease-in-out text-sm cursor-pointer text-center" // Ocultamos el input
-            />
-
-            <button
-              type="button"
-              onClick={handleUpload}
-              className="px-6 py-2 bg-[#BC995B] text-white font-semibold rounded-lg shadow-md hover:bg-[#A87F50] focus:outline-none focus:ring-4  transition duration-300 ease-in-out text-sm transform hover:scale-105 focus:ring-[#BC995B]"
-            >
-              Subir
-            </button>
+        <section className="border-b border-[#dedede] py-6">
+          <h2 className="mb-4 text-base font-semibold text-[#691B31]">Datos de registro</h2>
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            <div className="min-w-0">
+              <label htmlFor="fecha" className="mb-1.5 block text-base font-semibold">Fecha de registro</label>
+              <input
+                type="date"
+                id="fecha"
+                name="fecha"
+                onChange={handleChange}
+                required
+                className={fieldClass}
+              />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="comunidad" className="mb-1.5 block text-base font-semibold">Comunidades</label>
+              <Select
+                inputId="comunidad"
+                name="comunidad"
+                options={comunidadOptions}
+                value={comunidadOptions.find((option) => option.value === formData.comunidad) ?? null}
+                onChange={(option) => setFormData((previous) => ({
+                  ...previous,
+                  comunidad: option?.value ?? "",
+                }))}
+                placeholder="Seleccionar o buscar comunidad"
+                noOptionsMessage={() => "No se encontraron comunidades"}
+                isSearchable
+                required
+                className="w-full text-base"
+                styles={selectStyles}
+              />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="area-destino" className="mb-1.5 block text-base font-semibold">Área de Destino</label>
+              <Select
+                inputId="area-destino"
+                options={areaOptions}
+                placeholder="Seleccionar o buscar áreas"
+                noOptionsMessage={() => "No se encontraron áreas"}
+                isSearchable
+                isMulti
+                value={areaOptions.filter((option) =>
+                  formData.area.includes(option.value)
+                )}
+                onChange={(selected) => handleSelectChange(selected, "area")}
+                required
+                className="w-full text-base"
+                styles={selectStyles}
+              />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="importancia" className="mb-1.5 block text-base font-semibold">Importancia</label>
+              <select
+                onChange={handleChange}
+                id="importancia"
+                name="importancia"
+                required
+                className={fieldClass}
+              >
+                <option value="">Seleccionar importancia</option>
+                {importancia.map((com) => (
+                  <option key={com.idImportancia} value={com.idImportancia}>
+                    {com.nivel}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="status" className="mb-1.5 block text-base font-semibold">Estado</label>
+              <select
+                onChange={handleChange}
+                id="status"
+                name="status"
+                required
+                className={fieldClass}
+              >
+                <option value="">Seleccionar estado</option>
+                {status.map((com) => (
+                  <option key={com.idStatus} value={com.idStatus}>
+                    {com.estado}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="fechaTerminacion" className="mb-1.5 block text-base font-semibold">Fecha de terminación</label>
+              <input
+                type="date"
+                id="fechaTerminacion"
+                name="fechaTerminacion"
+                onChange={handleChange}
+                className={fieldClass}
+              />
+            </div>
           </div>
+        </section>
 
-          {progress > 0 && (
-            <p className="text-sm font-semibold text-gray-700">
-              Progreso: {progress}%
-            </p>
-          )}
+        <section className="border-b border-[#dedede] py-6">
+          <h2 className="mb-4 text-base font-semibold text-[#691B31]">Archivo y notas</h2>
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            <div className="min-w-0 sm:col-span-2">
+              <label htmlFor="file-upload" className="mb-1.5 block text-base font-semibold">Adjuntar PDF</label>
 
-          {/* Mostrar archivo subido */}
-          {downloadURL && (
-            <>
-              <p className="text-sm font-semibold text-gray-700 mb-2">
-                Archivo subido:{" "}
-                <a
-                  href={downloadURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 font-bold"
+              <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                <input
+                  type="file"
+                  id="file-upload"
+                  onChange={handleFileChange}
+                  accept="application/pdf"
+                  className={fieldClass + " min-w-0 file:mr-2 file:font-semibold"}
+                />
+
+                <button
+                  type="button"
+                  onClick={handleUpload}
+                  className={buttonClass + " shrink-0 border border-[#b8b8b8] bg-white text-[#691B31] hover:bg-[#f5f5f5]"}
                 >
-                  Ver PDF
-                </a>
-              </p>
-              <input type="text" name="documento" readOnly />
-            </>
-          )}
-        </div>
+                  Subir
+                </button>
+              </div>
 
-        <div className="col-span-1">
-          <label className="block font-bold">Observaciones</label>
-          <textarea
-            name="observaciones"
-            onChange={handleChange}
-            placeholder="Agrega observaciones o notas adicionales..."
-            className="w-full p-2 border rounded border-[#691B31] h-24 resize-none"
-          />
-        </div>
 
-        <div className="col-span-3 flex justify-center items-center">
-          <br></br>
-          <br></br>
-          <br></br>
-          <button className="bg-[#691B31] text-white px-10 py-3 rounded-lg hover:bg-[#A02142] transform hover:scale-105 focus:ring-2 focus:ring-[#A02142]">
-            Registrar
+              {downloadURL && (
+                <>
+                  <p className="text-base font-semibold text-gray-700 mb-2">
+                    Archivo subido:{" "}
+                    <a
+                      href={downloadURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 font-bold"
+                    >
+                      Ver PDF
+                    </a>
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="min-w-0 sm:col-span-2">
+              <label htmlFor="observaciones" className="mb-1.5 block text-base font-semibold">Observaciones</label>
+              <textarea
+                id="observaciones"
+                name="observaciones"
+                onChange={handleChange}
+                placeholder="Agrega observaciones o notas adicionales..."
+                className={fieldClass + " min-h-24 resize-y"}
+              />
+            </div>
+          </div>
+        </section>
+        <div className="flex justify-end py-5">
+          <button type="submit" className={buttonClass + " w-full bg-[#691B31] text-white hover:bg-[#A02142] sm:w-auto"}>
+            Registrar oficio
           </button>
         </div>
       </form>

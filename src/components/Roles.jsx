@@ -14,7 +14,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const fondoModal = "/images/fondoModal.jpg";
-const fondoRoles = "/images/roles.jpg";
 
 const Roles = () => {
   const router = useRouter();
@@ -291,12 +290,11 @@ const Roles = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center relative p-6 bg-cover bg-center"
-      style={{ backgroundImage: `url(${fondoRoles})` }}
+      className="municipal-page"
     >
-      <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-4">
-        <div className="flex items-center justify-between gap-4 mb-4">
-          <h1 className="text-4xl font-bold text-[#621132]">
+      <div className="municipal-panel">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <h1 className="municipal-title">
             <button
               onClick={() => setSearching(true)}
               className={`p-2 bg-[#621132] text-white rounded-full hover:bg-blue-600 transition ${
@@ -305,7 +303,7 @@ const Roles = () => {
             >
               <FaSearch />
             </button>{" "}
-            USUARIOS
+            Roles y usuarios
           </h1>
           <div className="flex items-center gap-2">
             <input
@@ -318,7 +316,7 @@ const Roles = () => {
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[500px] mt-6 border rounded-lg">
+        <div className="municipal-table" tabIndex={0} aria-label="Usuarios y roles">
           <table className="w-full border-collapse bg-white">
             <thead className="bg-white sticky top-0 z-10">
               <tr className="text-gray-700">

@@ -136,35 +136,29 @@ export const Register = () => {
    
 
   return (
-    <div className="right flex flex-col justify-center items-center relative">
+    <div className="municipal-public">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="lg:w-[26.5rem] w-80 flex flex-col gap-4"
+        className="municipal-panel w-full max-w-md"
       >
         <div className="text-center sm:text-left">
-          <h1 className="text-center text-3xl font-bold text-[#621132] ">
-            Nuevo Usuario
+          <h1 className="municipal-title">
+            Nuevo usuario
           </h1>
-          <br />
-          <img
-            src="/images/presidencia.png"
-            alt="Presidencia"
-            className="w-36 h-auto object-cover mb-4 mx-auto"
-          />
         </div>
 
         <form
           onSubmit={handleRegister}
-          className="bg-white rounded-[20px] p-8 flex flex-col gap-5 lg:border-none border border-[#e6ebf4]"
+          className="flex flex-col gap-4"
         >
           <div className="name flex flex-col gap-3 items-start">
             <label className="text-sm">Nombre de usuario</label>
             <input
               type="text"
               placeholder="Ingrese un nombre sin espacios"
-              className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+              className="w-full px-4 py-2 min-h-11 rounded-md border border-[#b8aaa6] bg-white"
               value={userName}
               onChange={(e) => setName(e.target.value)}
             />
@@ -175,7 +169,7 @@ export const Register = () => {
             <input
               type="email"
               placeholder="Ingrese su correo"
-              className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5]"
+              className="w-full px-4 py-2 min-h-11 rounded-md border border-[#b8aaa6] bg-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -187,7 +181,7 @@ export const Register = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Minimo 6 caracteres"
-                className="w-full px-4 py-2 rounded-lg border-none outline-none bg-[#F5F5F5] pr-10"
+                className="w-full px-4 py-2 min-h-11 rounded-md border border-[#b8aaa6] bg-white pr-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -205,9 +199,9 @@ export const Register = () => {
 
           <button
             type="submit"
-            className="bg-[#BC995B] text-white rounded-[10px] py-2"
+            className="municipal-primary"
           >
-            Registrarse
+            Crear usuario
           </button>
         </form>
       </motion.div>

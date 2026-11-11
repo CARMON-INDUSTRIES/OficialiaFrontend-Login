@@ -74,7 +74,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
 
           <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-[#691B31]">
+              <h2 className="municipal-title mb-4 ">
                 Detalles del Registro
               </h2>
               <p className="text-lg mb-2">
@@ -201,7 +201,7 @@ const DetalleModal = ({ selectedRecord, closeModal }) => {
 
       <div className="w-2/3 pr-6">
         {/* Lado izquierdo para la respuesta */}
-        <h2 className="text-2xl font-bold mb-4 text-[#691B31]">Respuesta</h2>
+        <h2 className="municipal-title mb-4 ">Respuesta</h2>
         {loadingResponse ? (
           <p>Cargando respuesta...</p>
         ) : error ? (

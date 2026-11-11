@@ -13,7 +13,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative"
+        className="bg-white p-6 rounded-xl border border-[#ded3cf] w-full max-w-lg relative"
       >
         {/* Botón para cerrar */}
         <button

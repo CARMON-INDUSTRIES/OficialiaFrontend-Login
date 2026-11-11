@@ -1,7 +1,1 @@
-import LandingPage from "@/components/LandingPage";
-
-const Page = () => {
-  return <LandingPage />;
-};
-
-export default Page;
+export { default } from "./login/page";

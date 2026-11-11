@@ -195,7 +195,7 @@ const handleChangeStatus = async () => {
 
   return (
     <motion.div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <motion.div className="bg-white p-6 rounded-lg shadow-lg w-[450px] relative">
+      <motion.div className="bg-white p-6 rounded-xl border border-[#ded3cf] w-full max-w-md relative">
         <div className="flex justify-center mb-4">
           <img
             src="/images/Respuesta.png"
