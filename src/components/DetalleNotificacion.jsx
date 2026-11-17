@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBase } from "@/lib/apiBase";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -22,7 +23,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
         const token = localStorage.getItem("token");
         try {
           const comResp = await axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
+            apiBase + "/Correspondencia/obtener-comunidades",
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setComunidad(
@@ -39,7 +40,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
         const token = localStorage.getItem("token");
         try {
           const areaResp = await axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
+            apiBase + "/Correspondencia/obtener-areas",
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setArea(
@@ -56,7 +57,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
         const token = localStorage.getItem("token");
         try {
           const impResp = await axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
+            apiBase + "/Correspondencia/obtener-importancia",
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setImportancia(
@@ -73,7 +74,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
         const token = localStorage.getItem("token");
         try {
           const statusResp = await axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+            apiBase + "/Correspondencia/obtener-status",
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setStatus(

@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
@@ -42,19 +43,19 @@ const Formulario = () => {
       try {
         const [comResp, areasResp, impResp, statusResp] = await Promise.all([
           axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
+            apiBase + "/Correspondencia/obtener-comunidades",
             { headers: { Authorization: `Bearer ${token}` } }
           ),
           axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
+            apiBase + "/Correspondencia/obtener-areas",
             { headers: { Authorization: `Bearer ${token}` } }
           ),
           axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
+            apiBase + "/Correspondencia/obtener-importancia",
             { headers: { Authorization: `Bearer ${token}` } }
           ),
           axios.get(
-            "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+            apiBase + "/Correspondencia/obtener-status",
             { headers: { Authorization: `Bearer ${token}` } }
           ),
         ]);
@@ -128,7 +129,7 @@ const Formulario = () => {
 
     try {
       const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/registrar",
+        apiBase + "/Correspondencia/registrar",
         {
           ...formData,
           folio: Number(formData.folio),

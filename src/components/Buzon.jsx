@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import { playNotificationSound } from "@/lib/notificationSounds";
 
 import { motion } from "framer-motion";
@@ -16,7 +17,7 @@ export default function Buzon() {
   const [modalDetalle, setModalDetalle] = useState(null);
  
   const API_URL =
-    "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener";
+    apiBase + "/Correspondencia/obtener";
 
   useEffect(() => {
     const fetchNotificaciones = async () => {
@@ -43,7 +44,7 @@ export default function Buzon() {
 
         // Obtener userId del backend
         const userIdResponse = await fetch(
-          `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`
+          `${apiBase}/Cuentas/GetUserId/${userName}`
         );
 
         const userIdData = await userIdResponse.json();

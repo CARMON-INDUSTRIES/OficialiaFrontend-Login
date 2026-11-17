@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBase } from "@/lib/apiBase";
 import { useState } from "react";
 import axios from "axios";
 import { OficioDialog, OficioSection } from "./OficioDialog";
@@ -39,7 +40,7 @@ export default function DetalleModal({ selectedRecord: record, closeModal }) {
 
     try {
       const { data } = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Respuesta/obtener/${record.respuestaCorrecta}`
+        `${apiBase}/Respuesta/obtener/${record.respuestaCorrecta}`
       );
       if (data?.idRespuesta) setResponse(data);
       else setError("No se encontró la respuesta de este oficio.");

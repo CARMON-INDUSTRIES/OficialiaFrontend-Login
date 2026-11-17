@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import { playNotificationSound } from "@/lib/notificationSounds";
 
 import React, { useState, useEffect } from "react";
@@ -85,19 +86,19 @@ const [lastStatus, setLastStatus] = useState([]);
     try {
       const [comResp, areasResp, impResp, statusResp] = await Promise.all([
         axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-comunidades",
+          apiBase + "/Correspondencia/obtener-comunidades",
           { headers: { Authorization: `Bearer ${token}` } }
         ),
         axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas",
+          apiBase + "/Correspondencia/obtener-areas",
           { headers: { Authorization: `Bearer ${token}` } }
         ),
         axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-importancia",
+          apiBase + "/Correspondencia/obtener-importancia",
           { headers: { Authorization: `Bearer ${token}` } }
         ),
         axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+          apiBase + "/Correspondencia/obtener-status",
           { headers: { Authorization: `Bearer ${token}` } }
         ),
       ]);
@@ -125,7 +126,7 @@ const [lastStatus, setLastStatus] = useState([]);
       }
 
       const response = await axios.get(
-        "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles",
+        apiBase + "/Roles/GetUsersWithRoles",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -154,7 +155,7 @@ const [lastStatus, setLastStatus] = useState([]);
 
       // Obtener userId
       const userIdResponse = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Cuentas/GetUserId/${userName}`,
+        `${apiBase}/Cuentas/GetUserId/${userName}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -169,7 +170,7 @@ const [lastStatus, setLastStatus] = useState([]);
 
       // Obtener registros con userId
       const response = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Correspondencia/obtener?userId=${userId}`,
+        `${apiBase}/Correspondencia/obtener?userId=${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -218,7 +219,7 @@ const [lastStatus, setLastStatus] = useState([]);
     for (const id of ids) {
       try {
         await axios.delete(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/eliminar/" + id,
+          apiBase + "/Correspondencia/eliminar/" + id,
           { headers: { Authorization: "Bearer " + token } }
         );
         deleted.add(id);
@@ -260,7 +261,7 @@ const [lastStatus, setLastStatus] = useState([]);
     const token = localStorage.getItem("token");
     try {
       await axios.put(
-        `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editData.id}`,
+        `${apiBase}/Correspondencia/editar/${editData.id}`,
         { ...editData, fechaTerminacion: editData.fechaTerminacion || null },
         {
           headers: { Authorization: `Bearer ${token}` },

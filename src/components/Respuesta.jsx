@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
@@ -25,7 +26,7 @@ useEffect(() => {
 
     try {
       const response = await axios.get(
-        "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-status",
+        apiBase + "/Correspondencia/obtener-status",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +62,7 @@ const handleChangeStatus = async () => {
 
   try {
     const response = await axios.put(
-      `https://oficialialoginbackend.somee.com/api/Correspondencia/actualizar-estado/${selectedRecord.id}`,
+      `${apiBase}/Correspondencia/actualizar-estado/${selectedRecord.id}`,
       { Status: selectedStatus },  // Asegúrate de enviar idStatus en el body
       {
         headers: {
@@ -160,7 +161,7 @@ const handleChangeStatus = async () => {
 
     try {
       const response = await fetch(
-        "https://oficialialoginbackend.somee.com/api/Respuesta/responder",
+        apiBase + "/Respuesta/responder",
         {
           method: "POST",
           headers: {

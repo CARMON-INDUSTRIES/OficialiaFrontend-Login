@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import Link from "next/link";
 import NotificationSoundToggle from "./NotificationSoundToggle";
 import SystemTour, { restartSystemTour } from "./SystemTour";
@@ -59,7 +60,7 @@ const Layout = ({ children }) => {
 
         // Obtener los usuarios con sus roles desde la API
         const response = await fetch(
-          "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles",
+          apiBase + "/Roles/GetUsersWithRoles",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import React, { useState } from "react";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
@@ -28,7 +29,7 @@ const ConsultaFolio = () => {
       setResultado(null);
 
       const response = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Correspondencia/consultar-folio/${folio}`
+        `${apiBase}/Correspondencia/consultar-folio/${folio}`
       );
 
       setResultado(response.data);
@@ -59,7 +60,7 @@ const ConsultaFolio = () => {
     try {
       setLoadingRespuesta(true);
       const resp = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Respuesta/obtener/${resultado.respuestaCorrecta}`
+        `${apiBase}/Respuesta/obtener/${resultado.respuestaCorrecta}`
       );
 
       const data = resp.data;

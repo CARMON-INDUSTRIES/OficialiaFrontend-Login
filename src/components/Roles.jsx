@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import React, { useState, useEffect } from "react";
 import {
   FaEdit,
@@ -14,7 +15,6 @@ import RegisterModal from "../components/RegisterModal"; // Asegúrate de que la
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const api = "https://oficialialoginbackend.somee.com/api";
 const roleLabels = { Admin: "Administrador", SuperAdmin: "Superadministrador", User: "Usuario" };
 
 const Roles = () => {
@@ -49,7 +49,7 @@ const Roles = () => {
     const fetchRoles = async () => {
       try {
         const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Roles/GetRoles"
+          apiBase + "/Roles/GetRoles"
         );
         setRoles(response.data); // Guarda los roles en el estado
       } catch (error) {
@@ -63,14 +63,15 @@ const Roles = () => {
   const fetchUsuarios = async () => {
     try {
       const response = await axios.get(
-        "https://oficialialoginbackend.somee.com/api/Roles/GetUsersWithRoles"
+        apiBase + "/Roles/GetUsersWithRoles"
       );
       const usuariosConArea = await Promise.all(
         response.data.map(async (user) => {
           try {
             
             const areaResponse = await axios.get(
-              `https://oficialialoginbackend.somee.com/api/UsuarioArea/GetAreaByUser/${user.id}`
+              `${apiBase}/UsuarioArea/GetAreaByUser/${user.id}`,
+              { validateStatus: (status) => status === 200 || status === 404 }
             );
 
 
@@ -81,10 +82,10 @@ const Roles = () => {
             };
           } catch (error) {
             console.error(
-              `Error al obtener área para usuario ${user.id}:`,
+              "No se pudo consultar el área del usuario:",
               error
             );
-            return { ...user, nombreArea: "No asignada" };
+            return { ...user, nombreArea: "Área no disponible" };
           }
         })
       );
@@ -122,7 +123,7 @@ const Roles = () => {
       if (result.isConfirmed) {
         // Realizar la solicitud de eliminación
         await axios.delete(
-          `https://oficialialoginbackend.somee.com/api/Cuentas/EliminarUsuario/${userId}`
+          `${apiBase}/Cuentas/EliminarUsuario/${userId}`
         );
 
         // Eliminar el usuario de los estados
@@ -157,7 +158,7 @@ const Roles = () => {
     setEditError("");
     setAreaLoadError(false);
     try {
-      const { data } = await axios.get(api + "/Correspondencia/obtener-areas");
+      const { data } = await axios.get(apiBase + "/Correspondencia/obtener-areas");
       setAreas(data);
     } catch {
       setAreaLoadError(true);
@@ -194,7 +195,7 @@ const Roles = () => {
     setEditError("");
     try {
       const token = localStorage.getItem("token");
-      await axios.put(api + "/Roles/usuarios/" + encodeURIComponent(selectedUser.id), changes, {
+      await axios.put(apiBase + "/Roles/usuarios/" + encodeURIComponent(selectedUser.id), changes, {
         headers: { Authorization: "Bearer " + token },
       });
       setUsuarios((previous) => previous.map((user) => user.id === selectedUser.id ? {
@@ -210,9 +211,13 @@ const Roles = () => {
       setTimeout(() => setShowConfirmation(false), 2000);
     } catch (error) {
       const code = error.response?.status;
-      setEditError(code === 401 || code === 403
-        ? "Tu sesión venció o no tienes permiso para editar usuarios."
-        : error.response?.data?.mensaje || "No se pudieron guardar los cambios. Inténtalo de nuevo.");
+      if (code === 401) {
+        setEditError("No se pudo validar tu sesión. Cierra sesión y vuelve a iniciar para reintentar.");
+      } else if (code === 403) {
+        setEditError("Solo un superadministrador puede editar usuarios.");
+      } else {
+        setEditError(error.response?.data?.mensaje || "No se pudieron guardar los cambios. Inténtalo de nuevo.");
+      }
     } finally {
       setSaving(false);
     }

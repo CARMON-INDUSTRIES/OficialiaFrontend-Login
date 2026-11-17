@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import { createContext, useState, useEffect } from "react";
 
 export const NotificacionesContext = createContext();
@@ -7,7 +8,7 @@ export const NotificacionesProvider = ({ children }) => {
   const [notificaciones, setNotificaciones] = useState([]);
 
   useEffect(() => {
-    const eventSource = new EventSource("https://oficialialoginbackend.somee.com/api/Notificaciones");
+    const eventSource = new EventSource(apiBase + "/Notificaciones");
 
     eventSource.onmessage = (event) => {
       const nuevaNotificacion = JSON.parse(event.data);

@@ -1,4 +1,5 @@
 "use client";
+import { apiBase } from "@/lib/apiBase";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -24,7 +25,7 @@ export const Register = ({ embedded = false, onUsersChanged }) => {
     const fetchAreas = async () => {
       try {
         const response = await axios.get(
-          "https://oficialialoginbackend.somee.com/api/Correspondencia/obtener-areas"
+          apiBase + "/Correspondencia/obtener-areas"
         );
         setAreas(response.data);
       } catch (error) {
@@ -39,7 +40,7 @@ export const Register = ({ embedded = false, onUsersChanged }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://oficialialoginbackend.somee.com/api/Cuentas/UserNuevo",
+        apiBase + "/Cuentas/UserNuevo",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -90,7 +91,7 @@ export const Register = ({ embedded = false, onUsersChanged }) => {
 
     try {
       await axios.post(
-        "https://oficialialoginbackend.somee.com/api/UsuarioArea/AsignarArea",
+        apiBase + "/UsuarioArea/AsignarArea",
         {
           userId, // Ahora ya estás usando 'userId' directamente
           areaId: selectedArea,
