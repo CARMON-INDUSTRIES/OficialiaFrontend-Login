@@ -122,7 +122,7 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
             <p className="text-lg mb-2"><span className="font-bold">Área(s) turnada(s):</span> {area}</p>
             <p className="text-lg mb-2"><span className="font-bold text-red-600">Importancia:</span> {importancia}</p>
             <p className="text-lg mb-2"><span className="font-bold">Fecha de Terminación:</span> {selectedRecord.fechaTerminacion}</p>
-            <p className="text-lg mb-2"><span className="font-bold text-[#621132]">Status:</span> {status}</p>
+            <p className="text-lg mb-2"><span className="font-bold text-[#621132]">Estado:</span> {status}</p>
             
           </div>
 

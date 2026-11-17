@@ -1,9 +1,10 @@
 "use client";
+import { playNotificationSound } from "@/lib/notificationSounds";
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import DetalleNotificacion from "./DetalleNotificacion";
-import Respuesta from "./Respuesta"; // Importar el nuevo componente
+import Respuesta from "./Respuesta"; 
 
 import { jwtDecode } from "jwt-decode";
 
@@ -23,7 +24,7 @@ export default function Buzon() {
         // Obtener token del localStorage
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("❌ No hay token disponible.");
+          console.error("No hay token disponible.");
           return;
         }
 
@@ -35,7 +36,7 @@ export default function Buzon() {
           ];
 
         if (!userName) {
-          console.error("❌ No se pudo obtener el nombre de usuario.");
+          console.error("No se pudo obtener el nombre de usuario.");
           return;
         }
 
@@ -57,14 +58,14 @@ export default function Buzon() {
         // Obtener registros filtrados por userId
         const response = await fetch(`${API_URL}?userId=${userId}`);
 
-        if (!response.ok) throw new Error("❌ Error al obtener los registros");
+        if (!response.ok) throw new Error("Error al obtener los registros");
 
         const data = await response.json();
 
 
         // Procesar datos
         const ultimosRegistros = data
-        .filter(item => !item.respuestaCorrecta) // 🔥 Filtra los que NO tienen respuesta
+        .filter(item => !item.respuestaCorrecta) 
           .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
           .slice(0, 5)
           .map((item) => ({
@@ -97,9 +98,7 @@ export default function Buzon() {
           if (nuevosRegistros.length > 0) {
             setNuevaNotificacion(true);
             setTimeout(() => setNuevaNotificacion(false), 5000); // Ocultar después de 5s
-            // Reproducir sonido de notificación
-          const audio = new Audio("/sounds/notificacionAudio.mp3");
-          audio.play();
+            playNotificationSound("/sounds/notificacionAudio.mp3");
           }
     
           setNotificaciones(ultimosRegistros);

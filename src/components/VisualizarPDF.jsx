@@ -7,7 +7,7 @@ const VisualizarPDF = ({ documento }) => {
         <div>
           <h2>Ver Documento PDF</h2>
           <iframe
-            src={documento} // URL del PDF
+            src={documento} 
             width="600"
             height="800"
             frameBorder="0"

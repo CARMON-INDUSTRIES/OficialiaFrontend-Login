@@ -10,7 +10,6 @@ const ConsultaFolio = () => {
   const [loading, setLoading] = useState(false);
   const [loadingRespuesta, setLoadingRespuesta] = useState(false);
 
-  // 🔍 Buscar folio
   const buscarFolio = async (e) => {
     e.preventDefault();
 
@@ -46,7 +45,6 @@ const ConsultaFolio = () => {
     }
   };
 
-  // 📄 Ver documento de respuesta
   const verDocumentoRespuesta = async () => {
     if (!resultado?.respuestaCorrecta) {
       Swal.fire({
@@ -144,7 +142,7 @@ const ConsultaFolio = () => {
 
             <br/>
 
-            {/* 📎 Botón o mensaje */}
+            
             {resultado.respuestaCorrecta > 0 ? (
               <div className="mt-4 text-center">
                 <button

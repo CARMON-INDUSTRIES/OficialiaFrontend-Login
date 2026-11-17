@@ -1,248 +1,102 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import axios from "axios"; // Asegúrate de tener axios instalado
-import { X } from "lucide-react"; // Importa el ícono de Lucide
+import { useState } from "react";
+import axios from "axios";
+import { OficioDialog, OficioSection } from "./OficioDialog";
 
-const DetalleModal = ({ selectedRecord, closeModal }) => {
-  const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
-  const [responseDetails, setResponseDetails] = useState(null);
-  const [loadingResponse, setLoadingResponse] = useState(false);
-  const [error, setError] = useState(null);
+function formatDate(value) {
+  const date = value?.slice(0, 10).split("-");
+  return date?.length === 3 ? date.reverse().join("/") : "";
+}
 
-  const openResponseModal = async () => {
+function Detail({ label, value, wide = false }) {
+  return (
+    <div className={wide ? "sm:col-span-2" : undefined}>
+      <dt className="font-semibold">{label}</dt>
+      <dd className="mt-1 whitespace-pre-wrap break-words">{value || "Sin información"}</dd>
+    </div>
+  );
+}
 
-    if (!selectedRecord.respuestaCorrecta) {
-      setError("No hay respuesta asociada a este registro.");
-      return;
-    }
+function Attachment({ url, children }) {
+  if (!/^https?:\/\//i.test(url ?? "")) return null;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer"
+      className="municipal-secondary inline-flex items-center">
+      {children}
+    </a>
+  );
+}
 
-    setLoadingResponse(true);
-    setError(null);
+export default function DetalleModal({ selectedRecord: record, closeModal }) {
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const loadResponse = async () => {
+    setLoading(true);
+    setError("");
 
     try {
-      // Realizamos la solicitud utilizando el idRespuesta (respuestaCorrecta)
-      const response = await axios.get(
-        `https://oficialialoginbackend.somee.com/api/Respuesta/obtener/${selectedRecord.respuestaCorrecta}`
+      const { data } = await axios.get(
+        `https://oficialialoginbackend.somee.com/api/Respuesta/obtener/${record.respuestaCorrecta}`
       );
-
-      const responseData = response.data;
-     
-      if (responseData && responseData.idRespuesta) {
-        setResponseDetails(responseData); // Asumimos que la respuesta está en el primer elemento
-      } else {
-        setError("No se encontró una respuesta para este registro.");
-      }
-    } catch (err) {
-      setError("Error al obtener la respuesta.");
-      console.error("Error al obtener la respuesta:", err);
+      if (data?.idRespuesta) setResponse(data);
+      else setError("No se encontró la respuesta de este oficio.");
+    } catch {
+      setError("No se pudo cargar la respuesta. Inténtalo de nuevo.");
     } finally {
-      setLoadingResponse(false);
-      setIsResponseModalOpen(true);
+      setLoading(false);
     }
-  };
-
-  // Función para cerrar el modal de respuesta
-  const closeResponseModal = () => {
-    setIsResponseModalOpen(false);
-    setResponseDetails(null);
   };
 
   return (
-    <div>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
-        <motion.div
-          className="bg-white rounded-lg w-full max-w-4xl md:max-w-2xl lg:max-w-3xl flex flex-col md:flex-row overflow-hidden"
-          initial={{ opacity: 0, y: -50 }} // Empieza arriba
-          animate={{ opacity: 1, y: 0 }} // Mueve hacia la posición original
-          exit={{ opacity: 0, y: 50 }} // Cuando se cierre, mueve hacia abajo
-          transition={{
-            type: "spring", 
-            stiffness: 100, // Qué tan fuerte será el rebote
-            damping: 15, // Cuánto se desacelera
-            duration: 0.5, // Duración total
-          }}
-        >
-          <div className="w-full md:w-1/3">
-            <img
-              src="/images/consulta.jpeg"
-              alt="Registro"
-              className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
-            />
-          </div>
-
-          <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
-            <div>
-              <h2 className="municipal-title mb-4 ">
-                Detalles del Registro
-              </h2>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Folio:</span> {selectedRecord.folio}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Fecha:</span>
-                {new Date(selectedRecord.fecha).toLocaleDateString("es-MX")}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Dependencia:</span>{" "}
-                {selectedRecord.dependencia}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Comunidad:</span>{" "}
-                {selectedRecord.comunidadDescripcion}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Remitente:</span>{" "}
-                {selectedRecord.remitente}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Cargo Remitente:</span>{" "}
-                {selectedRecord.cargoRemitente}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Asunto:</span>{" "}
-                {selectedRecord.asunto}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Destinatario:</span>{" "}
-                {selectedRecord.destinatario}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Cargo Destinatario:</span>{" "}
-                {selectedRecord.cargoDestinatario}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Área(s) turnada(s):</span>{" "}
-                {selectedRecord.areaDescripcion}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold text-red-600">Importancia:</span>{" "}
-                {selectedRecord.importanciaDescripcion}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold">Fecha Terminación: </span>
-                {""}
-                {new Date(selectedRecord.fechaTerminacion).toLocaleDateString(
-                  "es-MX"
-                )}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold text-[#621132]">Status:</span>{" "}
-                {selectedRecord.statusDescripcion}
-              </p>
-              <p className="text-lg mb-2">
-                <span className="font-bold text-[#621132]">Observaciones:</span>{" "}
-                {selectedRecord.observaciones}
-              </p>
-            </div>
-            
-            {selectedRecord?.respuestaCorrecta && (
-              <div className="mt-4">
-                <button
-                  onClick={openResponseModal}
-                  className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
-                >
-                  RESPUESTA
-                </button>
-              </div>
-            )}
-
-            {/* VISUALIZADOR DE PDF */}
-            {selectedRecord?.documento &&
-              selectedRecord.documento.endsWith(".pdf") && (
-                <div className="mt-4">
-                  <button
-                    onClick={() =>
-                      window.open(selectedRecord.documento, "_blank")
-                    }
-                    className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31] "
-                  >
-                    DOCUMENTO
-                  </button>
-                </div>
-              )}
-
-            <div className="flex justify-end mt-4">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="px-4 py-2 bg-[#BC995B] text-white rounded-lg hover:bg-[#A87F50] transform hover:scale-105 focus:ring-2 focus:ring-[#A87F50]"
-              >
-                Cerrar
+    <OficioDialog title="Detalles del oficio" onClose={closeModal} actions={
+      <button type="button" onClick={closeModal} className="municipal-primary">Cerrar</button>
+    }>
+      <OficioSection title="Identificación del oficio">
+        <dl className="col-span-full grid gap-4 sm:grid-cols-2">
+          <Detail label="Folio" value={record.folio} />
+          <Detail label="Dependencia" value={record.dependencia} />
+          <Detail label="Destinatario" value={record.destinatario} />
+          <Detail label="Asunto" value={record.asunto} wide />
+        </dl>
+      </OficioSection>
+      <OficioSection title="Datos de registro">
+        <dl className="col-span-full grid gap-4 sm:grid-cols-2">
+          <Detail label="Fecha de registro" value={formatDate(record.fecha)} />
+          <Detail label="Comunidad" value={record.comunidadDescripcion} />
+          <Detail label="Área de destino" value={record.areaDescripcion} />
+          <Detail label="Importancia" value={record.importanciaDescripcion} />
+          <Detail label="Estado" value={record.statusDescripcion} />
+          <Detail label="Fecha de terminación" value={formatDate(record.fechaTerminacion)} />
+        </dl>
+      </OficioSection>
+      <OficioSection title="Archivo y notas">
+        <dl className="col-span-full">
+          <Detail label="Observaciones" value={record.observaciones} />
+        </dl>
+        <div className="col-span-full">
+          <Attachment url={record.documento}>Ver documento adjunto</Attachment>
+        </div>
+      </OficioSection>
+      {record.respuestaCorrecta && (
+        <OficioSection title="Respuesta">
+          <div className="col-span-full space-y-3">
+            {response ? (
+              <>
+                <p className="whitespace-pre-wrap break-words">{response.mensaje}</p>
+                <Attachment url={response.documentoRespuesta}>Ver documento de respuesta</Attachment>
+              </>
+            ) : (
+              <button type="button" onClick={loadResponse} disabled={loading} className="municipal-secondary">
+                {loading ? "Cargando respuesta…" : "Ver respuesta"}
               </button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Modal para mostrar la respuesta */}
-{isResponseModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[50]">
-    <motion.div
-      className="bg-white rounded-lg w-full max-w-2xl p-6 relative flex"
-      initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 50 }}
-      transition={{
-        type: "spring",
-        stiffness: 100,
-        damping: 25,
-        duration: 0.5,
-      }}
-    >
-      {/* Botón de cerrar con ícono */}
-      <button
-        onClick={closeResponseModal}
-        className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 transition-transform transform hover:scale-110"
-      >
-        <X size={24} />
-      </button>
-
-      <div className="w-2/3 pr-6">
-        {/* Lado izquierdo para la respuesta */}
-        <h2 className="municipal-title mb-4 ">Respuesta</h2>
-        {loadingResponse ? (
-          <p>Cargando respuesta...</p>
-        ) : error ? (
-          <p className="text-red-600">{error}</p>
-        ) : responseDetails ? (
-          <div>
-            <p className="text-lg mb-4">
-              <span className="font-bold">Mensaje:</span> {responseDetails.mensaje}
-            </p>
-            {responseDetails.documentoRespuesta && (
-              <div className="mt-4">
-                <button
-                  onClick={() =>
-                    
-                    window.open(responseDetails.documentoRespuesta, "_blank")
-                  }
-                  className="px-4 py-2 bg-[#56242A] text-white rounded-lg hover:bg-[#691B31] transition duration-300 transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]"
-                >
-                  Ver Documento de Respuesta
-                </button>
-              </div>
             )}
+            {error && <p role="alert" className="text-red-800">{error}</p>}
           </div>
-        ) : (
-          <p>No se encontró una respuesta para este registro.</p>
-        )}
-      </div>
-
-      {/* Lado derecho para la imagen */}
-      <div className="w-1/3 flex justify-center">
-        <img
-          src="/images/Respuesta.png"
-          alt="Respuesta"
-          className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-        />
-      </div>
-    </motion.div>
-  </div>
-)}
-    </div>
+        </OficioSection>
+      )}
+    </OficioDialog>
   );
-};
-
-export default DetalleModal;
+}

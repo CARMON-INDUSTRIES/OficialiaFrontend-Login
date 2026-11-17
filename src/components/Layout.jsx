@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
+import NotificationSoundToggle from "./NotificationSoundToggle";
+import SystemTour, { restartSystemTour } from "./SystemTour";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   FaSignOutAlt,
+  FaQuestionCircle,
   FaHome,
   FaUsers,
   FaBars,
@@ -27,7 +30,9 @@ const Layout = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [tourVersion, setTourVersion] = useState(0);
   const [roles, setRoles] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(""); // Estado para almacenar el nombre del usuario
 
   useEffect(() => {
@@ -69,6 +74,7 @@ const Layout = ({ children }) => {
 
         if (user) {
           setRoles(user.roles || []);
+          setUserId(user.id);
         } else {
           console.warn("No se encontró al usuario en la lista de la API.");
           setRoles([]);
@@ -92,6 +98,15 @@ const Layout = ({ children }) => {
   const isUser = roles?.includes("User") ?? false;
   const isAdmin = roles?.includes("Admin") ?? false;
   const isSuperAdmin = roles?.includes("SuperAdmin") ?? false;
+
+  const tourRole = isSuperAdmin ? "SuperAdmin" : isAdmin ? "Admin" : isUser ? "User" : null;
+
+  const showTutorial = () => {
+    const firstPage = restartSystemTour(userId, tourRole);
+    setTourVersion((version) => version + 1);
+    setIsOpen(false);
+    if (pathname !== firstPage) router.push(firstPage);
+  };
 
   const links = [
     { href: "/consulta", label: "Registro de oficios", Icon: FaHome },
@@ -126,10 +141,22 @@ const Layout = ({ children }) => {
         </nav>
         <div className="municipal-account">
           <p><FaUserCircle aria-hidden="true" /> {userName || "Usuario"}</p>
+          {userId && tourRole && (
+            <button type="button" onClick={showTutorial}>
+              <FaQuestionCircle aria-hidden="true" /> Ver tutorial
+            </button>
+          )}
           <button type="button" onClick={handleLogout}><FaSignOutAlt aria-hidden="true" /> Cerrar sesión</button>
         </div>
       </aside>
-      <main className="municipal-content">{children}</main>
+      <main className="municipal-content">
+        {userId && tourRole && (
+          <SystemTour key={userId + ":" + tourRole + ":" + tourVersion} userId={userId} role={tourRole}
+            pathname={pathname} navigate={(path) => router.push(path)} />
+        )}
+        {children}
+      </main>
+      <NotificationSoundToggle />
     </div>
   );
 };

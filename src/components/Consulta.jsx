@@ -1,4 +1,5 @@
 "use client";
+import { playNotificationSound } from "@/lib/notificationSounds";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,8 @@ const Dashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [editData, setEditData] = useState({});
+  const [editError, setEditError] = useState("");
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [comunidades, setComunidades] = useState([]);
   const [areas, setAreas] = useState([]);
   const [importancias, setImportancias] = useState([]);
@@ -63,11 +66,6 @@ const [lastStatus, setLastStatus] = useState([]);
     }
   }, [showEditModal]);
 
-  useEffect(() => {
-    if (selectedRecord) {
-      setEditData(selectedRecord); // Carga los datos del registro seleccionado
-    }
-  }, [selectedRecord]);
 
   // Detectamos cambios en el status
   useEffect(() => {
@@ -77,8 +75,7 @@ const [lastStatus, setLastStatus] = useState([]);
     );
     
     if (hasStatusChanged) {
-      const audio = new Audio("/sounds/status.mp3"); // Reproduce el sonido
-      audio.play();
+      playNotificationSound("/sounds/status.mp3");
       setLastStatus(records.map((record) => record.statusDescripcion)); // Actualiza el último estado
     }
   }, [records, lastStatus]);
@@ -226,7 +223,7 @@ const [lastStatus, setLastStatus] = useState([]);
         );
         deleted.add(id);
       } catch {
-        // Keep this record selected so the user can retry.
+        // Se mantiene este campo para que el usuario pueda reintentar
       }
     }
     setRecords((previous) => previous.filter((record) => !deleted.has(record.id)));
@@ -257,16 +254,20 @@ const [lastStatus, setLastStatus] = useState([]);
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    if (isSavingEdit) return;
+    setIsSavingEdit(true);
+    setEditError("");
     const token = localStorage.getItem("token");
     try {
       await axios.put(
         `https://oficialialoginbackend.somee.com/api/Correspondencia/editar/${editData.id}`,
-        editData,
+        { ...editData, fechaTerminacion: editData.fechaTerminacion || null },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
+      closeEditModal();
       Swal.fire({
         icon: "success",
         title: "Registro actualizado",
@@ -274,15 +275,11 @@ const [lastStatus, setLastStatus] = useState([]);
         confirmButtonColor: "#691B31",
       });
 
-      setShowEditModal(false);
       fetchRecords(token); // Vuelve a cargar los registros actualizados
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "¡Error!",
-        text: "Hubo un problema al actualizar el registro.",
-        confirmButtonColor: "#691B31",
-      });
+    } catch {
+      setEditError("No se pudieron guardar los cambios. Inténtalo de nuevo.");
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -301,6 +298,8 @@ const [lastStatus, setLastStatus] = useState([]);
 
   const handleEdit = (record) => {
     setSelectedRecord(record);
+    setEditData(record);
+    setEditError("");
     setShowEditModal(true);
   };
 
@@ -524,17 +523,19 @@ const [lastStatus, setLastStatus] = useState([]);
 
           <ModalEditar
             showEditModal={showEditModal}
-            setShowEditModal={setShowEditModal}
+            closeModal={closeEditModal}
             selectedRecord={selectedRecord}
             comunidades={comunidades}
+            areas={areas}
             importancias={importancias}
             status={status}
-            handleChange={(e) =>
-              setEditData({ ...editData, [e.target.name]: e.target.value })
-            }
+            handleChange={handleChange}
+            setEditData={setEditData}
             handleEditSubmit={handleEditSubmit} // Ahora sí está definida
             editData={editData}
-            userRoles={userRole}  // Pasa los roles al modal
+            error={editError}
+            isSaving={isSavingEdit}
+            canEditIdentification={canDelete}
           />
         </div>
       </div>

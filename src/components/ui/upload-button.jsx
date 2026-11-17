@@ -40,12 +40,12 @@ export function UploadButton({
       {isPending ? (
         <>
           <Loader2 className="mr-2 size-4 animate-spin" />
-          Upload file
+          Subiendo archivo…
         </>
       ) : (
         <>
           <Upload className="mr-2 size-4" />
-          Upload file
+          Subir archivo
         </>
       )}
     </Button>)

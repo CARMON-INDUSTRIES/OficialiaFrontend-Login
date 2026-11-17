@@ -4,19 +4,24 @@ import { motion } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
 import Register from "./Register"; // Importa el formulario de registro
 
-const RegisterModal = ({ isOpen, onClose }) => {
+const RegisterModal = ({ isOpen, onClose, onUsersChanged }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 grid place-items-center p-4 z-50">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="bg-white p-6 rounded-xl border border-[#ded3cf] w-full max-w-lg relative"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Nuevo usuario"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-[#dedede] bg-white p-5 sm:p-6"
       >
         {/* Botón para cerrar */}
         <button
+          type="button"
+          aria-label="Cerrar registro de usuario"
           onClick={onClose}
           className="absolute top-4 right-4 text-[#621132] hover:text-gray-800"
         >
@@ -24,7 +29,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
         </button>
 
         {/* Componente de Registro */}
-        <Register />
+        <Register embedded onUsersChanged={onUsersChanged} />
       </motion.div>
     </div>
   );

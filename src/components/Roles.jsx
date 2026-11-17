@@ -7,30 +7,28 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa"; // Añadimos FaSearch
-import Image from "next/image";
+import { OficioDialog, OficioSection } from "./OficioDialog";
+import { fieldClass } from "./OficioFields";
 import { useRouter } from "next/navigation";
 import RegisterModal from "../components/RegisterModal"; // Asegúrate de que la ruta sea correcta
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const fondoModal = "/images/fondoModal.jpg";
+const api = "https://oficialialoginbackend.somee.com/api";
+const roleLabels = { Admin: "Administrador", SuperAdmin: "Superadministrador", User: "Usuario" };
 
 const Roles = () => {
   const router = useRouter();
   const [usuarios, setUsuarios] = useState([]);
-  const [filteredUsuarios, setFilteredUsuarios] = useState([]);
   // Estado para los usuarios filtrados
-  const [modalOpen, setModalOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [newRole, setNewRole] = useState("");
-  const { newUser, setNewUser } = useState({
-    area: "",
-    correo: "",
-    rol: "Usuario",
-  });
+  const [editUser, setEditUser] = useState({ correo: "", areaId: "", rol: "" });
+  const [areas, setAreas] = useState([]);
+  const [areaLoadError, setAreaLoadError] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false); // Estado para el mensaje de error
   const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
   const [rotateOnLoad, setRotateOnLoad] = useState(false); // Estado para controlar la animación en el
   const [roles, setRoles] = useState([]);
@@ -45,10 +43,6 @@ const Roles = () => {
   useEffect(() => {
     setRotateOnLoad(true);
     setTimeout(() => setRotateOnLoad(false), 1000);
-  }, []);
-
-  useEffect(() => {
-    fetchUsuarios();
   }, []);
 
   useEffect(() => {
@@ -83,6 +77,7 @@ const Roles = () => {
             return {
               ...user,
               nombreArea: areaResponse.data?.area || "No asignada",
+              areaId: areaResponse.data?.areaId,
             };
           } catch (error) {
             console.error(
@@ -94,7 +89,6 @@ const Roles = () => {
         })
       );
       setUsuarios(usuariosConArea);
-      setFilteredUsuarios(usuariosConArea);
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
     }
@@ -133,9 +127,6 @@ const Roles = () => {
 
         // Eliminar el usuario de los estados
         setUsuarios(usuarios.filter((user) => user.id !== userId));
-        setFilteredUsuarios(
-          filteredUsuarios.filter((user) => user.id !== userId)
-        );
 
         // Mostrar SweetAlert de éxito
         Swal.fire({
@@ -160,133 +151,79 @@ const Roles = () => {
     }
   };
 
-  const openModal = (user) => {
+  const openModal = async (user) => {
     setSelectedUser(user);
-    setNewRole(user.roles[0]);
-    setModalOpen(true);
-  };
-
-  const openAddUserModal = () => setAddUserModalOpen(true);
-
-  const closeAddUserModal = () => {
-    setAddUserModalOpen(false);
-    setNewUser({ userName: "", email: "", rol: "Usuario", password: "" });
-  };
-
-  const saveNewUser = async () => {
+    setEditUser({ correo: user.email ?? "", areaId: user.areaId ?? "", rol: "" });
+    setEditError("");
+    setAreaLoadError(false);
     try {
-      // Llamar a la API para registrar el nuevo usuario
-      const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Cuentas/RegistrarUsuario",
-        newUser
-      );
-
-      if (response.status === 200) {
-        // Una vez registrado el usuario, actualizamos la lista de usuarios
-        fetchUsuarios();
-        // Cerrar el modal de registro
-        closeAddUserModal();
-        Swal.fire({
-          title: "¡Usuario Registrado!",
-          text: "El usuario ha sido registrado exitosamente.",
-          icon: "success",
-          confirmButtonColor: "#691B31",
-          confirmButtonText: "Aceptar",
-        });
-      }
-    } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      Swal.fire({
-        title: "¡Error!",
-        text: "Ha ocurrido un error al registrar el usuario. Intenta nuevamente.",
-        icon: "error",
-        confirmButtonColor: "#691B31",
-        confirmButtonText: "Cerrar",
-      });
+      const { data } = await axios.get(api + "/Correspondencia/obtener-areas");
+      setAreas(data);
+    } catch {
+      setAreaLoadError(true);
     }
   };
 
   const closeModal = () => {
-    setModalOpen(false);
-    setSelectedUser(null);
+    if (!saving) setSelectedUser(null);
   };
 
-  const saveChanges = async () => {
-    if (!selectedUser) return;
-    try {
-      const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Roles/AsignarRol",
-        {
-          id: selectedUser.id,
-          userName: selectedUser.userName,
-          Role: newRole,
-        }
-      );
+  const saveChanges = async (event) => {
+    event.preventDefault();
+    if (!selectedUser || saving) return;
 
-      if (response.status === 200) {
-        setUsuarios((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === selectedUser.id ? { ...user, roles: newRole } : user
-          )
-        );
-        setFilteredUsuarios((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === selectedUser.id ? { ...user, roles: newRole } : user
-          )
-        );
-
-        setShowConfirmation(true);
-        setTimeout(() => setShowConfirmation(false), 2000);
+    const changes = {};
+    const correo = editUser.correo.trim();
+    if (correo !== (selectedUser.email ?? "")) {
+      if (!correo) {
+        setEditError("Ingresa un correo electrónico.");
+        return;
       }
-    } catch (error) {
-      console.error("Error al actualizar el rol:", error);
-      setShowErrorMessage(true);
-      setTimeout(() => setShowErrorMessage(false), 2000);
+      changes.correo = correo;
     }
-    closeModal();
-  };
+    if (editUser.areaId && Number(editUser.areaId) !== selectedUser.areaId) {
+      changes.areaId = Number(editUser.areaId);
+    }
+    if (editUser.rol) changes.rol = editUser.rol;
+    if (!Object.keys(changes).length) {
+      closeModal();
+      return;
+    }
 
-  const quitarRol = async (usuarioNombre, rolAEliminar) => {
+    setSaving(true);
+    setEditError("");
     try {
-      const response = await axios.post(
-        "https://oficialialoginbackend.somee.com/api/Roles/QuitarRol",
-        {
-          userName: usuarioNombre,
-          role: rolAEliminar,
-        }
-      );
-
-      // Mostrar mensaje de éxito con SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "Rol eliminado correctamente",
-        text: response.data.message || "El rol se ha eliminado con éxito.",
+      const token = localStorage.getItem("token");
+      await axios.put(api + "/Roles/usuarios/" + encodeURIComponent(selectedUser.id), changes, {
+        headers: { Authorization: "Bearer " + token },
       });
-
-      return response.data;
+      setUsuarios((previous) => previous.map((user) => user.id === selectedUser.id ? {
+        ...user,
+        email: changes.correo ?? user.email,
+        roles: changes.rol ? [changes.rol] : user.roles,
+        areaId: changes.areaId ?? user.areaId,
+        nombreArea: areas.find((area) => area.idArea === changes.areaId)?.nombreArea ?? user.nombreArea,
+      } : user));
+      setSelectedUser(null);
+      fetchUsuarios();
+      setShowConfirmation(true);
+      setTimeout(() => setShowConfirmation(false), 2000);
     } catch (error) {
-      // Mostrar mensaje de error con SweetAlert
-      Swal.fire({
-        icon: "error",
-        title: "Error al eliminar rol",
-        text: error.response?.data || error.message,
-      });
+      const code = error.response?.status;
+      setEditError(code === 401 || code === 403
+        ? "Tu sesión venció o no tienes permiso para editar usuarios."
+        : error.response?.data?.mensaje || "No se pudieron guardar los cambios. Inténtalo de nuevo.");
+    } finally {
+      setSaving(false);
     }
   };
 
-  // Función de filtro
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    const filtered = usuarios.filter(
-      (user) =>
-        user.userName.toLowerCase().includes(value.toLowerCase()) ||
-        user.nombreArea.toLowerCase().includes(value.toLowerCase()) ||
-        (user.roles[0] &&
-          user.roles[0].toLowerCase().includes(value.toLowerCase()))
-    );
-    setFilteredUsuarios(filtered);
-  };
+  const query = searchTerm.trim().toLowerCase();
+  const filteredUsuarios = usuarios.filter((user) =>
+    [user.userName, user.email, user.nombreArea, ...user.roles, ...user.roles.map((role) => roleLabels[role])].some(
+      (value) => value?.toLowerCase().includes(query)
+    )
+  );
 
   return (
     <div
@@ -309,7 +246,7 @@ const Roles = () => {
             <input
               type="text"
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Buscar por área o rol"
               className="p-2 border border-[#621132] rounded-md focus:outline-none"
             />
@@ -340,12 +277,13 @@ const Roles = () => {
                     {user.email}
                   </td>
                   <td className="px-4 py-2 text-gray-700 text-lg">
-                    {user.roles[0]}
+                    {user.roles.map((role) => roleLabels[role] ?? role).join(", ")}
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex space-x-2">
                       <button
                         className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:underline transition duration-200 transform hover:scale-105 focus:ring-2"
+                        aria-label={"Editar a " + user.userName}
                         onClick={() => openModal(user)}
                       >
                         <FaEdit />
@@ -369,7 +307,7 @@ const Roles = () => {
       {/* 🔹 Botón flotante para agregar usuario */}
       <button
         onClick={() => setIsRegisterOpen(true)}
-        className="fixed bottom-6 right-6 bg-[#621132] text-white p-4 rounded-full shadow-lg hover:bg-[#891b45] transition transform hover:scale-110"
+        className="fixed bottom-24 right-6 bg-[#621132] text-white p-4 rounded-full shadow-lg hover:bg-[#891b45] transition transform hover:scale-110"
       >
         <FaPlus className="text-2xl" />
       </button>
@@ -377,87 +315,62 @@ const Roles = () => {
       {/* Modal de Registro */}
       <RegisterModal
         isOpen={isRegisterOpen}
+        onUsersChanged={fetchUsuarios}
         onClose={() => setIsRegisterOpen(false)}
       />
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 transition-opacity duration-300 z-[50]">
-          <div className="bg-white rounded-2xl shadow-2xl w-[500px] transform transition-all scale-105 z-[50]">
-            <Image
-              src={fondoModal}
-              alt="Fondo Modal"
-              width={500}
-              height={120}
-              className="rounded-t-2xl w-full h-28 object-cover"
-            />
-
-            <div className="p-6">
-              <h2 className="text-2xl font-serif font-bold text-[#621132] text-center">
-                EDITAR ROL
-              </h2>
-              <p className="text-gray-700 text-lg mt-2">
-                <strong>Nombre de usuario:</strong> {selectedUser?.userName}
-              </p>
-              <p className="text-gray-700 text-lg mt-1">
-                <strong>Correo:</strong> {selectedUser?.email}
-              </p>
-
-              <div className="mt-6">
-                <label className="block font-semibold text-lg mb-2">
-                  Cambiar rol:
+      {selectedUser && (
+        <OficioDialog title="Editar usuario" onClose={closeModal} actions={
+          <>
+            <button type="button" onClick={closeModal} disabled={saving} className="municipal-secondary">
+              Cancelar
+            </button>
+            <button type="submit" form="editar-usuario" disabled={saving} className="municipal-primary disabled:opacity-60">
+              {saving ? "Guardando…" : "Guardar cambios"}
+            </button>
+          </>
+        }>
+          <form id="editar-usuario" onSubmit={saveChanges}>
+            <fieldset disabled={saving}>
+              <OficioSection title="Datos de la cuenta">
+                <div>
+                  <p className="mb-1 font-semibold">Nombre de usuario</p>
+                  <p className="break-words">{selectedUser.userName}</p>
+                </div>
+                <label className="grid min-w-0 gap-1 font-semibold">
+                  Correo electrónico
+                  <input type="email" autoComplete="email" maxLength={256} className={fieldClass + " font-normal"}
+                    value={editUser.correo}
+                    onChange={(event) => setEditUser({ ...editUser, correo: event.target.value })} />
                 </label>
-                <select
-                  value={newRole}
-                  onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full p-2 border rounded-lg border-[#691B31] focus:outline-none focus:ring-2 focus:ring-[#691B31] transition-all"
-                >
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.name}>
-                      {role.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-4 mt-6">
-                {/* Mostrar el botón para quitar rol solo si el usuario tiene el rol Admin o SuperAdmin */}
-                {selectedUser?.roles.includes("Admin") && (
-                  <button
-                    className="bg-yellow-500 text-white px-2 py-2 rounded-lg hover:bg-yellow-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-yellow-600"
-                    onClick={() => quitarRol(selectedUser.userName, "Admin")}
-                  >
-                    Quitar Admin
-                  </button>
-                )}
-
-                {selectedUser?.roles.includes("SuperAdmin") && (
-                  <button
-                    className="bg-orange-500 text-white px-2 py-2 rounded-lg hover:bg-orange-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-orange-600"
-                    onClick={() =>
-                      quitarRol(selectedUser.userName, "SuperAdmin")
-                    }
-                  >
-                    Quitar SuperAdmin
-                  </button>
-                )}
-
-                <button
-                  className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-green-500"
-                  onClick={saveChanges}
-                >
-                  Guardar Cambios
-                </button>
-                <button
-                  className="bg-red-400 text-white px-5 py-2 rounded-lg hover:bg-red-500 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-500"
-                  onClick={closeModal}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+              </OficioSection>
+              <OficioSection title="Área y permisos">
+                <label className="grid min-w-0 content-start gap-1 font-semibold">
+                  Área
+                  <select value={editUser.areaId} className={fieldClass + " font-normal"} disabled={areaLoadError}
+                    onChange={(event) => setEditUser({ ...editUser, areaId: event.target.value })}>
+                    <option value="" disabled>{selectedUser.nombreArea}</option>
+                    {selectedUser.areaId && !areas.some((area) => area.idArea === selectedUser.areaId) && (
+                      <option value={selectedUser.areaId}>{selectedUser.nombreArea}</option>
+                    )}
+                    {areas.map((area) => <option key={area.idArea} value={area.idArea}>{area.nombreArea}</option>)}
+                  </select>
+                </label>
+                <label className="grid min-w-0 content-start gap-1 font-semibold">
+                  Rol
+                  <select value={editUser.rol} className={fieldClass + " font-normal"}
+                    onChange={(event) => setEditUser({ ...editUser, rol: event.target.value })}>
+                    <option value="">Conservar {selectedUser.roles.map((role) => roleLabels[role] ?? role).join(", ") || "sin rol"}</option>
+                    {roles.map((role) => <option key={role.id} value={role.name}>{roleLabels[role.name] ?? role.name}</option>)}
+                  </select>
+                  <span className="text-sm font-normal">Elegir otro rol reemplaza los roles anteriores.</span>
+                </label>
+                {areaLoadError && <p role="alert" className="text-sm text-red-800 sm:col-span-2">No se pudieron cargar las áreas.</p>}
+              </OficioSection>
+            </fieldset>
+            {editError && <p role="alert" className="pb-4 text-red-800">{editError}</p>}
+          </form>
+        </OficioDialog>
       )}
 
       {/* Pantalla de confirmación */}
@@ -465,13 +378,6 @@ const Roles = () => {
         <div className="fixed top-20 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slideIn">
           <FaCheckCircle className="text-white text-2xl" />
           <span className="text-lg">Cambios guardados correctamente</span>
-        </div>
-      )}
-
-      {/* Pantalla de error */}
-      {showErrorMessage && (
-        <div className="fixed top-20 right-5 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slideIn">
-          <span className="text-lg">Ha ocurrido un error...</span>
         </div>
       )}
 

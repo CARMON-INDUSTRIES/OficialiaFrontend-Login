@@ -2,12 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-export const Register = () => {
+export const Register = ({ embedded = false, onUsersChanged }) => {
   const [userName, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +19,6 @@ export const Register = () => {
     setIsAreaModalOpen(false); // Asegura que esta variable de estado exista en tu componente
   };
   
-  const router = useRouter();
-
   // Obtener las áreas disponibles
   useEffect(() => {
     const fetchAreas = async () => {
@@ -57,7 +53,8 @@ export const Register = () => {
       const data = await response.json();
       
 
-      setUserId(data.userId); // Guarda el userId en el estado
+      setUserId(data.userId);
+      onUsersChanged?.();
   
 
       setError("");
@@ -108,7 +105,8 @@ export const Register = () => {
         confirmButtonText: "Aceptar",
       });
 
-      setIsAreaModalOpen(false); // Cierra el modal
+      setIsAreaModalOpen(false);
+      onUsersChanged?.();
     } catch (error) {
       console.error("Error al asignar el área:", error);
       Swal.fire({
@@ -121,27 +119,14 @@ export const Register = () => {
     }
   };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get("https://oficialialoginbackend.somee.com/api/Usuarios");
-      // Actualiza el estado de la lista de usuarios con la respuesta
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error al obtener usuarios:", error);
-    }
-  };
-  
-  // Llamar a fetchUsers después de registrar el usuario
-  fetchUsers();
-   
 
   return (
-    <div className="municipal-public">
+    <div className={embedded ? undefined : "municipal-public"}>
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={embedded ? false : { opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="municipal-panel w-full max-w-md"
+        className={embedded ? "w-full" : "municipal-panel w-full max-w-md"}
       >
         <div className="text-center sm:text-left">
           <h1 className="municipal-title">
@@ -208,12 +193,12 @@ export const Register = () => {
 
       {/* Modal para asignar área */}
 {isAreaModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div className="fixed inset-0 bg-black bg-opacity-50 grid place-items-center p-4 z-50">
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative"
+      className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-[#dedede] bg-white p-6"
     >
       {/* Botón de cierre (tache) */}
       <button

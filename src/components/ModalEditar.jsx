@@ -1,329 +1,103 @@
 "use client";
-import { FaEdit } from "react-icons/fa";
-import Swal from "sweetalert2";
-import { motion } from "framer-motion"; // Importa motion
 
-const ModalEditar = ({
-  showEditModal,
-  setShowEditModal,
-  selectedRecord,
-  comunidades,
-  importancias,
-  status,
-  handleChange,
-  handleEditSubmit,
-  editData,
-  userRoles, // Añadimos currentUserRoles
- 
-}) => {
-  
-  if (!showEditModal) return null;
+import Select from "react-select";
+import { fieldClass, selectStyles } from "./OficioFields";
+import { OficioDialog, OficioSection } from "./OficioDialog";
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+export default function ModalEditar({
+  showEditModal, closeModal, selectedRecord, comunidades, areas, importancias, status,
+  handleChange, setEditData, handleEditSubmit, editData, canEditIdentification, error, isSaving,
+}) {
+  if (!showEditModal || !selectedRecord) return null;
+
+  const input = (name, label, { type = "text", readOnly = false, required = false, wide = false } = {}) => (
+    <label className={"grid min-w-0 gap-1 font-semibold" + (wide ? " sm:col-span-2" : "")}>
+          {label}
+          <input
+            name={name}
+            type={type}
+            readOnly={readOnly}
+            required={required}
+            value={type === "date" ? editData[name]?.slice(0, 10) ?? "" : editData[name] ?? ""}
+            onChange={handleChange}
+            className={fieldClass + " font-normal read-only:bg-[#f5f5f5]"}
+          />
+    </label>
+  );
+
+  const catalog = (name, label, options, description, searchable = false) => {
+    const current = name === "area" ? editData.area?.[0] : editData[name];
+    const available = current && !options.some(({ value }) => String(value) === String(current))
+      ? [{ value: current, label: description || String(current) }, ...options]
+      : options;
+    const selected = available.find(({ value }) => String(value) === String(current)) ?? null;
+    const id = "editar-" + name;
+
+    return (
+      <div className="min-w-0">
+        <label htmlFor={id} className="mb-1 block font-semibold">{label}</label>
+        {searchable ? (
+          <Select
+            inputId={id}
+            options={available}
+            value={selected}
+            onChange={(option) => setEditData((previous) => ({
+              ...previous,
+              [name]: name === "area" ? [option.value] : option.value,
+            }))}
+            placeholder="Seleccionar o buscar"
+            noOptionsMessage={() => "No se encontraron opciones"}
+            screenReaderStatus={({ count }) => count === 1 ? "1 opción disponible" : count + " opciones disponibles"}
+            styles={selectStyles}
+            required
+          />
+        ) : (
+          <select id={id} name={name} value={current ?? ""} onChange={handleChange} className={fieldClass} required>
+            <option value="">Seleccionar</option>
+            {available.map(({ value, label: text }) => <option key={value} value={value}>{text}</option>)}
+          </select>
+        )}
+      </div>
+    );
   };
-  
-// Verifica si el usuario tiene el rol de Admin o SuperAdmin
-const isAdminOrSuperAdmin = userRoles.some(role => role === "Admin" || role === "SuperAdmin");
 
   return (
-    showEditModal &&
-    selectedRecord && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
-        {/* Aplica la animación al div que contiene el modal */}
-        <motion.div
-          className=" bg-[#F9F4DD] rounded-lg w-full max-w-3xl p-6 shadow-xl relative"
-          initial={{ opacity: 0, y: -50 }} // Empieza arriba
-          animate={{ opacity: 1, y: 0 }} // Mueve hacia la posición original
-          exit={{ opacity: 0, y: 50 }} // Cuando se cierre, mueve hacia abajo
-          transition={{
-            type: "spring", // Para el efecto de rebote
-            stiffness: 100, // Qué tan fuerte será el rebote
-            damping: 15, // Cuánto se desacelera
-            duration: 0.5, // Duración total
-          }}
-        >
-          {/* Encabezado con animación */}
-          <div className="flex justify-between items-center">
-            <h2 className="municipal-title ">
-              Editar Registro
-            </h2>
-            <div className="text-[#000000] text-3xl animate-spin duration-2000 ease-in-out">
-              <FaEdit />
-            </div>
-          </div>
-
-          {/* Formulario */}
-          <form onSubmit={(e) => handleEditSubmit(e, editData)}>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              {/* Mostrar solo para Admin o SuperAdmin */}
-              {isAdminOrSuperAdmin && (
-                <>
-              <div>
-                <label className="block text-gray-700 font-bold">Folio</label>
-                <input
-                  type="text"
-                  className="input-field"
-                  value={selectedRecord.folio}
-                  readOnly
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-bold">Fecha</label>
-                <input
-                  type="date"
-                  name="fecha"
-                  className="input-field"
-                  value={formatDate(editData.fecha || selectedRecord.fecha).split('/').reverse().join('-')}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Dependencia
-                </label>
-                <input
-                  type="text"
-                  name="dependencia"
-                  className="input-field"
-                  value={editData.dependencia}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-              {/* Comunidad - Dropdown Compacto */}
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Comunidad
-                </label>
-                <select
-                  name="comunidad"
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#BC995B] bg-white"
-                  value={editData.comunidad || selectedRecord.idComunidad}
-                  
-                >
-                  <option value={selectedRecord.idComunidad} hidden>
-                    {selectedRecord.comunidadDescripcion}{" "}
-                    {/* Muestra la comunidad actual */}
-                  </option>
-                  {comunidades.map((com) => (
-                    <option key={com.idComunidad} value={com.idComunidad}>
-                      {com.nombreComunidad}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Remitente
-                </label>
-                <input
-                  type="text"
-                  name="remitente"
-                  className="input-field"
-                  value={editData.remitente}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Cargo Remitente
-                </label>
-                <input
-                  type="text"
-                  name="cargoRemitente"
-                  className="input-field"
-                  value={editData.cargoRemitente}
-                  onChange={handleChange}
-                 
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-bold">Asunto</label>
-                <input
-                  type="text"
-                  name="asunto"
-                  className="input-field"
-                  value={editData.asunto}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Destinatario
-                </label>
-                <input
-                  type="text"
-                  name="destinatario"
-                  className="input-field"
-                  value={editData.destinatario}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Cargo Destinatario
-                </label>
-                <input
-                  type="text"
-                  name="cargoDestinatario"
-                  className="input-field"
-                  value={editData.cargoDestinatario}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-              {/* Área - Dropdown */}
-              <div>
-                <label className="block text-gray-700 font-bold">Área</label>
-                <input
-                  type="text"
-                  name="area"
-                  className="input-field"
-                  value={selectedRecord.areaDescripcion}
-                  
-                />
-              </div>
-              {/* Importancia - Dropdown */}
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Importancia
-                </label>
-                <select
-                  name="importancia"
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#BC995B] bg-white"
-                  value={editData.importancia || selectedRecord.idImportancia}
-                  
-                >
-                  <option value={selectedRecord.idImportancia} hidden>
-                    {selectedRecord.importanciaDescripcion}{" "}
-                    {/* Muestra la comunidad actual */}
-                  </option>
-                  {importancias.map((com) => (
-                    <option key={com.idImportancia} value={com.idImportancia}>
-                      {com.nivel}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-gray-700 font-bold">Fecha de Terminación: </label>
-                <input
-                  type="date"
-                  name="fechaTerminacion"
-                  className="input-field"
-                  value={formatDate(editData.fechaTerminacion || selectedRecord.fechaTerminacion).split('/').reverse().join('-')}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-              </>
-            )}
-
-              {/* Status - Dropdown */}
-              <div>
-                <label className="block text-gray-700 font-bold">Status</label>
-                <select
-                  name="status"
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded border-[#691B31] bg-white"
-                  value={editData.status || selectedRecord.idStatus}
-                  
-                >
-                  <option value={selectedRecord.idImportancia} hidden>
-                    {selectedRecord.statusDescripcion}{" "}
-                    {/* Muestra la comunidad actual */}
-                  </option>
-                  {status.map((com) => (
-                    <option key={com.idStatus} value={com.idStatus}>
-                      {com.estado}
-                    </option>
-                  ))}
-                </select>
-              </div> 
-              <div>
-                <label className="block text-gray-700 font-bold">
-                  Observaciones
-                </label>
-                <input
-                  type="text"
-                  name="observaciones"
-                  className="input-field"
-                  value={editData.observaciones}
-                  onChange={handleChange}
-                  
-                />
-              </div>
-            </div>
-
-            {/* Botones */}
-            <div className="flex justify-end mt-6">
-              <button
-                type="button"
-                className="bg-red-500 mr-2 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition duration-200 transform hover:scale-105 focus:ring-2 focus:ring-red-600"
-                onClick={() => setShowEditModal(false)}
-              >
-                Cancelar
-              </button>
-              <button type="submit" className="btn-gold transform hover:scale-105 focus:ring-2 focus:ring-[#691B31]">
-                Guardar Cambios
-              </button>
-            </div>
-          </form>
-        </motion.div>
-
-        {/* Estilos JSX */}
-        <style jsx>{`
-          .input-field {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #bc995b;
-            border-radius: 8px;
-            outline: none;
-            transition: 0.3s;
-          }
-          .input-field:focus {
-            border-color: #a87f50;
-            box-shadow: 0 0 5px rgba(188, 153, 91, 0.5);
-          }
-          .btn-red {
-            background-color: red;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: 0.3s;
-          }
-          .btn-red:hover {
-            background-color: darkred;
-          }
-          .btn-gold {
-            background-color: #bc995b;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: 0.3s;
-          }
-          .btn-gold:hover {
-            background-color: #a87f50;
-          }
-        `}</style>
-      </div>
-    )
+    <OficioDialog title="Editar oficio" onClose={() => { if (!isSaving) closeModal(); }} actions={
+      <>
+        <button type="button" onClick={closeModal} disabled={isSaving} className="municipal-secondary">Cancelar</button>
+        <button type="submit" form="editar-oficio" disabled={isSaving} className="municipal-primary disabled:opacity-60">{isSaving ? "Guardando…" : "Guardar cambios"}</button>
+      </>
+    }>
+      <form id="editar-oficio" onSubmit={handleEditSubmit}>
+        {canEditIdentification && (
+          <OficioSection title="Identificación del oficio">
+            {input("folio", "Folio", { readOnly: true })}
+            {input("dependencia", "Dependencia")}
+            {input("destinatario", "Destinatario", { required: true })}
+            {input("asunto", "Asunto", { wide: true, required: true })}
+          </OficioSection>
+        )}
+        <OficioSection title="Datos de registro">
+          {canEditIdentification && (
+            <>
+              {input("fecha", "Fecha de registro", { type: "date", required: true })}
+              {catalog("comunidad", "Comunidad", comunidades.map((item) => ({ value: item.idComunidad, label: item.nombreComunidad })), selectedRecord.comunidadDescripcion, true)}
+              {catalog("area", "Área de destino", areas.map((item) => ({ value: item.idArea, label: item.nombreArea })), selectedRecord.areaDescripcion, true)}
+              {catalog("importancia", "Importancia", importancias.map((item) => ({ value: item.idImportancia, label: item.nivel })), selectedRecord.importanciaDescripcion)}
+            </>
+          )}
+          {catalog("status", "Estado", status.map((item) => ({ value: item.idStatus, label: item.estado })), selectedRecord.statusDescripcion)}
+          {canEditIdentification && input("fechaTerminacion", "Fecha de terminación", { type: "date" })}
+        </OficioSection>
+        <OficioSection title="Archivo y notas">
+          <label className="grid gap-1 font-semibold sm:col-span-2">
+            Observaciones
+            <textarea name="observaciones" value={editData.observaciones ?? ""} onChange={handleChange}
+              className={fieldClass + " min-h-24 resize-y font-normal"} />
+          </label>
+        </OficioSection>
+        {error && <p role="alert" className="pb-4 text-red-800">{error}</p>}
+      </form>
+    </OficioDialog>
   );
-};
-
-export default ModalEditar;
+}

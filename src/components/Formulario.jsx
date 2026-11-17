@@ -5,21 +5,7 @@ import Select from "react-select";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const fieldClass = "min-h-11 w-full rounded-md border border-[#b8b8b8] bg-white px-3 py-2.5 text-base text-[#262626] placeholder:text-[#716460] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#691B31]";
-const buttonClass = "min-h-11 rounded-md px-5 py-2.5 text-base font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#691B31]";
-
-const selectStyles = {
-  control: (base, { isFocused }) => ({
-    ...base,
-    minHeight: 44,
-    borderRadius: 6,
-    borderColor: "#b8b8b8",
-    boxShadow: "none",
-    outline: isFocused ? "2px solid #691B31" : undefined,
-    outlineOffset: 2,
-  }),
-  placeholder: (base) => ({ ...base, color: "#716460" }),
-};
+import { buttonClass, fieldClass, selectStyles } from "./OficioFields";
 
 const Formulario = () => {
   const router = useRouter();
@@ -189,9 +175,9 @@ const Formulario = () => {
 
   return (
     <div className="mx-auto w-full max-w-4xl rounded-xl border border-[#dedede] bg-[#ffffff] text-[#262626]">
-      <header className="rounded-t-xl border-b border-[#BC995B] bg-[#f5f5f5] px-5 py-6 sm:px-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-[#691B31] sm:text-3xl">Registrar oficio</h1>
-        <p className="mt-1 text-base text-[#594b44]">Recepción de oficios · Secretaría Municipal</p>
+      <header className="rounded-t-xl border-b border-[#BC995B] bg-[#691B31] px-5 py-6 sm:px-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Registrar oficio</h1>
+        <p className="mt-1 text-base text-white/90">Recepción de oficios · Secretaría Municipal</p>
       </header>
       <form onSubmit={handleSubmit} className="px-5 sm:px-8">
         <section className="border-b border-[#dedede] py-6">
