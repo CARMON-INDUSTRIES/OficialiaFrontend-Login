@@ -13,6 +13,7 @@ import {
   FaBars,
   FaTimes,
   FaInbox,
+  FaClipboardList,
   FaUserCircle,
 } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
@@ -112,7 +113,10 @@ const Layout = ({ children }) => {
   const links = [
     { href: "/consulta", label: "Registro de oficios", Icon: FaHome },
     ...((isAdmin || isSuperAdmin)
-      ? [{ href: "/formulario", label: "Nuevo registro", Icon: FiFilePlus }]
+      ? [
+          { href: "/formulario", label: "Nuevo registro", Icon: FiFilePlus },
+          { href: "/seguimiento", label: "Seguimiento de oficios", Icon: FaClipboardList },
+        ]
       : []),
     { href: "/buzon", label: "Buzón", Icon: FaInbox },
     ...(isSuperAdmin ? [{ href: "/roles", label: "Roles y usuarios", Icon: FaUsers }] : []),

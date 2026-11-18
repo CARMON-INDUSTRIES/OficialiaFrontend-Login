@@ -1,15 +1,17 @@
 "use client";
 import { apiBase } from "@/lib/apiBase";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 
 import { buttonClass, fieldClass, selectStyles } from "./OficioFields";
 
 const Formulario = () => {
   const router = useRouter();
+  const dependenciaEdited = useRef(false);
   const [areasDestino, setAreasDestino] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const [importancia, setImportancias] = useState([]);
@@ -72,6 +74,43 @@ const Formulario = () => {
     fetchData();
   }, [router]); 
   
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const controller = new AbortController();
+
+    const loadDependencia = async () => {
+      try {
+        const decoded = jwtDecode(token);
+        const userName = decoded.userName ||
+          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        if (!userName) return;
+
+        const config = {
+          headers: { Authorization: "Bearer " + token },
+          signal: controller.signal,
+        };
+        const { data: user } = await axios.get(
+          apiBase + "/Cuentas/GetUserId/" + encodeURIComponent(userName), config
+        );
+        if (!user.userId) return;
+
+        const { data } = await axios.get(
+          apiBase + "/UsuarioArea/GetAreaByUser/" + encodeURIComponent(user.userId),
+          { ...config, validateStatus: (status) => status === 200 || status === 404 }
+        );
+        if (controller.signal.aborted || dependenciaEdited.current || !data?.area) return;
+
+        setFormData((previous) => ({ ...previous, dependencia: data.area }));
+      } catch (error) {
+        if (!controller.signal.aborted) console.error("No se pudo cargar la dependencia del usuario.", error);
+      }
+    };
+
+    loadDependencia();
+    return () => controller.abort();
+  }, []);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -205,7 +244,11 @@ const Formulario = () => {
                 type="text"
                 id="dependencia"
                 name="dependencia"
-                onChange={handleChange}
+                value={formData.dependencia}
+                onChange={(event) => {
+                  dependenciaEdited.current = true;
+                  handleChange(event);
+                }}
                 placeholder="Dependencia que emite el oficio"
                 className={fieldClass}
               />
