@@ -15,7 +15,11 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [filterDate, setFilterDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [communityFilter, setCommunityFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [exporting, setExporting] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [busy, setBusy] = useState(false);
   const [records, setRecords] = useState([]);
@@ -325,10 +329,31 @@ const [lastStatus, setLastStatus] = useState([]);
     });
   };
 
+  const communityOptions = [...new Map(records.filter((record) => record.comunidad != null)
+    .map((record) => [String(record.comunidad), record.comunidadDescripcion || "Comunidad " + record.comunidad])).entries()];
+  const statusOptions = [...new Map(records.filter((record) => record.status != null)
+    .map((record) => [String(record.status), record.statusDescripcion || "Estado " + record.status])).entries()];
+
+  const exportExcel = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const { exportOficios } = await import("@/lib/exportOficios");
+      await exportOficios(filteredRecords);
+    } catch {
+      Swal.fire({ icon: "error", title: "No se pudo generar el Excel", text: "Inténtalo de nuevo." });
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const searchText = search.trim().toLowerCase();
   const filteredRecords = records.filter((record) => {
     const date = record.fecha?.slice(0, 10) || "";
-    return (!filterDate || date === filterDate)
+    return (!startDate || (date && date >= startDate))
+      && (!endDate || (date && date <= endDate))
+      && (!communityFilter || String(record.comunidad) === communityFilter)
+      && (!statusFilter || String(record.status) === statusFilter)
       && [
         record.folio, record.fecha && formatDate(record.fecha), record.dependencia,
         record.asunto, record.areaDescripcion, record.statusDescripcion, record.comunidadDescripcion,
@@ -381,24 +406,43 @@ const [lastStatus, setLastStatus] = useState([]);
               />
             </label>
             <label className="grid gap-1 text-sm font-semibold">
-              Fecha de registro (opcional)
-              <input
-                type="date"
-                value={filterDate}
+              Desde (opcional)
+              <input type="date" value={startDate} max={endDate || undefined}
                 className="min-h-11 rounded-md border bg-white px-3 font-normal"
-                onChange={(event) => {
-                  setFilterDate(event.target.value);
-                  setSelectedIds([]);
-                }}
-              />
+                onChange={(event) => { setStartDate(event.target.value); setSelectedIds([]); }} />
             </label>
-            {(search || filterDate) && (
+            <label className="grid gap-1 text-sm font-semibold">
+              Hasta (opcional)
+              <input type="date" value={endDate} min={startDate || undefined}
+                className="min-h-11 rounded-md border bg-white px-3 font-normal"
+                onChange={(event) => { setEndDate(event.target.value); setSelectedIds([]); }} />
+            </label>
+            <label className="grid gap-1 text-sm font-semibold">
+              Comunidad
+              <select value={communityFilter} className="min-h-11 rounded-md border bg-white px-3 font-normal"
+                onChange={(event) => { setCommunityFilter(event.target.value); setSelectedIds([]); }}>
+                <option value="">Todas las comunidades</option>
+                {communityOptions.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+              </select>
+            </label>
+            <label className="grid gap-1 text-sm font-semibold">
+              Status
+              <select value={statusFilter} className="min-h-11 rounded-md border bg-white px-3 font-normal"
+                onChange={(event) => { setStatusFilter(event.target.value); setSelectedIds([]); }}>
+                <option value="">Todos los status</option>
+                {statusOptions.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+              </select>
+            </label>
+            {(search || startDate || endDate || communityFilter || statusFilter) && (
               <button
                 type="button"
                 className="municipal-secondary"
                 onClick={() => {
                   setSearch("");
-                  setFilterDate("");
+                  setStartDate("");
+                  setEndDate("");
+                  setCommunityFilter("");
+                  setStatusFilter("");
                   setSelectedIds([]);
                 }}
               >
@@ -410,6 +454,11 @@ const [lastStatus, setLastStatus] = useState([]);
             <p className="mr-auto text-sm" role="status">
               {filteredRecords.length} oficios · {selectedRecords.length} seleccionados
             </p>
+            <button type="button" className="municipal-secondary disabled:opacity-50"
+              disabled={exporting || !filteredRecords.length || (startDate && endDate && startDate > endDate)}
+              onClick={exportExcel}>
+              {exporting ? "Generando Excel…" : "Descargar Excel"}
+            </button>
             <button type="button" className="municipal-secondary disabled:opacity-50"
               disabled={busy || !selectedRecords.length} onClick={() => downloadRecords(selectedRecords)}>
               Descargar PDF{selectedRecords.length > 1 ? "s (ZIP)" : ""}
@@ -439,7 +488,7 @@ const [lastStatus, setLastStatus] = useState([]);
                   <th className="py-3 px-6 text-left">Asunto</th>
                   <th className="py-3 px-6 text-left">Comunidad</th>
                   <th className="py-3 px-6 text-left">Área de destino</th>
-                  <th className="py-3 px-6 text-left">Estado</th>
+                  <th className="py-3 px-6 text-left">Status</th>
                   <th className="py-3 px-6 text-center">Acciones</th>
                 </tr>
               </thead>
