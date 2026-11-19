@@ -124,7 +124,7 @@ export default function Buzon() {
       case "leido":
         return "bg-orange-200";
       case "en proceso":
-        return "bg-red-200";
+        return "bg-red-400";
       case "finalizado":
         return "bg-green-200";
       default:

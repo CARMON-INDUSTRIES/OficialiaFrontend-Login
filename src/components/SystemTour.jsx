@@ -33,10 +33,21 @@ const usuarios = {
   text: "Usa el botón + para crear una cuenta. Desde el icono de edición puedes actualizar su correo, área y rol.",
 };
 
+const tema = {
+  path: "/consulta",
+  title: "Cambia entre modo claro y oscuro",
+  text: "El botón de la esquina superior derecha alterna el modo claro y el oscuro. La luna activa el oscuro y el sol vuelve al claro. Tu preferencia se guarda en este navegador.",
+};
+const sonido = {
+  path: "/consulta",
+  title: "Controla las alertas sonoras",
+  text: "El botón de altavoz, en la esquina inferior derecha, activa o silencia los avisos del buzón y los cambios de estado. El audio empieza silenciado y tu elección se guarda en este navegador.",
+};
+
 const tours = {
-  User: [consulta, detalle, buzon],
-  Admin: [consulta, captura, seleccion, buzon],
-  SuperAdmin: [consulta, captura, seleccion, buzon, usuarios],
+  User: [consulta, detalle, buzon, tema, sonido],
+  Admin: [consulta, captura, seleccion, buzon, tema, sonido],
+  SuperAdmin: [consulta, captura, seleccion, buzon, usuarios, tema, sonido],
 };
 
 const tourStorageKey = (userId, role) => "municipal-tour-v1:" + userId + ":" + role;

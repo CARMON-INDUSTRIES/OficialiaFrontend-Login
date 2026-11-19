@@ -1,5 +1,6 @@
 import { Source_Sans_3 } from 'next/font/google';
 import './globals.css';
+import ThemeToggle from '@/components/ThemeToggle';
 import AddUserClickContextProvider from '@/contexts/AddUserClickContext';
 import AddUserContextProvider from '@/contexts/AddUserContext';
 import { NotificacionesProvider } from '@/contexts/NotificacionesContext';
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         <title>Secretaría Municipal · Registro de oficios</title>
       </head>
       <body className={sourceSans.className}>
+        <ThemeToggle />
         <NotificacionesProvider>
           <NotificacionGlobal /> {/* Notificación visible en todas las vistas */}
           <AddUserClickContextProvider>

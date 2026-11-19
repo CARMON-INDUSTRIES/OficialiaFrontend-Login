@@ -272,3 +272,67 @@ img {
     border-right: 1px solid var(--municipal-line);
   }
 }
+
+html.dark {
+  color-scheme: dark;
+  --municipal-ink: #f1e9e6;
+  --municipal-line: #51454a;
+  --municipal-paper: #241f23;
+  --municipal-canvas: #171417;
+}
+
+.dark .municipal-title,
+.dark .municipal-topbar,
+.dark .municipal-secondary {
+  color: #edb7c6;
+}
+
+.dark .municipal-table tbody tr:hover,
+.dark .municipal-secondary:hover {
+  background: #382c33;
+}
+
+.dark :is(.bg-white, .bg-stone-50, .bg-gray-100, .bg-gray-50,
+  [class*="bg-[#ffffff]"], [class*="bg-[#f5f5f5]"], [class*="bg-[#F5F5F5]"],
+  [class*="bg-[#EAEAEA]"], [class*="bg-[#fffdfb]"], [class*="bg-[#F9F4DD]"]) {
+  background-color: var(--municipal-paper);
+}
+
+.dark :is(.text-black, .text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800,
+  [class*="text-[#262626]"], [class*="text-[#302320]"], [class*="text-[#594b44]"]) {
+  color: var(--municipal-ink);
+}
+
+.dark :is(h1, h2, h3, label, dt, p, span)[class*="text-[#691B31]"] {
+  color: #edb7c6;
+}
+
+.dark :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background-color: #302930;
+  border-color: #78656d;
+  color: #f1e9e6;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #c5b7bd;
+}
+
+.dark :focus-visible {
+  outline-color: #e5b77a;
+}
+
+.dark .municipal-table th,
+.dark .municipal-sidebar a[aria-current="page"] {
+  color: #262626;
+}
+
+.dark .municipal-sidebar :focus-visible {
+  outline-color: #fff;
+}
+
+@media (max-width: 767px) {
+  .municipal-topbar { padding-right: 5.5rem; }
+}
+
+.dark { --select-muted: #c5b7bd; --select-hover: #493a43; }
