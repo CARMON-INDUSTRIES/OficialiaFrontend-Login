@@ -60,6 +60,9 @@ export default function DetalleModal({ selectedRecord: record, closeModal }) {
           <Detail label="Folio" value={record.folio} />
           <Detail label="Dependencia" value={record.dependencia} />
           <Detail label="Destinatario" value={record.destinatario} />
+          <Detail label="Tipo de documento" value={record.tipoDocumento} />
+          <Detail label="Calle" value={record.calle} />
+          <Detail label="Teléfono" value={record.telefono} />
           <Detail label="Asunto" value={record.asunto} wide />
         </dl>
       </OficioSection>

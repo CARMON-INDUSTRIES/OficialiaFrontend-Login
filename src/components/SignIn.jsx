@@ -1,4 +1,5 @@
 "use client";
+import { cacheCurrentUser } from "@/lib/currentUser";
 import { apiBase } from "@/lib/apiBase";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -44,6 +45,7 @@ export const SignIn = () => {
       const data = await response.json();
       if (!data.token) throw new Error("No se recibió un token de autenticación");
 
+      if (data.user) cacheCurrentUser(data.token, data.user);
       localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
 

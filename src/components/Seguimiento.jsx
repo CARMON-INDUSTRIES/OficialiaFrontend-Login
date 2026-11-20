@@ -128,6 +128,7 @@ export default function Seguimiento() {
             {[
               ["Folio", selected.folio], ["Fecha de registro", date(selected.fecha)],
               ["Fecha de envío", dateTime(selected.fechaEnvio)],
+              ["Tipo de documento", selected.tipoDocumento], ["Calle", selected.calle], ["Teléfono", selected.telefono],
               ["Dependencia", selected.dependencia], ["Destinatario", selected.destinatario],
               ["Comunidad", selected.comunidadDescripcion], ["Importancia", selected.importanciaDescripcion],
               ["Fecha de terminación", date(selected.fechaTerminacion)],

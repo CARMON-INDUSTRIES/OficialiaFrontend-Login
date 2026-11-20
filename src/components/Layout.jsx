@@ -1,5 +1,5 @@
 "use client";
-import { loadCurrentUser } from "@/lib/currentUser";
+import { loadCurrentUser, getCachedUser, clearCurrentUser } from "@/lib/currentUser";
 import Link from "next/link";
 import NotificationSoundToggle from "./NotificationSoundToggle";
 import SystemTour, { restartSystemTour } from "./SystemTour";
@@ -43,6 +43,12 @@ const Layout = ({ children }) => {
         const token = localStorage.getItem("token");
         if (!token) return;
 
+        const cached = getCachedUser(token);
+        if (cached) {
+          setUserName(cached.userName);
+          setRoles(cached.roles || []);
+          setUserId(cached.id);
+        }
         const decoded = decodeToken(token);
 
         // Extraer el nombre del usuario
@@ -78,6 +84,7 @@ const Layout = ({ children }) => {
   }, []);
 
   const handleLogout = () => {
+    clearCurrentUser();
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");

@@ -6,12 +6,12 @@ const escapeXml = (value) => String(value ?? "")
   .replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
 export async function exportOficios(records) {
-  const headers = ["Folio", "Fecha", "Dependencia", "Asunto", "Comunidad", "Área de destino", "Estado"];
+  const headers = ["Folio", "Fecha", "Dependencia", "Asunto", "Comunidad", "Área de destino", "Estado", "Tipo de documento", "Calle", "Teléfono"];
   const rows = [headers, ...records.map((record) => [
     record.folio,
     record.fecha?.slice(0, 10).split("-").reverse().join("/") ?? "",
     record.dependencia, record.asunto, record.comunidadDescripcion,
-    record.areaDescripcion, record.statusDescripcion,
+    record.areaDescripcion, record.statusDescripcion, record.tipoDocumento, record.calle, record.telefono,
   ])];
   const cells = rows.map((row, index) => {
     const values = row.map((value, column) => {
@@ -32,7 +32,7 @@ export async function exportOficios(records) {
   zip.file("_rels/.rels", `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
   zip.file("xl/workbook.xml", `<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Registro de oficios" sheetId="1" r:id="rId1"/></sheets></workbook>`);
   zip.file("xl/_rels/workbook.xml.rels", `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`);
-  zip.file("xl/worksheets/sheet1.xml", `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="18" customWidth="1"/><col min="3" max="7" width="32" customWidth="1"/></cols><sheetData>${cells}</sheetData><autoFilter ref="A1:G${rows.length}"/></worksheet>`);
+  zip.file("xl/worksheets/sheet1.xml", `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="18" customWidth="1"/><col min="3" max="10" width="32" customWidth="1"/></cols><sheetData>${cells}</sheetData><autoFilter ref="A1:J${rows.length}"/></worksheet>`);
   const blob = await zip.generateAsync({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");

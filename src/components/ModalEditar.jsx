@@ -10,12 +10,13 @@ export default function ModalEditar({
 }) {
   if (!showEditModal || !selectedRecord) return null;
 
-  const input = (name, label, { type = "text", readOnly = false, required = false, wide = false } = {}) => (
+  const input = (name, label, { type = "text", readOnly = false, required = false, wide = false, maxLength } = {}) => (
     <label className={"grid min-w-0 gap-1 font-semibold" + (wide ? " sm:col-span-2" : "")}>
           {label}
           <input
             name={name}
             type={type}
+            maxLength={maxLength}
             readOnly={readOnly}
             required={required}
             value={type === "date" ? editData[name]?.slice(0, 10) ?? "" : editData[name] ?? ""}
@@ -74,6 +75,9 @@ export default function ModalEditar({
             {input("folio", "Folio", { readOnly: true })}
             {input("dependencia", "Dependencia")}
             {input("destinatario", "Destinatario", { required: true })}
+            {input("tipoDocumento", "Tipo de documento", { maxLength: 100 })}
+            {input("calle", "Calle", { maxLength: 250 })}
+            {input("telefono", "Teléfono", { type: "tel", maxLength: 50 })}
             {input("asunto", "Asunto", { wide: true, required: true })}
           </OficioSection>
         )}

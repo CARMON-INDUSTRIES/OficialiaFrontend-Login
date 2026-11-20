@@ -26,6 +26,9 @@ const Formulario = () => {
     dependencia: "",
     comunidad: "",
     destinatario: "",
+    tipoDocumento: "",
+    calle: "",
+    telefono: "",
     asunto: "",
     area: [],
     importancia: "",
@@ -264,6 +267,21 @@ const Formulario = () => {
                 required
                 className={fieldClass}
               />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="tipoDocumento" className="mb-1.5 block text-base font-semibold">Tipo de documento</label>
+              <input id="tipoDocumento" name="tipoDocumento" type="text" maxLength={100}
+                value={formData.tipoDocumento} onChange={handleChange} className={fieldClass} />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="calle" className="mb-1.5 block text-base font-semibold">Calle</label>
+              <input id="calle" name="calle" type="text" maxLength={250}
+                value={formData.calle} onChange={handleChange} className={fieldClass} />
+            </div>
+            <div className="min-w-0">
+              <label htmlFor="telefono" className="mb-1.5 block text-base font-semibold">Teléfono</label>
+              <input id="telefono" name="telefono" type="tel" maxLength={50}
+                value={formData.telefono} onChange={handleChange} className={fieldClass} />
             </div>
             <div className="min-w-0 sm:col-span-2">
               <label htmlFor="asunto" className="mb-1.5 block text-base font-semibold">Asunto</label>

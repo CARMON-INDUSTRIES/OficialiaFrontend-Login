@@ -118,6 +118,9 @@ const DetalleNotificacion = ({ selectedRecord, closeModal }) => {
             <p className="text-lg mb-2"><span className="font-bold">Remitente:</span> {selectedRecord.remitente}</p>
             <p className="text-lg mb-2"><span className="font-bold">Cargo Remitente:</span> {selectedRecord.cargoRemitente}</p>
             <p className="text-lg mb-2"><span className="font-bold">Asunto:</span> {selectedRecord.asunto}</p>
+            <p className="text-lg mb-2"><span className="font-bold">Tipo de documento:</span> {selectedRecord.tipoDocumento || "Sin información"}</p>
+            <p className="text-lg mb-2"><span className="font-bold">Calle:</span> {selectedRecord.calle || "Sin información"}</p>
+            <p className="text-lg mb-2"><span className="font-bold">Teléfono:</span> {selectedRecord.telefono || "Sin información"}</p>
             <p className="text-lg mb-2"><span className="font-bold">Destinatario:</span> {selectedRecord.destinatario}</p>
             <p className="text-lg mb-2"><span className="font-bold">Cargo Destinatario:</span> {selectedRecord.cargoDestinatario}</p>
             <p className="text-lg mb-2"><span className="font-bold">Área(s) turnada(s):</span> {area}</p>
