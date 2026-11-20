@@ -65,30 +65,10 @@ const Roles = () => {
       const response = await axios.get(
         apiBase + "/Roles/GetUsersWithRoles"
       );
-      const usuariosConArea = await Promise.all(
-        response.data.map(async (user) => {
-          try {
-            
-            const areaResponse = await axios.get(
-              `${apiBase}/UsuarioArea/GetAreaByUser/${user.id}`,
-              { validateStatus: (status) => status === 200 || status === 404 }
-            );
-
-
-            return {
-              ...user,
-              nombreArea: areaResponse.data?.area || "No asignada",
-              areaId: areaResponse.data?.areaId,
-            };
-          } catch (error) {
-            console.error(
-              "No se pudo consultar el área del usuario:",
-              error
-            );
-            return { ...user, nombreArea: "Área no disponible" };
-          }
-        })
-      );
+      const usuariosConArea = response.data.map((user) => ({
+        ...user,
+        nombreArea: user.nombreArea || "No asignada",
+      }));
       setUsuarios(usuariosConArea);
     } catch (error) {
       console.error("Error al obtener usuarios:", error);

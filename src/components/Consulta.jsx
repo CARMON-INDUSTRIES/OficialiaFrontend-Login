@@ -8,7 +8,7 @@ import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import DetalleModal from "@/components/DetalleModal";
 import ModalEditar from "@/components/ModalEditar"; // Ajusta la ruta si es necesario
-import { jwtDecode } from "jwt-decode";
+import { loadCurrentUser } from "@/lib/currentUser";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [busy, setBusy] = useState(false);
   const [records, setRecords] = useState([]);
+  const [loadingRecords, setLoadingRecords] = useState(true);
+  const [recordsError, setRecordsError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -44,9 +46,8 @@ const [lastStatus, setLastStatus] = useState([]);
       router.push("/login");
     } else {
       fetchUserRole(token);
-      fetchRecords(token);
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -118,59 +119,18 @@ const [lastStatus, setLastStatus] = useState([]);
 
   const fetchUserRole = async (token) => {
     try {
-      const decodedToken = jwtDecode(token);
-      const userName =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-
-      if (!userName) {
-        console.error("Error: userName es undefined");
-        return;
-      }
-
-      const response = await axios.get(
-        apiBase + "/Roles/GetUsersWithRoles",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      const user = response.data.find((u) => u.userName === userName);
-      if (user) {
-        setUserRole(user.roles);
-      } else {
-        console.error("No se encontró el usuario en la lista de roles");
-      }
+      const user = await loadCurrentUser(token);
+      setUserRole(user.roles || []);
     } catch (error) {
-      console.error("Error al obtener el rol del usuario:", error);
+      console.error("No se pudo consultar el usuario actual.", error);
     }
   };
 
   const fetchRecords = async (token) => {
     try {
-      const decodedToken = jwtDecode(token);
-      const userName =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-
-      if (!userName) return;
-
-      // Obtener userId
-      const userIdResponse = await axios.get(
-        `${apiBase}/Cuentas/GetUserId/${userName}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      const userId = userIdResponse.data.userId;
-
-      if (!userId) {
-        console.error("Error: No se obtuvo userId del backend");
-        return;
-      }
+      const user = await loadCurrentUser(token);
+      const userId = user.id;
+      if (!userId) return;
 
       // Obtener registros con userId
       const response = await axios.get(
@@ -193,11 +153,15 @@ const [lastStatus, setLastStatus] = useState([]);
       );
 
       setRecords(sortedRecords);
+      setRecordsError("");
     } catch (error) {
+      setRecordsError("No se pudieron cargar los oficios. Inténtalo de nuevo.");
       console.error(
         "Error en fetchRecords:",
         error.response?.data || error.message
       );
+    } finally {
+      setLoadingRecords(false);
     }
   };
 
@@ -452,7 +416,7 @@ const [lastStatus, setLastStatus] = useState([]);
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2" aria-busy={busy}>
             <p className="mr-auto text-sm" role="status">
-              {filteredRecords.length} oficios · {selectedRecords.length} seleccionados
+              {loadingRecords ? "Cargando oficios…" : filteredRecords.length + " oficios"} · {selectedRecords.length} seleccionados
             </p>
             <button type="button" className="municipal-secondary disabled:opacity-50"
               disabled={exporting || !filteredRecords.length || (startDate && endDate && startDate > endDate)}
@@ -471,6 +435,7 @@ const [lastStatus, setLastStatus] = useState([]);
               </button>
             )}
           </div>
+          {recordsError && <p role="alert" className="mt-3 text-red-800">{recordsError}</p>}
           <div className="municipal-table" tabIndex={0} aria-label="Oficios registrados">
             <table className="min-w-full bg-white">
               <thead className="sticky top-0 z-10">
@@ -493,7 +458,7 @@ const [lastStatus, setLastStatus] = useState([]);
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {!filteredRecords.length && (
+                {!loadingRecords && !recordsError && !filteredRecords.length && (
                   <tr><td colSpan={9} className="p-6 text-center">No se encontraron oficios.</td></tr>
                 )}
                 {filteredRecords.map((record) => (

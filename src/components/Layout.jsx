@@ -1,5 +1,5 @@
 "use client";
-import { apiBase } from "@/lib/apiBase";
+import { loadCurrentUser } from "@/lib/currentUser";
 import Link from "next/link";
 import NotificationSoundToggle from "./NotificationSoundToggle";
 import SystemTour, { restartSystemTour } from "./SystemTour";
@@ -59,20 +59,7 @@ const Layout = ({ children }) => {
 
         setUserName(extractedUserName); // Guardar en el estado
 
-        // Obtener los usuarios con sus roles desde la API
-        const response = await fetch(
-          apiBase + "/Roles/GetUsersWithRoles",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (!response.ok) throw new Error("Error al obtener los roles");
-
-        const data = await response.json();
-
-        // Buscar el usuario por su nombre de usuario
-        const user = data.find((user) => user.userName === extractedUserName);
+        const user = await loadCurrentUser(token);
 
         if (user) {
           setRoles(user.roles || []);
